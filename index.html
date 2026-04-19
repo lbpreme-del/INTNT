@@ -226,17 +226,23 @@ footer { max-width: 1160px; margin: 0 auto; padding: 3rem 1.5rem; display: flex;
   gap: 5px;
   cursor: pointer;
   padding: 6px;
-  background: none;
-  border: none;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none;
   flex-shrink: 0;
+  width: auto !important;
+  min-width: unset !important;
 }
 .hamburger span {
-  display: block;
+  display: block !important;
   width: 22px;
   height: 2px;
-  background: rgba(245,244,240,0.7);
+  background: rgba(245,244,240,0.75) !important;
   border-radius: 2px;
   transition: all .25s;
+  pointer-events: none;
 }
 .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
@@ -285,16 +291,16 @@ footer { max-width: 1160px; margin: 0 auto; padding: 3rem 1.5rem; display: flex;
 /* ── MOBILE BREAKPOINTS ── */
 @media (max-width: 768px) {
   /* Nav */
-  .nav-outer { padding: .85rem .85rem 0; background: transparent; }
+  .nav-outer { padding: .75rem .75rem 0; background: transparent; }
   nav {
-    padding: .6rem .85rem .6rem 1.1rem;
+    padding: .7rem 1rem .7rem 1.25rem;
     border-radius: 14px;
     position: relative; z-index: 101;
   }
   .nav-links { display: none !important; }
   .nav-login { display: none !important; }
   .nav-cta { display: none !important; }
-  .nav-logo { height: 38px; }
+  .nav-logo { height: 46px; }
   .hamburger { display: flex; }
 
   /* Hero */
@@ -364,9 +370,9 @@ footer { max-width: 1160px; margin: 0 auto; padding: 3rem 1.5rem; display: flex;
 }
 
 @media (max-width: 480px) {
-  .nav-outer { padding: .65rem .65rem 0; background: transparent; }
-  nav { padding: .55rem .7rem .55rem .9rem; }
-  .nav-logo { height: 32px; }
+  .nav-outer { padding: .6rem .6rem 0; background: transparent; }
+  nav { padding: .6rem .85rem .6rem 1rem; }
+  .nav-logo { height: 40px; }
   .stats-grid { grid-template-columns: 1fr; }
   .alloc-grid { grid-template-columns: 1fr; }
   .hero-h1 { font-size: clamp(28px, 9vw, 40px); }
