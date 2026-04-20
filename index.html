@@ -87,23 +87,7 @@ body { background: #000; color: #fff; font-family: 'Almarai', sans-serif; overfl
 .hero-stars {
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.9) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.7) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 45% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
-    radial-gradient(1px 1px at 65% 35%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 75% 75%, rgba(255,255,255,0.9) 0%, transparent 100%),
-    radial-gradient(1px 1px at 85% 10%, rgba(255,255,255,0.7) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 35% 80%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 55% 55%, rgba(255,255,255,0.8) 0%, transparent 100%),
-    radial-gradient(1px 1px at 10% 45%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(2px 2px at 30% 30%, rgba(200,220,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 20%, rgba(200,220,255,0.7) 0%, transparent 100%),
-    radial-gradient(1px 1px at 80% 85%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 50% 5%, rgba(255,255,255,0.7) 0%, transparent 100%),
-    linear-gradient(180deg, #03111f 0%, #061525 30%, #04101c 60%, #020a14 100%);
+  background: linear-gradient(180deg, #03111f 0%, #061525 30%, #04101c 60%, #020a14 100%);
   z-index: 1;
 }
 
@@ -561,8 +545,10 @@ footer {
 <section class="hero">
   <div class="hero-inner noise">
 
-    <!-- Starfield bg (CSS + optional video fallback) -->
-    <video class="hero-video" autoplay loop muted playsinline><source src="hero.mp4" type="video/mp4"></video>
+    <!-- Hero video background -->
+    <video class="hero-video" autoplay loop muted playsinline>
+      <source src="hero.mp4" type="video/mp4">
+    </video>
     <div class="hero-overlay"></div>
 
     <!-- NAV -->
@@ -588,11 +574,11 @@ footer {
     <!-- CONTENT -->
     <div class="hero-content">
       <div>
-        <p class="hero-eyebrow">General intent layer — Base network</p>
+        <p class="hero-eyebrow">Built on Base</p>
         <img class="hero-wordmark" src="data:image/png;base64,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" alt="INTNT">
       </div>
       <div class="hero-right">
-        <p class="hero-tagline">You say what you want. Solvers compete to make it happen. The protocol guarantees the outcome. No chain selection. No bridges. No failed transactions.</p>
+        <p class="hero-tagline">Tell it what you want. Get exactly that. No settings, no bridges, no failed transactions.</p>
         <a href="#solvers" class="hero-btn">
           Become a solver
           <span class="hero-btn-arrow">
@@ -610,11 +596,11 @@ footer {
     <span class="how-eyebrow">The general intent layer for crypto</span>
     <h2 class="how-big-text">
       You say what you want.<br>
-      <em>Solvers compete to execute it.</em><br>
-      The protocol guarantees the outcome.
+      <em>You get exactly that.</em><br>
+      We handle everything in between.
     </h2>
     <p class="how-stat">
-      93% of Coinbase's 119 million verified wallet holders never transact monthly. The barrier is the execution layer — not regulation, not education. INTNT replaces manual execution with signed intent. Built on Base.
+      93% of people who own crypto never actually use it. Not because it's complicated — because the apps make it complicated. INTNT fixes that. Tell it what you want. It figures out how to get it done. — not regulation, not education. INTNT replaces manual execution with signed intent. Built on Base.
     </p>
   </div>
 </div>
@@ -623,38 +609,38 @@ footer {
 <section class="steps-section">
   <div class="section-inner">
     <span class="section-tag reveal">How it works</span>
-    <h2 class="section-heading reveal" style="transition-delay:0.08s">How INTNT works in four steps.</h2>
-    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">Intent in. Outcome out.</h2>
+    <h2 class="section-heading reveal" style="transition-delay:0.08s">Here&#39;s how it works.</h2>
+    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">Simple as that.</h2>
     <div class="steps-grid">
       <div class="step-card glass-card reveal-card" style="transition-delay:0s">
         <div>
           <span class="step-num">01</span>
-          <div class="step-title">Sign an intent.</div>
-          <p class="step-body">Tell INTNT what you want — swap, earn yield, buy if price drops. Sign with your wallet. No gas paid, no transaction broadcast. Just a signed message.</p>
+          <div class="step-title">Tell it what you want.</div>
+          <p class="step-body">Swap tokens, earn yield, buy when the price drops. Just say what you want and sign it. You don&#39;t touch a single setting.</p>
         </div>
         <a href="#how" class="step-link">Learn more <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
       <div class="step-card glass-card reveal-card" style="transition-delay:0.12s">
         <div>
           <span class="step-num">02</span>
-          <div class="step-title">Solvers compete.</div>
-          <p class="step-body">A network of registered solvers races to find the best execution path across every DEX, bridge, and liquidity source. Best outcome wins the fee.</p>
+          <div class="step-title">We find the best deal.</div>
+          <p class="step-body">Behind the scenes, a network of bots races to find you the best price across every exchange and liquidity source. Competition means you win.</p>
         </div>
         <a href="#solvers" class="step-link">Learn more <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
       <div class="step-card glass-card reveal-card" style="transition-delay:0.24s">
         <div>
           <span class="step-num">03</span>
-          <div class="step-title">Protocol enforces.</div>
-          <p class="step-body">The 5-layer settlement engine verifies the solver's solution atomically before a single dollar moves. Output misses your minimum? Full revert. You lose nothing.</p>
+          <div class="step-title">You&#39;re protected either way.</div>
+          <p class="step-body">Before a single dollar moves, the protocol checks that you're getting what you asked for. If not — nothing happens. You keep your money.</p>
         </div>
         <a href="#arch" class="step-link">Learn more <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
       <div class="step-card glass-card reveal-card" style="transition-delay:0.36s">
         <div>
           <span class="step-num">04</span>
-          <div class="step-title">You got it.</div>
-          <p class="step-body">Output lands in your wallet. No intermediate steps, no stuck tokens, no routing decisions made by you.</p>
+          <div class="step-title">Done.</div>
+          <p class="step-body">The result lands in your wallet. You never had to think about chains, bridges, or gas. It just worked.</p>
         </div>
         <a href="#solvers" class="step-link">Join waitlist <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
@@ -666,15 +652,15 @@ footer {
 <section class="arch-section" id="arch">
   <div class="section-inner">
     <span class="section-tag reveal">Architecture</span>
-    <h2 class="section-heading reveal" style="transition-delay:0.08s">5-layer settlement architecture.</h2>
-    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">Security by separation of funds.</h2>
+    <h2 class="section-heading reveal" style="transition-delay:0.08s">Built to be secure.</h2>
+    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">A bug in the wrong place can&#39;t touch your money.</h2>
 
     <div class="layers">
       <div class="layer-row glass-card reveal-card" style="transition-delay:0s">
         <span class="layer-id" style="color:rgba(255,255,255,0.55)">L1</span>
         <div class="layer-info">
           <span class="layer-name">IntentValidator</span>
-          <span class="layer-desc">EIP-712 signature verification and nonce consumption. No funds ever enter this contract.</span>
+          <span class="layer-desc">Checks your signature is valid and hasn&#39;t been used before. Never holds money.</span>
         </div>
         <span class="layer-badge badge-none">no funds</span>
       </div>
@@ -682,7 +668,7 @@ footer {
         <span class="layer-id" style="color:rgba(255,255,255,0.55)">L2</span>
         <div class="layer-info">
           <span class="layer-name">SolverVerifier</span>
-          <span class="layer-desc">Solver staking, reputation scoring (0–1000), and slashing. Bad actors burned permanently.</span>
+          <span class="layer-desc">Tracks which solvers are trustworthy. Bad actors lose their stake permanently.</span>
         </div>
         <span class="layer-badge badge-none">no funds</span>
       </div>
@@ -690,7 +676,7 @@ footer {
         <span class="layer-id" style="color:rgba(255,255,255,0.55)">L3</span>
         <div class="layer-info">
           <span class="layer-name">ExecutionSandbox</span>
-          <span class="layer-desc">Simulates solver calldata and measures actual output delta before money moves. Reverts if output misses minimum.</span>
+          <span class="layer-desc">Double-checks the solver&#39;s work before anything moves. If it&#39;s not good enough, the whole thing cancels.</span>
         </div>
         <span class="layer-badge badge-none">no funds</span>
       </div>
@@ -698,7 +684,7 @@ footer {
         <span class="layer-id" style="color:#fff;font-weight:700">L4</span>
         <div class="layer-info">
           <span class="layer-name">SettlementFinalizer</span>
-          <span class="layer-desc">The ONLY contract that moves user funds. Intentionally under 100 lines. Calls L1→L2→L3 in sequence then executes atomically.</span>
+          <span class="layer-desc">The only part that moves money. Intentionally tiny — less code means less that can go wrong.</span>
         </div>
         <span class="layer-badge badge-funds">moves funds</span>
       </div>
@@ -706,7 +692,7 @@ footer {
         <span class="layer-id" style="color:rgba(255,255,255,0.55)">L5</span>
         <div class="layer-info">
           <span class="layer-name">DisputeEscrow</span>
-          <span class="layer-desc">Solver fees held in escrow for a 10-minute optimistic dispute window. Auto-releases after window closes.</span>
+          <span class="layer-desc">Solver fees are held for 10 minutes so anyone can challenge a bad fill. Then they&#39;re released automatically.</span>
         </div>
         <span class="layer-badge badge-none">optimistic</span>
       </div>
@@ -714,7 +700,7 @@ footer {
 
     <div class="security-box glass-warm reveal">
       <span class="security-label">Security model</span>
-      <p class="security-text">A bug in L1, L2, L3, or L5 <em>cannot drain user funds</em> — those layers hold no money. Only L4 touches funds and it is minimal by design.</p>
+      <p class="security-text">Only one part of the protocol ever touches your money. Everything else — the verification, the solvers, the dispute system — is completely separate. A problem in any of those can&#39;t reach your funds.</p>
     </div>
 
     <div class="contracts-header reveal">
@@ -736,44 +722,44 @@ footer {
 <section class="token-section" id="token">
   <div class="section-inner">
     <span class="section-tag reveal">Token</span>
-    <h2 class="section-heading reveal" style="transition-delay:0.08s">$INTNT — three reasons to hold.</h2>
-    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">0.15% total fee. 60% solver / 25% stakers / 15% treasury.</h2>
+    <h2 class="section-heading reveal" style="transition-delay:0.08s">The $INTNT token.</h2>
+    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">Every swap has a small fee. Most of it goes back to the people who make the network run.</h2>
     <div class="token-grid">
       <div class="token-card glass-card reveal-card" style="transition-delay:0s">
         <span class="token-num">01</span>
-        <div class="token-title">Solver access.</div>
+        <div class="token-title">Run a solver.</div>
         <ul class="token-items">
-          <li class="token-item">Stake $INTNT to join the solver network</li>
-          <li class="token-item">Bad actors slashed — tokens burned permanently</li>
-          <li class="token-item">Real demand tied to protocol usage</li>
+          <li class="token-item">Stake $INTNT to start filling intents and earning fees</li>
+          <li class="token-item">Cheat and you lose your stake — no exceptions</li>
+          <li class="token-item">More swaps = more demand for $INTNT</li>
         </ul>
       </div>
       <div class="token-card glass-card reveal-card" style="transition-delay:0.12s">
         <span class="token-num">02</span>
-        <div class="token-title">Governance.</div>
+        <div class="token-title">Vote on changes.</div>
         <ul class="token-items">
-          <li class="token-item">Vote on fee rates and supported chains</li>
-          <li class="token-item">Approve execution targets and treasury allocation</li>
-          <li class="token-item">Each layer independently upgradeable</li>
+          <li class="token-item">Have a say in fees and which chains we support</li>
+          <li class="token-item">Vote on how the treasury gets spent</li>
+          <li class="token-item">Changes are made carefully, one piece at a time</li>
         </ul>
       </div>
       <div class="token-card glass-card reveal-card" style="transition-delay:0.24s">
         <span class="token-num">03</span>
-        <div class="token-title">Staker yield.</div>
+        <div class="token-title">Earn from the protocol.</div>
         <ul class="token-items">
-          <li class="token-item">25% of all protocol fees to $INTNT stakers</li>
-          <li class="token-item">Proportional to stake — real yield, real volume</li>
-          <li class="token-item">At $10M daily volume: $3,750 distributed daily</li>
+          <li class="token-item">25% of every fee goes to people who stake $INTNT</li>
+          <li class="token-item">Real yield from real activity — not printed tokens</li>
+          <li class="token-item">At $10M in daily swaps: $3,750 paid out every single day</li>
         </ul>
       </div>
     </div>
     <div class="supply-box glass-warm reveal">
       <span class="supply-label">Token supply</span>
       <div class="supply-grid">
-        <div><div class="supply-pct">40%</div><div class="supply-name">Community incentives</div></div>
+        <div><div class="supply-pct">40%</div><div class="supply-name">Community</div></div>
         <div><div class="supply-pct">25%</div><div class="supply-name">Treasury</div></div>
         <div><div class="supply-pct">20%</div><div class="supply-name">Team (4yr vest / 1yr cliff)</div></div>
-        <div><div class="supply-pct">15%</div><div class="supply-name">Ecosystem fund</div></div>
+        <div><div class="supply-pct">15%</div><div class="supply-name">Ecosystem</div></div>
       </div>
     </div>
   </div>
@@ -783,8 +769,8 @@ footer {
 <section class="roadmap-section">
   <div class="section-inner">
     <span class="section-tag reveal">Roadmap</span>
-    <h2 class="section-heading reveal" style="transition-delay:0.08s">Roadmap.</h2>
-    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">Phase 1 complete. Solvers onboarding now.</h2>
+    <h2 class="section-heading reveal" style="transition-delay:0.08s">What&#39;s next.</h2>
+    <h2 class="section-heading section-heading-muted reveal" style="transition-delay:0.14s">Phase 1 is done. Solvers are onboarding now.</h2>
     <div class="roadmap-grid">
       <div class="phase-card glass-card reveal-card" style="transition-delay:0s">
         <div class="phase-header">
@@ -792,10 +778,10 @@ footer {
           <span class="phase-badge badge-complete">Complete</span>
         </div>
         <ul class="phase-items">
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>5 contracts deployed</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>2 audits complete</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Base Sepolia testnet live</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>First intent filled on-chain</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Smart contracts live on Base</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Audits done</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Testnet live at intnt.xyz/testnet</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>First real swap completed</li>
         </ul>
       </div>
       <div class="phase-card glass-card reveal-card" style="transition-delay:0.1s">
@@ -804,10 +790,10 @@ footer {
           <span class="phase-badge badge-progress">In progress</span>
         </div>
         <ul class="phase-items">
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>Open-source solver template</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>5–10 early solvers onboarded</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>Reputation scores activated</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>Liquidity mining live</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>Open-source bot template published</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>First 10 solvers onboarded</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>Solver leaderboard live</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.35"><polyline points="20 6 9 17 4 12"/></svg>Rewards program launched</li>
         </ul>
       </div>
       <div class="phase-card glass-card reveal-card" style="transition-delay:0.2s">
@@ -819,7 +805,7 @@ footer {
           <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>$INTNT deployed</li>
           <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>Staking live</li>
           <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>Governance active</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>Uniswap v3 liquidity seeded</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>Token available to buy</li>
         </ul>
       </div>
       <div class="phase-card glass-card reveal-card" style="transition-delay:0.3s">
@@ -829,8 +815,8 @@ footer {
         </div>
         <ul class="phase-items">
           <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>Ethereum, Arbitrum, Optimism</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>TypeScript and Python SDKs</li>
-          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>AI agent reputation API</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>Developer SDKs released</li>
+          <li class="phase-item"><svg class="phase-check" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2"><polyline points="20 6 9 17 4 12"/></svg>API for AI agent integrations</li>
         </ul>
       </div>
     </div>
@@ -842,14 +828,14 @@ footer {
   <div class="waitlist-inner glass-warm">
     <div class="waitlist-top reveal">
       <span class="waitlist-tag">Solver waitlist</span>
-      <h2 class="waitlist-heading">Get in before anyone else.</h2>
-      <p class="waitlist-sub">Early solvers earn bonus $INTNT on top of fill fees, get a reduced stake requirement, and 2× reputation weighting at launch.</p>
+      <h2 class="waitlist-heading">Become an early solver.</h2>
+      <p class="waitlist-sub">Run one of the bots that fills swaps and earn fees on every trade you complete. Early solvers get extra rewards and a head start on reputation.</p>
     </div>
     <div class="perks-grid reveal">
-      <div class="perk">Bonus $INTNT on every fill during bootstrap phase</div>
-      <div class="perk">Lower minimum stake than public launch</div>
-      <div class="perk">2× reputation weighting — climb the leaderboard faster</div>
-      <div class="perk">Direct access to the founding team on Discord</div>
+      <div class="perk">Bonus $INTNT on top of your fill fees</div>
+      <div class="perk">Lower barrier to get started</div>
+      <div class="perk">Double reputation points — get established faster</div>
+      <div class="perk">Direct line to the team on Discord</div>
     </div>
     <div id="wl-form" class="reveal">
       <div class="form-grid">
@@ -880,7 +866,7 @@ footer {
         </div>
         <div class="form-col" style="align-self:flex-end">
           <button class="submit-btn" onclick="submitWL()">
-            Apply for solver access
+            Join the waitlist
             <span class="submit-arrow">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </span>
