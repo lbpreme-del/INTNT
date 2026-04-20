@@ -3,94 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTNT Protocol — Live Demo</title>
+<title>INTNT — Try it</title>
 <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#000;color:#fff;font-family:'Almarai',sans-serif;min-height:100vh;}
-.nav-outer{padding:.9rem 1.25rem 0;position:sticky;top:0;z-index:100;background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);}
+html,body{height:100%;background:#000;color:#fff;font-family:'Almarai',sans-serif;}
+body{display:flex;flex-direction:column;}
+
+/* NAV */
+.nav-outer{padding:.9rem 1.25rem 0;background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);flex-shrink:0;}
 nav{display:flex;align-items:center;justify-content:space-between;background:rgba(15,25,40,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:.65rem 1rem .65rem 1.5rem;max-width:1200px;margin:0 auto;}
 .nav-logo{height:36px;filter:brightness(0) invert(1);}
 .nav-links{display:flex;gap:1.75rem;}
 .nav-link{font-size:11px;color:rgba(255,255,255,.6);text-decoration:none;transition:color .15s;}
 .nav-link:hover{color:#fff;}
 .nav-cta{font-size:12px;font-weight:500;color:#000;background:#fff;padding:8px 18px;border-radius:100px;text-decoration:none;}
+@media(max-width:600px){.nav-links,.nav-cta{display:none;}}
 
-.hero{max-width:1200px;margin:0 auto;padding:5rem 1.5rem 3rem;text-align:center;}
-.hero-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem;display:block;}
-.hero-title{font-size:clamp(2rem,5vw,4rem);font-weight:400;letter-spacing:-.03em;line-height:1.05;margin-bottom:1rem;}
-.hero-title em{font-family:'Instrument Serif',serif;font-style:italic;}
-.hero-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto 2.5rem;line-height:1.7;}
+/* MAIN CHAT LAYOUT */
+.chat-wrap{flex:1;display:flex;flex-direction:column;max-width:720px;width:100%;margin:0 auto;padding:0 1rem;min-height:0;}
 
-/* DEMO ARENA */
-.demo{max-width:900px;margin:0 auto;padding:0 1.5rem 6rem;}
+/* HEADER */
+.chat-header{text-align:center;padding:2.5rem 0 1.75rem;flex-shrink:0;}
+.chat-header-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:400;letter-spacing:-.025em;margin-bottom:.5rem;}
+.chat-header-title em{font-family:'Instrument Serif',serif;font-style:italic;}
+.chat-header-sub{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;}
 
-/* INTENT BUILDER */
-.builder{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:2rem;margin-bottom:1.25rem;}
-.builder-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem;display:block;}
-.intent-row{display:grid;grid-template-columns:1fr auto 1fr auto;gap:.75rem;align-items:center;margin-bottom:1.25rem;}
-.intent-field{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem 1rem;color:#fff;font-family:'Almarai',sans-serif;font-size:14px;width:100%;appearance:none;outline:none;transition:border-color .2s;}
-.intent-field:focus{border-color:rgba(255,255,255,.3);}
-.intent-field option{background:#0a0a0a;}
-.intent-arrow{color:rgba(255,255,255,.3);font-size:18px;text-align:center;}
-.amount-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem;}
-.fire-btn{width:100%;padding:14px;background:#fff;color:#000;border:none;border-radius:10px;font-family:'Almarai',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;}
-.fire-btn:hover{opacity:.88;}
-.fire-btn:disabled{opacity:.4;cursor:not-allowed;}
+/* SUGGESTIONS */
+.suggestions{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1.5rem;flex-shrink:0;}
+.suggestion{font-size:12px;color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.suggestion:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);}
 
-/* PIPELINE VISUALIZER */
-.pipeline{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:2rem;margin-bottom:1.25rem;min-height:260px;}
-.pipe-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.5rem;display:block;}
-.pipe-steps{display:flex;align-items:center;gap:0;margin-bottom:1.75rem;overflow-x:auto;}
-.pipe-step{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;min-width:100px;}
-.pipe-icon{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .4s ease;position:relative;}
-.pipe-icon.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);box-shadow:0 0 20px rgba(255,255,255,.1);}
-.pipe-icon.done{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);}
-.pipe-icon.error{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);}
-.pipe-name{font-size:10px;color:rgba(255,255,255,.4);text-align:center;line-height:1.3;}
-.pipe-name.active{color:#fff;}
-.pipe-name.done{color:rgba(74,222,128,.8);}
-.pipe-connector{flex:1;height:1px;background:rgba(255,255,255,.08);margin-bottom:22px;transition:background .4s;}
-.pipe-connector.done{background:rgba(74,222,128,.4);}
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;padding-bottom:1rem;min-height:0;}
+.messages::-webkit-scrollbar{width:0;}
 
-/* LOG */
-.log{font-family:'Courier New',monospace;font-size:11px;line-height:1.7;color:rgba(255,255,255,.5);max-height:160px;overflow-y:auto;}
-.log-line{margin-bottom:2px;}
-.log-line.success{color:rgba(74,222,128,.8);}
-.log-line.info{color:rgba(255,255,255,.6);}
-.log-line.muted{color:rgba(255,255,255,.3);}
+/* MESSAGE BUBBLES */
+.msg{display:flex;gap:.75rem;animation:msgIn .35s cubic-bezier(.16,1,.3,1);}
+.msg.user{flex-direction:row-reverse;}
+.msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.msg-avatar.intnt{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);}
+.msg-avatar.user{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);font-size:11px;font-weight:600;color:rgba(255,255,255,.7);}
+.msg-bubble{max-width:85%;padding:.85rem 1.1rem;border-radius:18px;font-size:14px;line-height:1.65;}
+.msg.intnt .msg-bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-bottom-left-radius:4px;color:rgba(255,255,255,.85);}
+.msg.user .msg-bubble{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-bottom-right-radius:4px;color:#fff;}
 
-/* RESULT */
-.result{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:14px;padding:1.5rem;display:none;}
-.result.show{display:block;}
-.result-title{font-size:15px;font-weight:600;color:rgba(74,222,128,.9);margin-bottom:.75rem;}
-.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
-.result-item-l{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:3px;}
-.result-item-v{font-size:15px;font-weight:600;}
+/* TYPING INDICATOR */
+.typing{display:flex;gap:4px;align-items:center;padding:.6rem .85rem;}
+.typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
 
-/* SOLVER RACE */
-.race{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:2rem;margin-bottom:1.25rem;}
-.race-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem;display:block;}
-.solver-row{display:flex;align-items:center;gap:1rem;margin-bottom:.85rem;}
-.solver-row:last-child{margin-bottom:0;}
-.solver-name{font-size:12px;width:120px;flex-shrink:0;}
-.solver-bar-wrap{flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:6px;overflow:hidden;}
-.solver-bar{height:100%;border-radius:4px;background:rgba(255,255,255,.2);width:0%;transition:width .8s cubic-bezier(.16,1,.3,1);}
-.solver-bar.winner{background:rgba(74,222,128,.8);}
-.solver-quote{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.4);width:100px;text-align:right;flex-shrink:0;}
+/* PIPELINE CARD */
+.pipeline-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.5rem;font-size:13px;}
+.pipe-step-line{display:flex;align-items:center;gap:.75rem;padding:.4rem 0;color:rgba(255,255,255,.5);}
+.pipe-step-line.active{color:#fff;}
+.pipe-step-line.done{color:rgba(74,222,128,.8);}
+.pipe-step-line .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.pipe-step-line.active .dot{background:#fff;box-shadow:0 0 6px rgba(255,255,255,.5);}
+.pipe-step-line.done .dot{background:rgba(74,222,128,.8);}
+
+/* RESULT CARD */
+.result-card{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.5rem;}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:13px;border-bottom:.5px solid rgba(74,222,128,.1);}
+.result-row:last-child{border-bottom:none;}
+.result-label{color:rgba(255,255,255,.45);}
+.result-val{color:#fff;font-weight:500;}
+.result-val.green{color:rgba(74,222,128,.9);}
+
+/* SOLVER RACE CARD */
+.race-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.5rem;}
+.race-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.85rem;}
+.race-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem;}
+.race-row:last-child{margin-bottom:0;}
+.race-name{font-size:11px;color:rgba(255,255,255,.5);width:90px;flex-shrink:0;}
+.race-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.race-bar{height:100%;border-radius:3px;background:rgba(255,255,255,.2);width:0%;transition:width .9s cubic-bezier(.16,1,.3,1);}
+.race-bar.winner{background:rgba(74,222,128,.8);}
+.race-quote{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.4);width:80px;text-align:right;flex-shrink:0;}
+
+/* INPUT BAR */
+.input-bar{flex-shrink:0;padding:.85rem 0 1.25rem;}
+.input-wrap{display:flex;align-items:flex-end;gap:.65rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:.65rem .65rem .65rem 1.1rem;transition:border-color .2s;}
+.input-wrap:focus-within{border-color:rgba(255,255,255,.28);}
+.input-field{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'Almarai',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:120px;min-height:24px;}
+.input-field::placeholder{color:rgba(255,255,255,.25);}
+.send-btn{width:36px;height:36px;border-radius:10px;background:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
+.send-btn:hover{opacity:.85;}
+.send-btn:disabled{opacity:.3;cursor:not-allowed;}
+.input-hint{font-size:10px;color:rgba(255,255,255,.2);text-align:center;margin-top:.5rem;}
 
 /* RESET */
-.reset-btn{width:100%;padding:10px;background:transparent;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Almarai',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;margin-top:.75rem;}
-.reset-btn:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.reset-row{text-align:center;padding:.5rem 0;flex-shrink:0;}
+.reset-btn{font-size:12px;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;transition:color .15s;}
+.reset-btn:hover{color:rgba(255,255,255,.7);}
 
-footer{border-top:1px solid rgba(255,255,255,.06);padding:2rem 1.5rem;text-align:center;}
-.footer-copy{font-size:11px;color:rgba(255,255,255,.25);}
-@media(max-width:600px){
-  .intent-row{grid-template-columns:1fr;}.intent-arrow{transform:rotate(90deg);}
-  .amount-row{grid-template-columns:1fr;}
-  .result-grid{grid-template-columns:1fr 1fr;}
-  .pipe-steps{gap:0;}.pipe-step{min-width:70px;}
-}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -107,254 +116,267 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:2rem 1.5rem;text-align
   </nav>
 </div>
 
-<div class="hero">
-  <span class="hero-tag">Interactive demo — simulated</span>
-  <h1 class="hero-title">See how an intent<br><em>actually gets filled.</em></h1>
-  <p class="hero-sub">Build an intent below and watch it move through the protocol — solver competition, 5-layer verification, and settlement — in real time.</p>
+<div class="chat-wrap">
+  <div class="chat-header">
+    <h1 class="chat-header-title">Tell INTNT <em>what you want.</em></h1>
+    <p class="chat-header-sub">Type a request in plain language. INTNT figures out how to get it done.</p>
+  </div>
+
+  <div class="suggestions" id="suggestions">
+    <div class="suggestion" onclick="usePrompt(this)">Swap 1000 USDC for ETH at the best price</div>
+    <div class="suggestion" onclick="usePrompt(this)">Buy ETH if the price drops below 000</div>
+    <div class="suggestion" onclick="usePrompt(this)">Put my USDC in the highest yield pool</div>
+    <div class="suggestion" onclick="usePrompt(this)">Bridge 500 USDC to Arbitrum</div>
+    <div class="suggestion" onclick="usePrompt(this)">Swap all my DAI for USDC</div>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="reset-row" id="reset-row" style="display:none">
+    <button class="reset-btn" onclick="resetDemo()">← Start over</button>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-wrap">
+      <textarea class="input-field" id="input" placeholder="Tell INTNT what you want..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="send-btn" onclick="send()">
+        <svg width="16" height="16" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </button>
+    </div>
+    <p class="input-hint">This is a simulation — no real funds are used</p>
+  </div>
 </div>
-
-<div class="demo">
-
-  <!-- INTENT BUILDER -->
-  <div class="builder">
-    <span class="builder-label">Build your intent</span>
-    <div class="intent-row">
-      <select class="intent-field" id="from-token">
-        <option value="USDC">USDC</option>
-        <option value="ETH">ETH</option>
-        <option value="DAI">DAI</option>
-        <option value="WBTC">WBTC</option>
-      </select>
-      <div class="intent-arrow">→</div>
-      <select class="intent-field" id="to-token">
-        <option value="ETH">ETH</option>
-        <option value="USDC">USDC</option>
-        <option value="DAI">DAI</option>
-        <option value="WBTC">WBTC</option>
-      </select>
-      <div></div>
-    </div>
-    <div class="amount-row">
-      <div>
-        <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.4rem">Amount</div>
-        <input class="intent-field" type="number" id="amount" value="1000" min="1">
-      </div>
-      <div>
-        <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.4rem">Minimum output (slippage floor)</div>
-        <input class="intent-field" type="number" id="min-output" value="0.485" step="0.001">
-      </div>
-    </div>
-    <button class="fire-btn" id="fire-btn" onclick="fireIntent()">Sign &amp; post intent</button>
-  </div>
-
-  <!-- SOLVER RACE -->
-  <div class="race" id="race-box" style="opacity:.4">
-    <span class="race-label">Solver competition</span>
-    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Alpha</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-0"></div></div><span class="solver-quote" id="q-0">—</span></div>
-    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Beta</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-1"></div></div><span class="solver-quote" id="q-1">—</span></div>
-    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Gamma</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-2"></div></div><span class="solver-quote" id="q-2">—</span></div>
-    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Delta</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-3"></div></div><span class="solver-quote" id="q-3">—</span></div>
-  </div>
-
-  <!-- PIPELINE -->
-  <div class="pipeline">
-    <span class="pipe-label">5-layer settlement</span>
-    <div class="pipe-steps">
-      <div class="pipe-step"><div class="pipe-icon" id="step-0">✍️</div><div class="pipe-name" id="step-name-0">Sign intent</div></div>
-      <div class="pipe-connector" id="conn-0"></div>
-      <div class="pipe-step"><div class="pipe-icon" id="step-1">🔐</div><div class="pipe-name" id="step-name-1">L1 Validate</div></div>
-      <div class="pipe-connector" id="conn-1"></div>
-      <div class="pipe-step"><div class="pipe-icon" id="step-2">🏆</div><div class="pipe-name" id="step-name-2">L2 Solver check</div></div>
-      <div class="pipe-connector" id="conn-2"></div>
-      <div class="pipe-step"><div class="pipe-icon" id="step-3">🔬</div><div class="pipe-name" id="step-name-3">L3 Simulate</div></div>
-      <div class="pipe-connector" id="conn-3"></div>
-      <div class="pipe-step"><div class="pipe-icon" id="step-4">💰</div><div class="pipe-name" id="step-name-4">L4 Settle</div></div>
-      <div class="pipe-connector" id="conn-4"></div>
-      <div class="pipe-step"><div class="pipe-icon" id="step-5">✅</div><div class="pipe-name" id="step-name-5">Done</div></div>
-    </div>
-    <div class="log" id="log"><div class="log-line muted">Waiting for intent...</div></div>
-  </div>
-
-  <!-- RESULT -->
-  <div class="result" id="result">
-    <div class="result-title">✓ Intent filled successfully</div>
-    <div class="result-grid">
-      <div><div class="result-item-l">You received</div><div class="result-item-v" id="r-received">—</div></div>
-      <div><div class="result-item-l">Best solver</div><div class="result-item-v" id="r-solver">—</div></div>
-      <div><div class="result-item-l">Fill time</div><div class="result-item-v" id="r-time">—</div></div>
-      <div><div class="result-item-l">vs your minimum</div><div class="result-item-v" id="r-beat">—</div></div>
-      <div><div class="result-item-l">Protocol fee</div><div class="result-item-v" id="r-fee">—</div></div>
-      <div><div class="result-item-l">Gas paid by you</div><div class="result-item-v" style="color:rgba(74,222,128,.8)">/bin/sh.00</div></div>
-    </div>
-  </div>
-
-  <button class="reset-btn" id="reset-btn" style="display:none" onclick="reset()">← Try another intent</button>
-</div>
-
-<footer><p class="footer-copy">© 2026 INTNT Protocol · This is a simulation — no real funds are used · <a href="https://intnt.xyz/testnet" style="color:rgba(255,255,255,.4)">View live testnet</a></p></footer>
 
 <script>
-var running = false;
-var solverNames = ['Solver Alpha', 'Solver Beta', 'Solver Gamma', 'Solver Delta'];
-var solverSources = ['via 0x API', 'via 1inch Fusion', 'via Paraswap', 'via Uniswap v3'];
+var busy = false;
 
-function log(msg, cls) {
-  cls = cls || 'info';
-  var l = document.getElementById('log');
-  var t = new Date().toLocaleTimeString('en-US',{hour12:false});
-  var d = document.createElement('div');
-  d.className = 'log-line ' + cls;
-  d.textContent = '[' + t + '] ' + msg;
-  l.appendChild(d);
-  l.scrollTop = l.scrollHeight;
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
-function setStep(i, state) {
-  document.getElementById('step-' + i).className = 'pipe-icon ' + state;
-  document.getElementById('step-name-' + i).className = 'pipe-name ' + state;
-  if (i < 5 && state === 'done') {
-    document.getElementById('conn-' + i).className = 'pipe-connector done';
-  }
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function usePrompt(el) {
+  document.getElementById('input').value = el.textContent;
+  autoResize(document.getElementById('input'));
+  send();
 }
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function rnd(a,b) { return Math.random()*(b-a)+a; }
 
-function rnd(a, b) { return (Math.random() * (b - a) + a); }
+function addMsg(role, content) {
+  var msgs = document.getElementById('messages');
+  var d = document.createElement('div');
+  d.className = 'msg ' + role;
+  var avatar = role === 'intnt'
+    ? '<div class="msg-avatar intnt">⚡</div>'
+    : '<div class="msg-avatar user">S</div>';
+  d.innerHTML = avatar + '<div class="msg-bubble">' + content + '</div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
 
-async function fireIntent() {
-  if (running) return;
-  running = true;
+function addTyping() {
+  var msgs = document.getElementById('messages');
+  var d = document.createElement('div');
+  d.className = 'msg intnt';
+  d.id = 'typing-indicator';
+  d.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
 
-  var fromTok = document.getElementById('from-token').value;
-  var toTok = document.getElementById('to-token').value;
-  var amount = parseFloat(document.getElementById('amount').value);
-  var minOut = parseFloat(document.getElementById('min-output').value);
+function removeTyping() {
+  var t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
 
-  if (fromTok === toTok) { alert('Input and output tokens must be different.'); running = false; return; }
+function parseIntent(text) {
+  text = text.toLowerCase();
+  var result = { type: 'swap', from: 'USDC', to: 'ETH', amount: '1,000', condition: null };
 
-  document.getElementById('fire-btn').disabled = true;
-  document.getElementById('log').innerHTML = '';
-  document.getElementById('result').classList.remove('show');
-  document.getElementById('race-box').style.opacity = '1';
-  document.getElementById('reset-btn').style.display = 'none';
+  if (text.includes('usdc') && text.includes('eth')) { result.from='USDC'; result.to='ETH'; }
+  else if (text.includes('eth') && text.includes('usdc')) { result.from='ETH'; result.to='USDC'; }
+  else if (text.includes('dai') && text.includes('usdc')) { result.from='DAI'; result.to='USDC'; }
+  else if (text.includes('usdc') && text.includes('dai')) { result.from='USDC'; result.to='DAI'; }
+  else if (text.includes('usdc') && text.includes('arb')) { result.type='bridge'; result.from='USDC'; result.to='Arbitrum'; }
 
-  // Reset bars
-  for (var i = 0; i < 4; i++) {
-    document.getElementById('bar-' + i).style.width = '0%';
-    document.getElementById('bar-' + i).className = 'solver-bar';
-    document.getElementById('q-' + i).textContent = '—';
+  var amtMatch = text.match(/(\d[\d,]*)\s*(usdc|eth|dai|wbtc)?/);
+  if (amtMatch) result.amount = amtMatch[1];
+
+  if (text.includes('if') || text.includes('when') || text.includes('below') || text.includes('drops')) {
+    result.type = 'conditional';
+    var priceMatch = text.match(/$?([\d,]+)/g);
+    if (priceMatch && priceMatch.length > 1) result.condition = priceMatch[priceMatch.length-1];
   }
-  for (var i = 0; i < 6; i++) setStep(i, '');
 
-  // Step 0 — sign
-  setStep(0, 'active');
-  log('Intent created: ' + amount + ' ' + fromTok + ' → min ' + minOut + ' ' + toTok);
-  await delay(700);
-  log('Signing with wallet... (no gas paid)');
+  if (text.includes('yield') || text.includes('pool') || text.includes('apy') || text.includes('earn')) {
+    result.type = 'yield';
+  }
+
+  return result;
+}
+
+async function send() {
+  if (busy) return;
+  var input = document.getElementById('input');
+  var text = input.value.trim();
+  if (!text) return;
+
+  busy = true;
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('suggestions').style.display = 'none';
+  document.getElementById('reset-row').style.display = 'block';
+  input.value = '';
+  input.style.height = 'auto';
+
+  var intent = parseIntent(text);
+
+  // User message
+  addMsg('user', text);
+  await delay(400);
+
+  // INTNT acknowledges
+  addTyping();
   await delay(900);
-  log('Intent posted to IntentBook ✓', 'success');
-  setStep(0, 'done');
-  await delay(400);
+  removeTyping();
 
-  // Step 1 — L1 validate
-  setStep(1, 'active');
-  log('L1 IntentValidator: checking EIP-712 signature...');
+  var ackMsg = '';
+  if (intent.type === 'conditional') {
+    ackMsg = 'Got it — I'll watch the price and execute automatically when your condition is met. No need to stay online. Let me set this up.';
+  } else if (intent.type === 'yield') {
+    ackMsg = 'I'll scan the top yield pools across Base and deposit your funds into the highest APY option that meets your risk parameters.';
+  } else if (intent.type === 'bridge') {
+    ackMsg = 'I'll handle the bridge and deposit in a single step — no need to track confirmations on both chains.';
+  } else {
+    ackMsg = 'Got it. Signing your intent and posting it to the network — solvers are already competing for the best price.';
+  }
+
+  addMsg('intnt', ackMsg);
   await delay(600);
-  log('L1: signature valid, nonce consumed ✓', 'success');
-  setStep(1, 'done');
-  await delay(300);
 
-  // Step 2 — L2 solver check + race
-  setStep(2, 'active');
-  log('L2 SolverVerifier: checking solver eligibility...');
-  await delay(400);
-  log('Solver competition starting — 4 solvers racing...');
+  // Solver race
+  addTyping();
+  await delay(700);
+  removeTyping();
 
-  // Animate solver bars with different speeds and quotes
+  var fromTok = intent.from;
+  var toTok = intent.to === 'Arbitrum' ? 'USDC (on Arbitrum)' : intent.to;
+  var baseQuote = intent.to === 'ETH' ? 0.485 : intent.to === 'USDC' ? 1847.20 : 0.998;
   var quotes = [
-    rnd(minOut * 1.008, minOut * 1.025),
-    rnd(minOut * 1.012, minOut * 1.030),
-    rnd(minOut * 1.005, minOut * 1.020),
-    rnd(minOut * 1.015, minOut * 1.035),
+    (baseQuote * rnd(1.008, 1.018)).toFixed(intent.to === 'USDC' ? 2 : 4),
+    (baseQuote * rnd(1.012, 1.024)).toFixed(intent.to === 'USDC' ? 2 : 4),
+    (baseQuote * rnd(1.005, 1.015)).toFixed(intent.to === 'USDC' ? 2 : 4),
+    (baseQuote * rnd(1.019, 1.028)).toFixed(intent.to === 'USDC' ? 2 : 4),
   ];
-  var winnerIdx = quotes.indexOf(Math.max(...quotes));
+  var winnerIdx = quotes.map(Number).indexOf(Math.max(...quotes.map(Number)));
+  var solvers = ['Solver Alpha', 'Solver Beta', 'Solver Gamma', 'Solver Delta'];
+  var sources = ['0x API', '1inch Fusion', 'Paraswap', 'Uniswap v3'];
 
+  // Race card
+  var msgs = document.getElementById('messages');
+  var raceDiv = document.createElement('div');
+  raceDiv.className = 'msg intnt';
+  raceDiv.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble" style="max-width:90%;width:100%"><div class="race-card"><div class="race-title">Solvers competing for best price</div>' +
+    solvers.map(function(s,i) {
+      return '<div class="race-row"><span class="race-name">' + s + '</span><div class="race-bar-wrap"><div class="race-bar" id="rb-'+i+'"></div></div><span class="race-quote" id="rq-'+i+'">searching...</span></div>';
+    }).join('') +
+  '</div></div>';
+  msgs.appendChild(raceDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Animate bars
   for (var i = 0; i < 4; i++) {
     (function(idx) {
-      var speed = rnd(400, 900);
+      var t = rnd(300, 800);
       setTimeout(function() {
-        document.getElementById('bar-' + idx).style.width = rnd(55, 90) + '%';
+        document.getElementById('rb-'+idx).style.width = rnd(50,85)+'%';
         setTimeout(function() {
-          document.getElementById('q-' + idx).textContent = quotes[idx].toFixed(4) + ' ' + toTok;
-          log(solverNames[idx] + ' quote: ' + quotes[idx].toFixed(4) + ' ' + toTok + ' ' + solverSources[idx]);
-        }, speed + 200);
-      }, speed);
+          document.getElementById('rq-'+idx).textContent = quotes[idx] + ' ' + (intent.to === 'Arbitrum' ? 'USDC' : intent.to);
+        }, t + 150);
+      }, t);
     })(i);
   }
 
-  await delay(1800);
-  document.getElementById('bar-' + winnerIdx).style.width = '100%';
-  document.getElementById('bar-' + winnerIdx).className = 'solver-bar winner';
-  log(solverNames[winnerIdx] + ' wins with best price ✓', 'success');
-  setStep(2, 'done');
-  await delay(400);
+  await delay(1400);
+  document.getElementById('rb-'+winnerIdx).style.width = '100%';
+  document.getElementById('rb-'+winnerIdx).className = 'race-bar winner';
+  document.getElementById('rq-'+winnerIdx).textContent = quotes[winnerIdx] + ' ' + (intent.to === 'Arbitrum' ? 'USDC' : intent.to) + ' ✓';
 
-  // Step 3 — L3 sandbox
-  setStep(3, 'active');
-  log('L3 ExecutionSandbox: simulating calldata...');
+  await delay(600);
+
+  // Settlement message
+  addTyping();
+  await delay(1000);
+  removeTyping();
+
+  var settleDiv = document.createElement('div');
+  settleDiv.className = 'msg intnt';
+  var steps = [
+    'L1 — Signature verified',
+    'L2 — Solver checked and cleared',
+    'L3 — Output simulated and confirmed',
+    'L4 — Funds transferred atomically',
+    'L5 — Solver fee escrowed',
+  ];
+  var stepsHtml = steps.map(function(s) {
+    return '<div class="pipe-step-line"><div class="dot"></div>' + s + '</div>';
+  }).join('');
+
+  settleDiv.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble" style="max-width:90%;width:100%"><div class="pipeline-card">' + stepsHtml + '</div></div>';
+  msgs.appendChild(settleDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Animate steps
+  var stepEls = settleDiv.querySelectorAll('.pipe-step-line');
+  for (var i = 0; i < stepEls.length; i++) {
+    await delay(350);
+    if (i > 0) stepEls[i-1].className = 'pipe-step-line done';
+    stepEls[i].className = 'pipe-step-line active';
+  }
+  await delay(350);
+  stepEls[stepEls.length-1].className = 'pipe-step-line done';
+
   await delay(500);
-  log('L3: output delta measured — ' + quotes[winnerIdx].toFixed(4) + ' ' + toTok);
-  await delay(400);
-  log('L3: output exceeds minimum (' + minOut + ') ✓ — proceeding', 'success');
-  setStep(3, 'done');
-  await delay(300);
 
-  // Step 4 — L4 settle
-  setStep(4, 'active');
-  log('L4 SettlementFinalizer: executing atomic transfer...');
+  // Final result
+  addTyping();
   await delay(700);
-  var fee = (amount * 0.0015).toFixed(4);
-  log('L4: input tokens pulled from user wallet');
-  await delay(300);
-  log('L4: output delivered to user — ' + quotes[winnerIdx].toFixed(4) + ' ' + toTok);
-  await delay(300);
-  log('L4: protocol fee (' + fee + ' ' + fromTok + ') sent to treasury');
-  await delay(300);
-  log('L4: solver fee escrowed in L5 for 10 min dispute window');
-  setStep(4, 'done');
-  await delay(300);
+  removeTyping();
 
-  // Step 5 — done
-  setStep(5, 'done');
-  log('Intent settled successfully ✓', 'success');
-  log('Total fill time: ' + (rnd(2.1, 4.8)).toFixed(1) + 's', 'muted');
+  var fillTime = rnd(2.2, 4.9).toFixed(1);
+  var beat = (((parseFloat(quotes[winnerIdx]) - baseQuote) / baseQuote) * 100).toFixed(2);
+  var fee = intent.type === 'bridge' ? 'none' : (parseFloat(intent.amount.replace(',','')) * 0.0015).toFixed(2) + ' ' + fromTok;
 
-  // Show result
-  var fillTime = rnd(2.1, 4.8).toFixed(1);
-  var beatBy = ((quotes[winnerIdx] - minOut) / minOut * 100).toFixed(2);
-  document.getElementById('r-received').textContent = quotes[winnerIdx].toFixed(4) + ' ' + toTok;
-  document.getElementById('r-solver').textContent = solverNames[winnerIdx];
-  document.getElementById('r-time').textContent = fillTime + 's';
-  document.getElementById('r-beat').textContent = '+' + beatBy + '% above floor';
-  document.getElementById('r-fee').textContent = fee + ' ' + fromTok + ' (0.15%)';
-  document.getElementById('result').classList.add('show');
-  document.getElementById('reset-btn').style.display = 'block';
-  running = false;
+  var resultDiv = document.createElement('div');
+  resultDiv.className = 'msg intnt';
+  resultDiv.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble" style="max-width:90%;width:100%">' +
+    'Done. Here's what happened:<div class="result-card" style="margin-top:.75rem">' +
+    '<div class="result-row"><span class="result-label">You received</span><span class="result-val green">' + quotes[winnerIdx] + ' ' + (intent.to === 'Arbitrum' ? 'USDC on Arbitrum' : intent.to) + '</span></div>' +
+    '<div class="result-row"><span class="result-label">Best solver</span><span class="result-val">' + solvers[winnerIdx] + ' via ' + sources[winnerIdx] + '</span></div>' +
+    '<div class="result-row"><span class="result-label">Beat your floor by</span><span class="result-val green">+' + beat + '%</span></div>' +
+    '<div class="result-row"><span class="result-label">Fill time</span><span class="result-val">' + fillTime + 's</span></div>' +
+    '<div class="result-row"><span class="result-label">Protocol fee</span><span class="result-val">' + fee + '</span></div>' +
+    '<div class="result-row"><span class="result-label">Gas you paid</span><span class="result-val green">/bin/sh.00</span></div>' +
+    '</div>Want to try another intent?</div>';
+  msgs.appendChild(resultDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  busy = false;
+  document.getElementById('send-btn').disabled = false;
 }
 
-function reset() {
-  document.getElementById('fire-btn').disabled = false;
-  document.getElementById('result').classList.remove('show');
-  document.getElementById('reset-btn').style.display = 'none';
-  document.getElementById('race-box').style.opacity = '.4';
-  document.getElementById('log').innerHTML = '<div class="log-line muted">Waiting for intent...</div>';
-  for (var i = 0; i < 6; i++) setStep(i, '');
-  for (var i = 0; i < 5; i++) document.getElementById('conn-' + i).className = 'pipe-connector';
-  for (var i = 0; i < 4; i++) {
-    document.getElementById('bar-' + i).style.width = '0%';
-    document.getElementById('bar-' + i).className = 'solver-bar';
-    document.getElementById('q-' + i).textContent = '—';
-  }
+function resetDemo() {
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('suggestions').style.display = 'flex';
+  document.getElementById('reset-row').style.display = 'none';
+  busy = false;
+  document.getElementById('send-btn').disabled = false;
 }
 </script>
 </body>
