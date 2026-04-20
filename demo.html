@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTNT Protocol — Live Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;color:#fff;font-family:'Almarai',sans-serif;min-height:100vh;}
+.nav-outer{padding:.9rem 1.25rem 0;position:sticky;top:0;z-index:100;background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);}
+nav{display:flex;align-items:center;justify-content:space-between;background:rgba(15,25,40,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:.65rem 1rem .65rem 1.5rem;max-width:1200px;margin:0 auto;}
+.nav-logo{height:36px;filter:brightness(0) invert(1);}
+.nav-links{display:flex;gap:1.75rem;}
+.nav-link{font-size:11px;color:rgba(255,255,255,.6);text-decoration:none;transition:color .15s;}
+.nav-link:hover{color:#fff;}
+.nav-cta{font-size:12px;font-weight:500;color:#000;background:#fff;padding:8px 18px;border-radius:100px;text-decoration:none;}
+
+.hero{max-width:1200px;margin:0 auto;padding:5rem 1.5rem 3rem;text-align:center;}
+.hero-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem;display:block;}
+.hero-title{font-size:clamp(2rem,5vw,4rem);font-weight:400;letter-spacing:-.03em;line-height:1.05;margin-bottom:1rem;}
+.hero-title em{font-family:'Instrument Serif',serif;font-style:italic;}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto 2.5rem;line-height:1.7;}
+
+/* DEMO ARENA */
+.demo{max-width:900px;margin:0 auto;padding:0 1.5rem 6rem;}
+
+/* INTENT BUILDER */
+.builder{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:2rem;margin-bottom:1.25rem;}
+.builder-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem;display:block;}
+.intent-row{display:grid;grid-template-columns:1fr auto 1fr auto;gap:.75rem;align-items:center;margin-bottom:1.25rem;}
+.intent-field{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem 1rem;color:#fff;font-family:'Almarai',sans-serif;font-size:14px;width:100%;appearance:none;outline:none;transition:border-color .2s;}
+.intent-field:focus{border-color:rgba(255,255,255,.3);}
+.intent-field option{background:#0a0a0a;}
+.intent-arrow{color:rgba(255,255,255,.3);font-size:18px;text-align:center;}
+.amount-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem;}
+.fire-btn{width:100%;padding:14px;background:#fff;color:#000;border:none;border-radius:10px;font-family:'Almarai',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.fire-btn:hover{opacity:.88;}
+.fire-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* PIPELINE VISUALIZER */
+.pipeline{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:2rem;margin-bottom:1.25rem;min-height:260px;}
+.pipe-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.5rem;display:block;}
+.pipe-steps{display:flex;align-items:center;gap:0;margin-bottom:1.75rem;overflow-x:auto;}
+.pipe-step{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;min-width:100px;}
+.pipe-icon{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .4s ease;position:relative;}
+.pipe-icon.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);box-shadow:0 0 20px rgba(255,255,255,.1);}
+.pipe-icon.done{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);}
+.pipe-icon.error{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);}
+.pipe-name{font-size:10px;color:rgba(255,255,255,.4);text-align:center;line-height:1.3;}
+.pipe-name.active{color:#fff;}
+.pipe-name.done{color:rgba(74,222,128,.8);}
+.pipe-connector{flex:1;height:1px;background:rgba(255,255,255,.08);margin-bottom:22px;transition:background .4s;}
+.pipe-connector.done{background:rgba(74,222,128,.4);}
+
+/* LOG */
+.log{font-family:'Courier New',monospace;font-size:11px;line-height:1.7;color:rgba(255,255,255,.5);max-height:160px;overflow-y:auto;}
+.log-line{margin-bottom:2px;}
+.log-line.success{color:rgba(74,222,128,.8);}
+.log-line.info{color:rgba(255,255,255,.6);}
+.log-line.muted{color:rgba(255,255,255,.3);}
+
+/* RESULT */
+.result{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:14px;padding:1.5rem;display:none;}
+.result.show{display:block;}
+.result-title{font-size:15px;font-weight:600;color:rgba(74,222,128,.9);margin-bottom:.75rem;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.result-item-l{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:3px;}
+.result-item-v{font-size:15px;font-weight:600;}
+
+/* SOLVER RACE */
+.race{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:2rem;margin-bottom:1.25rem;}
+.race-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem;display:block;}
+.solver-row{display:flex;align-items:center;gap:1rem;margin-bottom:.85rem;}
+.solver-row:last-child{margin-bottom:0;}
+.solver-name{font-size:12px;width:120px;flex-shrink:0;}
+.solver-bar-wrap{flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:6px;overflow:hidden;}
+.solver-bar{height:100%;border-radius:4px;background:rgba(255,255,255,.2);width:0%;transition:width .8s cubic-bezier(.16,1,.3,1);}
+.solver-bar.winner{background:rgba(74,222,128,.8);}
+.solver-quote{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.4);width:100px;text-align:right;flex-shrink:0;}
+
+/* RESET */
+.reset-btn{width:100%;padding:10px;background:transparent;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Almarai',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;margin-top:.75rem;}
+.reset-btn:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+
+footer{border-top:1px solid rgba(255,255,255,.06);padding:2rem 1.5rem;text-align:center;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.25);}
+@media(max-width:600px){
+  .intent-row{grid-template-columns:1fr;}.intent-arrow{transform:rotate(90deg);}
+  .amount-row{grid-template-columns:1fr;}
+  .result-grid{grid-template-columns:1fr 1fr;}
+  .pipe-steps{gap:0;}.pipe-step{min-width:70px;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav-outer">
+  <nav>
+    <a href="/"><img class="nav-logo" src="data:image/png;base64,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" alt="INTNT"></a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/whitepaper" class="nav-link">Whitepaper</a>
+      <a href="/testnet" class="nav-link">Testnet</a>
+    </div>
+    <a href="/#solvers" class="nav-cta">Join waitlist</a>
+  </nav>
+</div>
+
+<div class="hero">
+  <span class="hero-tag">Interactive demo — simulated</span>
+  <h1 class="hero-title">See how an intent<br><em>actually gets filled.</em></h1>
+  <p class="hero-sub">Build an intent below and watch it move through the protocol — solver competition, 5-layer verification, and settlement — in real time.</p>
+</div>
+
+<div class="demo">
+
+  <!-- INTENT BUILDER -->
+  <div class="builder">
+    <span class="builder-label">Build your intent</span>
+    <div class="intent-row">
+      <select class="intent-field" id="from-token">
+        <option value="USDC">USDC</option>
+        <option value="ETH">ETH</option>
+        <option value="DAI">DAI</option>
+        <option value="WBTC">WBTC</option>
+      </select>
+      <div class="intent-arrow">→</div>
+      <select class="intent-field" id="to-token">
+        <option value="ETH">ETH</option>
+        <option value="USDC">USDC</option>
+        <option value="DAI">DAI</option>
+        <option value="WBTC">WBTC</option>
+      </select>
+      <div></div>
+    </div>
+    <div class="amount-row">
+      <div>
+        <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.4rem">Amount</div>
+        <input class="intent-field" type="number" id="amount" value="1000" min="1">
+      </div>
+      <div>
+        <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.4rem">Minimum output (slippage floor)</div>
+        <input class="intent-field" type="number" id="min-output" value="0.485" step="0.001">
+      </div>
+    </div>
+    <button class="fire-btn" id="fire-btn" onclick="fireIntent()">Sign &amp; post intent</button>
+  </div>
+
+  <!-- SOLVER RACE -->
+  <div class="race" id="race-box" style="opacity:.4">
+    <span class="race-label">Solver competition</span>
+    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Alpha</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-0"></div></div><span class="solver-quote" id="q-0">—</span></div>
+    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Beta</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-1"></div></div><span class="solver-quote" id="q-1">—</span></div>
+    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Gamma</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-2"></div></div><span class="solver-quote" id="q-2">—</span></div>
+    <div class="solver-row"><span class="solver-name" style="color:rgba(255,255,255,.5)">Solver Delta</span><div class="solver-bar-wrap"><div class="solver-bar" id="bar-3"></div></div><span class="solver-quote" id="q-3">—</span></div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="pipeline">
+    <span class="pipe-label">5-layer settlement</span>
+    <div class="pipe-steps">
+      <div class="pipe-step"><div class="pipe-icon" id="step-0">✍️</div><div class="pipe-name" id="step-name-0">Sign intent</div></div>
+      <div class="pipe-connector" id="conn-0"></div>
+      <div class="pipe-step"><div class="pipe-icon" id="step-1">🔐</div><div class="pipe-name" id="step-name-1">L1 Validate</div></div>
+      <div class="pipe-connector" id="conn-1"></div>
+      <div class="pipe-step"><div class="pipe-icon" id="step-2">🏆</div><div class="pipe-name" id="step-name-2">L2 Solver check</div></div>
+      <div class="pipe-connector" id="conn-2"></div>
+      <div class="pipe-step"><div class="pipe-icon" id="step-3">🔬</div><div class="pipe-name" id="step-name-3">L3 Simulate</div></div>
+      <div class="pipe-connector" id="conn-3"></div>
+      <div class="pipe-step"><div class="pipe-icon" id="step-4">💰</div><div class="pipe-name" id="step-name-4">L4 Settle</div></div>
+      <div class="pipe-connector" id="conn-4"></div>
+      <div class="pipe-step"><div class="pipe-icon" id="step-5">✅</div><div class="pipe-name" id="step-name-5">Done</div></div>
+    </div>
+    <div class="log" id="log"><div class="log-line muted">Waiting for intent...</div></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="result">
+    <div class="result-title">✓ Intent filled successfully</div>
+    <div class="result-grid">
+      <div><div class="result-item-l">You received</div><div class="result-item-v" id="r-received">—</div></div>
+      <div><div class="result-item-l">Best solver</div><div class="result-item-v" id="r-solver">—</div></div>
+      <div><div class="result-item-l">Fill time</div><div class="result-item-v" id="r-time">—</div></div>
+      <div><div class="result-item-l">vs your minimum</div><div class="result-item-v" id="r-beat">—</div></div>
+      <div><div class="result-item-l">Protocol fee</div><div class="result-item-v" id="r-fee">—</div></div>
+      <div><div class="result-item-l">Gas paid by you</div><div class="result-item-v" style="color:rgba(74,222,128,.8)">/bin/sh.00</div></div>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="reset-btn" style="display:none" onclick="reset()">← Try another intent</button>
+</div>
+
+<footer><p class="footer-copy">© 2026 INTNT Protocol · This is a simulation — no real funds are used · <a href="https://intnt.xyz/testnet" style="color:rgba(255,255,255,.4)">View live testnet</a></p></footer>
+
+<script>
+var running = false;
+var solverNames = ['Solver Alpha', 'Solver Beta', 'Solver Gamma', 'Solver Delta'];
+var solverSources = ['via 0x API', 'via 1inch Fusion', 'via Paraswap', 'via Uniswap v3'];
+
+function log(msg, cls) {
+  cls = cls || 'info';
+  var l = document.getElementById('log');
+  var t = new Date().toLocaleTimeString('en-US',{hour12:false});
+  var d = document.createElement('div');
+  d.className = 'log-line ' + cls;
+  d.textContent = '[' + t + '] ' + msg;
+  l.appendChild(d);
+  l.scrollTop = l.scrollHeight;
+}
+
+function setStep(i, state) {
+  document.getElementById('step-' + i).className = 'pipe-icon ' + state;
+  document.getElementById('step-name-' + i).className = 'pipe-name ' + state;
+  if (i < 5 && state === 'done') {
+    document.getElementById('conn-' + i).className = 'pipe-connector done';
+  }
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function rnd(a, b) { return (Math.random() * (b - a) + a); }
+
+async function fireIntent() {
+  if (running) return;
+  running = true;
+
+  var fromTok = document.getElementById('from-token').value;
+  var toTok = document.getElementById('to-token').value;
+  var amount = parseFloat(document.getElementById('amount').value);
+  var minOut = parseFloat(document.getElementById('min-output').value);
+
+  if (fromTok === toTok) { alert('Input and output tokens must be different.'); running = false; return; }
+
+  document.getElementById('fire-btn').disabled = true;
+  document.getElementById('log').innerHTML = '';
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('race-box').style.opacity = '1';
+  document.getElementById('reset-btn').style.display = 'none';
+
+  // Reset bars
+  for (var i = 0; i < 4; i++) {
+    document.getElementById('bar-' + i).style.width = '0%';
+    document.getElementById('bar-' + i).className = 'solver-bar';
+    document.getElementById('q-' + i).textContent = '—';
+  }
+  for (var i = 0; i < 6; i++) setStep(i, '');
+
+  // Step 0 — sign
+  setStep(0, 'active');
+  log('Intent created: ' + amount + ' ' + fromTok + ' → min ' + minOut + ' ' + toTok);
+  await delay(700);
+  log('Signing with wallet... (no gas paid)');
+  await delay(900);
+  log('Intent posted to IntentBook ✓', 'success');
+  setStep(0, 'done');
+  await delay(400);
+
+  // Step 1 — L1 validate
+  setStep(1, 'active');
+  log('L1 IntentValidator: checking EIP-712 signature...');
+  await delay(600);
+  log('L1: signature valid, nonce consumed ✓', 'success');
+  setStep(1, 'done');
+  await delay(300);
+
+  // Step 2 — L2 solver check + race
+  setStep(2, 'active');
+  log('L2 SolverVerifier: checking solver eligibility...');
+  await delay(400);
+  log('Solver competition starting — 4 solvers racing...');
+
+  // Animate solver bars with different speeds and quotes
+  var quotes = [
+    rnd(minOut * 1.008, minOut * 1.025),
+    rnd(minOut * 1.012, minOut * 1.030),
+    rnd(minOut * 1.005, minOut * 1.020),
+    rnd(minOut * 1.015, minOut * 1.035),
+  ];
+  var winnerIdx = quotes.indexOf(Math.max(...quotes));
+
+  for (var i = 0; i < 4; i++) {
+    (function(idx) {
+      var speed = rnd(400, 900);
+      setTimeout(function() {
+        document.getElementById('bar-' + idx).style.width = rnd(55, 90) + '%';
+        setTimeout(function() {
+          document.getElementById('q-' + idx).textContent = quotes[idx].toFixed(4) + ' ' + toTok;
+          log(solverNames[idx] + ' quote: ' + quotes[idx].toFixed(4) + ' ' + toTok + ' ' + solverSources[idx]);
+        }, speed + 200);
+      }, speed);
+    })(i);
+  }
+
+  await delay(1800);
+  document.getElementById('bar-' + winnerIdx).style.width = '100%';
+  document.getElementById('bar-' + winnerIdx).className = 'solver-bar winner';
+  log(solverNames[winnerIdx] + ' wins with best price ✓', 'success');
+  setStep(2, 'done');
+  await delay(400);
+
+  // Step 3 — L3 sandbox
+  setStep(3, 'active');
+  log('L3 ExecutionSandbox: simulating calldata...');
+  await delay(500);
+  log('L3: output delta measured — ' + quotes[winnerIdx].toFixed(4) + ' ' + toTok);
+  await delay(400);
+  log('L3: output exceeds minimum (' + minOut + ') ✓ — proceeding', 'success');
+  setStep(3, 'done');
+  await delay(300);
+
+  // Step 4 — L4 settle
+  setStep(4, 'active');
+  log('L4 SettlementFinalizer: executing atomic transfer...');
+  await delay(700);
+  var fee = (amount * 0.0015).toFixed(4);
+  log('L4: input tokens pulled from user wallet');
+  await delay(300);
+  log('L4: output delivered to user — ' + quotes[winnerIdx].toFixed(4) + ' ' + toTok);
+  await delay(300);
+  log('L4: protocol fee (' + fee + ' ' + fromTok + ') sent to treasury');
+  await delay(300);
+  log('L4: solver fee escrowed in L5 for 10 min dispute window');
+  setStep(4, 'done');
+  await delay(300);
+
+  // Step 5 — done
+  setStep(5, 'done');
+  log('Intent settled successfully ✓', 'success');
+  log('Total fill time: ' + (rnd(2.1, 4.8)).toFixed(1) + 's', 'muted');
+
+  // Show result
+  var fillTime = rnd(2.1, 4.8).toFixed(1);
+  var beatBy = ((quotes[winnerIdx] - minOut) / minOut * 100).toFixed(2);
+  document.getElementById('r-received').textContent = quotes[winnerIdx].toFixed(4) + ' ' + toTok;
+  document.getElementById('r-solver').textContent = solverNames[winnerIdx];
+  document.getElementById('r-time').textContent = fillTime + 's';
+  document.getElementById('r-beat').textContent = '+' + beatBy + '% above floor';
+  document.getElementById('r-fee').textContent = fee + ' ' + fromTok + ' (0.15%)';
+  document.getElementById('result').classList.add('show');
+  document.getElementById('reset-btn').style.display = 'block';
+  running = false;
+}
+
+function reset() {
+  document.getElementById('fire-btn').disabled = false;
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('reset-btn').style.display = 'none';
+  document.getElementById('race-box').style.opacity = '.4';
+  document.getElementById('log').innerHTML = '<div class="log-line muted">Waiting for intent...</div>';
+  for (var i = 0; i < 6; i++) setStep(i, '');
+  for (var i = 0; i < 5; i++) document.getElementById('conn-' + i).className = 'pipe-connector';
+  for (var i = 0; i < 4; i++) {
+    document.getElementById('bar-' + i).style.width = '0%';
+    document.getElementById('bar-' + i).className = 'solver-bar';
+    document.getElementById('q-' + i).textContent = '—';
+  }
+}
+</script>
+</body>
+</html>

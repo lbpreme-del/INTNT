@@ -95,6 +95,17 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .speed-btn:hover{border-color:rgba(255,255,255,.35);color:#fff;}
 .speed-btn.active{border-color:rgba(255,255,255,.5);color:#fff;background:rgba(255,255,255,.06);}
 
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:.85rem;padding:.65rem 0;border-bottom:.5px solid rgba(255,255,255,.05);}
+.lb-row:last-child{border-bottom:none;}
+.lb-rank{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.25);width:18px;flex-shrink:0;}
+.lb-addr{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.6);flex:1;}
+.lb-bar-wrap{width:80px;background:rgba(255,255,255,.06);border-radius:3px;height:4px;flex-shrink:0;}
+.lb-bar{height:100%;border-radius:3px;background:#fff;}
+.lb-score{font-family:'Courier New',monospace;font-size:10px;color:#fff;width:32px;text-align:right;flex-shrink:0;}
+.lb-fills{font-size:9px;color:rgba(255,255,255,.3);width:50px;text-align:right;flex-shrink:0;}
+
 /* FOOTER */
 footer{border-top:1px solid var(--border);padding:2.5rem 1.25rem;}
 .footer-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
@@ -224,6 +235,13 @@ footer{border-top:1px solid var(--border);padding:2.5rem 1.25rem;}
   </div>
 </div>
 
+
+  <!-- LEADERBOARD -->
+  <div class="card" style="margin-bottom:1.25rem">
+    <span class="card-label">Solver leaderboard — reputation scores</span>
+    <div id="leaderboard"></div>
+  </div>
+
 <footer>
   <div class="footer-inner">
     <div style="display:flex;flex-direction:column;gap:8px">
@@ -342,6 +360,43 @@ function setSpeed(ms,btn){
   clearInterval(stats.botTimer);
   stats.botTimer=setInterval(simulate,ms);
 }
+
+
+// Solver leaderboard
+var solverAddresses = [
+  '0x71C7...a4b2',
+  '0x8fAE...c391',
+  '0x3d2B...f847',
+  '0xA91c...e230',
+  '0x5f0D...b128',
+];
+var solverScores = [847, 712, 634, 521, 389];
+var solverFills = [1247, 891, 634, 412, 203];
+
+function renderLeaderboard() {
+  var lb = document.getElementById('leaderboard');
+  lb.innerHTML = solverAddresses.map(function(addr, i) {
+    var pct = (solverScores[i] / 1000 * 100).toFixed(0);
+    return '<div class="lb-row">' +
+      '<span class="lb-rank">#' + (i+1) + '</span>' +
+      '<span class="lb-addr">' + addr + '</span>' +
+      '<div class="lb-bar-wrap"><div class="lb-bar" style="width:' + pct + '%"></div></div>' +
+      '<span class="lb-score">' + solverScores[i] + '</span>' +
+      '<span class="lb-fills">' + solverFills[i] + ' fills</span>' +
+    '</div>';
+  }).join('');
+}
+
+// Update leaderboard periodically with simulated changes
+function updateLeaderboard() {
+  solverFills[0] += Math.floor(Math.random() * 3);
+  solverFills[1] += Math.floor(Math.random() * 2);
+  solverScores[0] = Math.min(1000, solverScores[0] + (Math.random() > 0.7 ? 1 : 0));
+  renderLeaderboard();
+}
+
+renderLeaderboard();
+setInterval(updateLeaderboard, 8000);
 
 // Start
 simulate();
