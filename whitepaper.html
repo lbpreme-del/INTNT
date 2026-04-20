@@ -4,208 +4,177 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INTNT Protocol — Whitepaper</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f5f4f0;
-  --white: #ffffff;
-  --black: #161614;
-  --muted: #8a8a84;
-  --faint: #d4d3ce;
-  --border: rgba(22,22,20,0.1);
-  --pill-bg: #1e1e1c;
-  --font: "Sora", sans-serif;
-  --mono: "DM Mono", monospace;
-  --r: 12px; --r-lg: 16px; --r-pill: 100px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--black);font-family:var(--font);overflow-x:hidden}
+:root { --white:#fff; --black:#000; --gray:rgba(255,255,255,0.5); --gray2:rgba(255,255,255,0.25); --faint:rgba(255,255,255,0.07); --border:rgba(255,255,255,0.09); }
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#000;color:#fff;font-family:'Almarai',sans-serif;font-weight:300;}
 
 /* NAV */
-.nav-outer{padding:1.25rem 1.5rem 0;position:sticky;top:0;z-index:100;background:var(--bg)}
-nav{display:flex;align-items:center;justify-content:space-between;background:var(--pill-bg);border-radius:var(--r-pill);padding:.75rem 1rem .75rem 1.5rem;max-width:1100px;margin:0 auto}
-.nav-logo{height:52px;filter:invert(1)}
-.nav-right{display:flex;align-items:center;gap:.75rem}
-.nav-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:rgba(245,244,240,.4);padding:5px 12px;border:1px solid rgba(255,255,255,.1);border-radius:var(--r-pill)}
-.mode-toggle{display:flex;background:rgba(255,255,255,.08);border-radius:var(--r-pill);padding:3px;gap:2px}
-.mode-btn{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:6px 14px;border-radius:var(--r-pill);border:none;cursor:pointer;transition:all .2s;color:rgba(245,244,240,.5);background:transparent}
-.mode-btn.active{background:var(--bg);color:var(--black);font-weight:500}
+.nav-outer{padding:.9rem 1.25rem 0;position:sticky;top:0;z-index:100;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+nav{display:flex;align-items:center;justify-content:space-between;background:rgba(15,25,40,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:.65rem 1rem .65rem 1.5rem;max-width:1200px;margin:0 auto;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1);}
+.nav-logo{height:38px;filter:brightness(0) invert(1);}
+.nav-links{display:flex;gap:1.75rem;}
+.nav-link{font-size:11px;color:rgba(255,255,255,0.6);text-decoration:none;transition:color .15s;letter-spacing:.02em;}
+.nav-link:hover{color:#fff;}
+.nav-cta{font-size:12px;font-weight:500;color:#000;background:#fff;padding:8px 18px;border-radius:100px;text-decoration:none;transition:opacity .15s;}
+.nav-cta:hover{opacity:.85;}
+
+/* HERO */
+.wp-hero{max-width:1200px;margin:0 auto;padding:7rem 1.5rem 5rem;border-bottom:1px solid var(--border);}
+.wp-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.5rem;display:block;}
+.wp-title{font-size:clamp(2.5rem,5.5vw,5rem);font-weight:400;line-height:1.02;letter-spacing:-.03em;margin-bottom:1rem;}
+.wp-title em{font-family:'Instrument Serif',serif;font-style:italic;}
+.wp-sub{font-size:16px;color:rgba(255,255,255,.5);line-height:1.7;max-width:520px;margin-bottom:2.5rem;}
+.wp-meta{display:flex;gap:2rem;flex-wrap:wrap;}
+.wp-meta-item{display:flex;flex-direction:column;gap:3px;}
+.wp-meta-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.wp-meta-val{font-family:'Courier New',monospace;font-size:12px;color:rgba(255,255,255,.65);}
 
 /* LAYOUT */
-.layout{display:grid;grid-template-columns:240px 1fr;max-width:1100px;margin:2rem auto 0;padding:0 1.5rem;gap:4rem;align-items:start}
-
-/* SIDEBAR TOC */
-.toc{position:sticky;top:100px}
-.toc-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem}
-.toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
-.toc-item a{font-size:13px;color:var(--muted);text-decoration:none;padding:5px 0;display:block;transition:color .15s;font-weight:300;border-left:2px solid transparent;padding-left:12px}
-.toc-item a:hover{color:var(--black)}
-.toc-item.active a{color:var(--black);border-left-color:var(--black);font-weight:500}
-.toc-sub a{font-size:12px;padding-left:24px}
-.toc-divider{border:none;border-top:1px solid var(--faint);margin:.75rem 0}
-.toc-meta{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7;padding-left:12px}
+.wp-body{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:grid;grid-template-columns:220px 1fr;gap:4rem;align-items:start;}
+.wp-toc{position:sticky;top:90px;padding:2.5rem 0;}
+.toc-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1.25rem;display:block;}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:2px;}
+.toc-item a{font-size:12px;color:rgba(255,255,255,.4);text-decoration:none;padding:5px 10px;border-radius:6px;display:block;transition:all .15s;line-height:1.4;}
+.toc-item a:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.06);}
+.toc-item.active a{color:#fff;background:rgba(255,255,255,.08);}
+.toc-sub a{padding-left:20px;font-size:11px;}
 
 /* CONTENT */
-.content{padding-bottom:8rem}
+.wp-content{padding:4rem 0 8rem;}
+.wp-section{margin-bottom:4rem;padding-bottom:4rem;border-bottom:1px solid var(--border);}
+.wp-section:last-child{border-bottom:none;}
+.sec-num{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.12em;margin-bottom:.75rem;display:block;}
+.sec-title{font-size:clamp(1.5rem,3vw,2.25rem);font-weight:400;letter-spacing:-.025em;margin-bottom:1.5rem;line-height:1.1;}
+.sec-title em{font-family:'Instrument Serif',serif;font-style:italic;}
+.sec-body{font-size:15px;color:rgba(255,255,255,.6);line-height:1.85;font-weight:300;}
+.sec-body p{margin-bottom:1.25rem;}
+.sec-body p:last-child{margin-bottom:0;}
+.sec-body strong{color:rgba(255,255,255,.9);font-weight:600;}
+.sec-body code{font-family:'Courier New',monospace;font-size:12px;color:rgba(255,255,255,.75);background:rgba(255,255,255,.06);padding:2px 7px;border-radius:4px;}
 
-/* COVER */
-.cover{margin-bottom:5rem;padding-bottom:4rem;border-bottom:1px solid var(--faint)}
-.cover-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);margin-bottom:1.5rem}
-.cover-title{font-size:clamp(36px,5vw,58px);font-weight:300;letter-spacing:-.03em;line-height:1.08;margin-bottom:1.5rem}
-.cover-title strong{font-weight:600}
-.cover-sub{font-size:17px;color:var(--muted);line-height:1.75;max-width:580px;font-weight:300;margin-bottom:2.5rem}
-.cover-meta{display:flex;gap:2rem;flex-wrap:wrap}
-.cover-meta-item{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.cover-meta-item span{color:var(--black);font-weight:500}
-.abstract{background:var(--white);border:1px solid var(--faint);border-radius:var(--r-lg);padding:2rem;margin-top:2.5rem}
-.abstract-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--muted);margin-bottom:.85rem;text-transform:uppercase}
-.abstract p{font-size:15px;line-height:1.8;color:var(--black);font-weight:300}
-
-/* SECTIONS */
-.wp-section{margin-bottom:4rem;padding-bottom:4rem;border-bottom:1px solid var(--faint)}
-.wp-section:last-child{border-bottom:none}
-.section-num{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--muted);margin-bottom:.75rem}
-.section-title{font-size:clamp(22px,3vw,32px);font-weight:300;letter-spacing:-.02em;line-height:1.15;margin-bottom:1.25rem}
-.section-title strong{font-weight:600}
-h3{font-size:18px;font-weight:500;letter-spacing:-.01em;margin:2rem 0 .85rem}
-h4{font-size:15px;font-weight:500;letter-spacing:-.01em;margin:1.5rem 0 .6rem;color:var(--muted)}
-p{font-size:15px;line-height:1.85;color:var(--black);font-weight:300;margin-bottom:1.1rem}
-p:last-child{margin-bottom:0}
-strong{font-weight:500}
+/* SUB HEADING */
+.sub-heading{font-size:16px;font-weight:600;color:#fff;margin:2rem 0 .85rem;letter-spacing:-.01em;}
 
 /* CALLOUT */
-.callout{background:var(--white);border:1px solid var(--faint);border-left:3px solid var(--black);border-radius:0 var(--r) var(--r) 0;padding:1.25rem 1.5rem;margin:1.75rem 0}
-.callout p{font-size:14px;margin:0;color:var(--muted)}
-.callout strong{color:var(--black)}
+.callout{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:1.5rem 1.75rem;margin:1.75rem 0;font-size:15px;color:rgba(255,255,255,.75);line-height:1.75;}
+.callout strong{color:#fff;}
+.callout em{font-family:'Instrument Serif',serif;font-style:italic;color:#fff;}
 
-/* CODE BLOCK */
-.code-block{background:var(--pill-bg);border-radius:var(--r-lg);padding:1.5rem;margin:1.75rem 0;overflow-x:auto}
-.code-block pre{font-family:var(--mono);font-size:12px;line-height:1.8;color:#9fa0a0;white-space:pre}
-.code-comment{color:#555}
-.code-keyword{color:#7dd3fc}
-.code-type{color:#86efac}
-.code-string{color:#fca5a5}
-.code-num{color:#fbbf24}
+/* LAYERS */
+.layer-list{display:flex;flex-direction:column;gap:10px;margin:1.75rem 0;}
+.layer{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.25rem 1.5rem;display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:1rem;}
+.layer.funds{border-color:rgba(255,255,255,.2);}
+.layer-id{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.05em;color:rgba(255,255,255,.5);}
+.layer.funds .layer-id{color:#fff;font-weight:700;}
+.layer-info .layer-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px;}
+.layer-info .layer-desc{font-size:12px;color:rgba(255,255,255,.4);line-height:1.55;}
+.layer-badge{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;white-space:nowrap;}
+.badge-funds{color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.3);}
+.badge-none{color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.07);}
 
 /* TABLE */
-.wp-table{width:100%;border-collapse:collapse;margin:1.75rem 0;font-size:13px}
-.wp-table th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;padding:.75rem 1rem;border-bottom:2px solid var(--faint);text-align:left;font-weight:400}
-.wp-table td{padding:.85rem 1rem;border-bottom:1px solid var(--faint);font-weight:300;vertical-align:top}
-.wp-table tr:last-child td{border-bottom:none}
-.wp-table tr:hover td{background:var(--white)}
+.wp-table{width:100%;border-collapse:collapse;margin:1.75rem 0;font-size:13px;}
+.wp-table th{text-align:left;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:.75rem 1rem;border-bottom:1px solid var(--border);font-weight:400;}
+.wp-table td{padding:.85rem 1rem;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.6);vertical-align:top;line-height:1.55;}
+.wp-table tr:last-child td{border-bottom:none;}
+.wp-table td:first-child{color:rgba(255,255,255,.85);font-weight:500;}
 
-/* FORMULA */
-.formula{background:var(--white);border:1px solid var(--faint);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;text-align:center;font-family:var(--mono);font-size:14px;color:var(--black)}
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1.75rem 0;}
+.stat-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:1.25rem;}
+.stat-n{font-size:2rem;font-weight:300;letter-spacing:-.03em;line-height:1;margin-bottom:.3rem;}
+.stat-l{font-size:11px;color:rgba(255,255,255,.4);}
 
-/* LIST */
-.wp-list{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin:1rem 0 1.5rem}
-.wp-list li{display:flex;align-items:flex-start;gap:.85rem;font-size:15px;line-height:1.7;font-weight:300}
-.wp-list li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--faint);flex-shrink:0;margin-top:9px}
+/* RISK ITEMS */
+.risk-list{display:flex;flex-direction:column;gap:12px;margin:1.5rem 0;}
+.risk-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;}
+.risk-title{font-size:14px;font-weight:600;margin-bottom:.5rem;}
+.risk-body{font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;}
 
-/* LAYER DIAGRAM */
-.layer-diagram{display:flex;flex-direction:column;gap:1px;background:var(--faint);border:1px solid var(--faint);border-radius:var(--r-lg);overflow:hidden;margin:1.75rem 0}
-.ld-row{display:grid;grid-template-columns:140px 1fr auto;background:var(--white);transition:background .15s}
-.ld-row:hover{background:var(--bg)}
-.ld-left{padding:1.25rem 1.5rem;border-right:1px solid var(--faint)}
-.ld-num{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--muted);margin-bottom:4px}
-.ld-name{font-size:13px;font-weight:500}
-.ld-mid{padding:1.25rem 1.5rem;font-size:13px;color:var(--muted);font-weight:300;line-height:1.6;display:flex;align-items:center}
-.ld-badge{font-family:var(--mono);font-size:9px;padding:3px 10px;border-radius:var(--r-pill);margin:1.25rem 1rem;white-space:nowrap;align-self:center}
-.lb-safe{background:#e6f4ea;color:#1e6b3a}
-.lb-fund{background:var(--pill-bg);color:var(--bg)}
-.lb-opt{background:#fff8e6;color:#7a5a1a}
-.ld-fund{border-left:3px solid var(--black)}
+/* ROADMAP */
+.roadmap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:1.75rem 0;}
+.phase-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;}
+.phase-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:1rem;}
+.phase-period{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.3);display:block;margin-bottom:3px;}
+.phase-title{font-size:15px;font-weight:600;}
+.phase-badge{font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+.badge-complete{color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.5);}
+.badge-progress{color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2);}
+.badge-upcoming{color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);}
+.phase-items{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.phase-item{font-size:12px;color:rgba(255,255,255,.5);display:flex;align-items:flex-start;gap:7px;}
+.phase-item::before{content:'—';color:rgba(255,255,255,.25);flex-shrink:0;}
 
-/* TECHNICAL PANEL */
-.tech-panel{display:none}
-.tech-panel.active{display:block}
-.lite-panel{display:block}
-.lite-panel.hidden{display:none}
+/* ADDRESS */
+.address{font-family:'Courier New',monospace;font-size:11px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:2px 8px;}
 
-/* STATS GRID */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--faint);border:1px solid var(--faint);border-radius:var(--r-lg);overflow:hidden;margin:1.75rem 0}
-.sg-item{background:var(--white);padding:1.5rem}
-.sg-n{font-size:32px;font-weight:300;letter-spacing:-.03em;line-height:1;margin-bottom:.35rem}
-.sg-l{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-logo{height:24px;filter:brightness(0) invert(1);opacity:.4;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.25);}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-link{font-size:12px;color:rgba(255,255,255,.35);text-decoration:none;transition:color .15s;}
+.footer-link:hover{color:rgba(255,255,255,.8);}
 
-/* SCENARIO TABLE */
-.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--faint);border:1px solid var(--faint);border-radius:var(--r-lg);overflow:hidden;margin:1.75rem 0}
-.sc-card{background:var(--white);padding:1.75rem}
-.sc-label{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem}
-.sc-title{font-size:16px;font-weight:500;margin-bottom:1rem}
-.sc-row{display:flex;justify-content:space-between;font-size:13px;padding:.35rem 0;border-bottom:1px solid var(--faint)}
-.sc-row:last-child{border-bottom:none}
-.sc-key{color:var(--muted);font-weight:300}
-.sc-val{font-weight:500}
-
-@media print{
-  .nav-outer,.toc{display:none}
-  .layout{grid-template-columns:1fr;padding:2rem}
-  .content{padding-bottom:2rem}
+/* MOBILE */
+@media(max-width:768px){
+  .wp-body{grid-template-columns:1fr;}
+  .wp-toc{display:none;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .roadmap-grid{grid-template-columns:1fr;}
+  .layer{grid-template-columns:36px 1fr;}
+  .layer-badge{display:none;}
+  .nav-links{display:none;}
 }
-
-@media (max-width: 768px) {
-  .nav-outer { padding: .75rem .75rem 0; }
-  nav { padding: .65rem .75rem; gap: .5rem; flex-wrap: wrap; border-radius: 14px; }
-  .nav-logo { height: 34px; }
-  .layout { grid-template-columns: 1fr !important; padding: 1.5rem 1.25rem !important; gap: 1.5rem !important; }
-  .toc { display: none !important; }
-  .cover-title { font-size: clamp(26px, 6vw, 40px); }
-  .section-title { font-size: clamp(20px, 5vw, 28px); }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .scenario-grid { grid-template-columns: 1fr; }
-  .ld-row { grid-template-columns: 1fr !important; }
-  .ld-left { border-right: none !important; border-bottom: 1px solid var(--faint); }
-  .ld-badge { margin: .75rem 1.25rem !important; }
-  .wp-table { font-size: 11px; }
-  .wp-table th, .wp-table td { padding: .5rem .6rem; }
-  .code-block pre { font-size: 10px; }
-  .cover-meta { flex-direction: column; gap: .4rem; }
-  .abstract { padding: 1.25rem; }
-  h3 { font-size: 16px; }
-}
-@media (max-width: 480px) {
-  .stats-grid { grid-template-columns: 1fr !important; }
-}
-
 </style>
 </head>
 <body>
 
 <div class="nav-outer">
   <nav>
-    <img class="nav-logo" src="data:image/png;base64,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" alt="INTNT">
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <span class="nav-tag">WHITEPAPER v1.0</span>
-      <div class="mode-toggle">
-        <button class="mode-btn active" id="btn-lite" onclick="setMode('lite')">Lite paper</button>
-        <button class="mode-btn" id="btn-tech" onclick="setMode('tech')">Technical</button>
-      </div>
+    <a href="/"><img class="nav-logo" src="data:image/png;base64,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" alt="INTNT"></a>
+    <div class="nav-links">
+      <a href="/#how" class="nav-link">How it works</a>
+      <a href="/#arch" class="nav-link">Architecture</a>
+      <a href="/#token" class="nav-link">Token</a>
+      <a href="/testnet" class="nav-link">Testnet</a>
     </div>
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <a href="/" style="font-size:13px;color:rgba(245,244,240,.5);text-decoration:none" onmouseover="this.style.color='rgba(245,244,240,1)'" onmouseout="this.style.color='rgba(245,244,240,.5)'">Back to site</a>
-      <a href="/#solvers" style="font-size:13px;font-weight:500;color:var(--black);background:var(--bg);padding:8px 18px;border-radius:100px;text-decoration:none">Join waitlist</a>
-    </div>
+    <a href="/#solvers" class="nav-cta">Join waitlist</a>
   </nav>
 </div>
 
-<div class="layout">
+<div class="wp-hero">
+  <span class="wp-tag">Technical whitepaper — v1.0</span>
+  <h1 class="wp-title">INTNT Protocol<br><em>A General Intent Layer<br>for Trustless Execution</em></h1>
+  <p class="wp-sub">INTNT is an application-layer protocol that translates user intent into verified onchain execution. Users express what they want. Solvers compete to deliver it. The protocol enforces the outcome.</p>
+  <div class="wp-meta">
+    <div class="wp-meta-item"><span class="wp-meta-label">Network</span><span class="wp-meta-val">Base (EVM)</span></div>
+    <div class="wp-meta-item"><span class="wp-meta-label">Status</span><span class="wp-meta-val">Testnet live</span></div>
+    <div class="wp-meta-item"><span class="wp-meta-label">Contract (L4)</span><span class="wp-meta-val">0x6000...47B0</span></div>
+    <div class="wp-meta-item"><span class="wp-meta-label">Contact</span><span class="wp-meta-val">salvador@intnt.xyz</span></div>
+  </div>
+</div>
+
+<div class="wp-body">
 
   <!-- TOC -->
-  <aside class="toc">
-    <div class="toc-label">Contents</div>
-    <ul class="toc-list" id="toc-list">
+  <aside class="wp-toc">
+    <span class="toc-label">Contents</span>
+    <ul class="toc-list">
       <li class="toc-item"><a href="#abstract">Abstract</a></li>
       <li class="toc-item"><a href="#problem">1. The problem</a></li>
       <li class="toc-item"><a href="#solution">2. The solution</a></li>
-      <li class="toc-item"><a href="#architecture">3. Architecture</a></li>
-      <li class="toc-item toc-sub lite-toc"><a href="#layers">3.1 Settlement layers</a></li>
-      <li class="toc-item toc-sub tech-toc" style="display:none"><a href="#layer1">3.1 Layer 1 — Validator</a></li>
-      <li class="toc-item toc-sub tech-toc" style="display:none"><a href="#layer2">3.2 Layer 2 — Verifier</a></li>
-      <li class="toc-item toc-sub tech-toc" style="display:none"><a href="#layer3">3.3 Layer 3 — Sandbox</a></li>
-      <li class="toc-item toc-sub tech-toc" style="display:none"><a href="#layer4">3.4 Layer 4 — Settlement</a></li>
-      <li class="toc-item toc-sub tech-toc" style="display:none"><a href="#layer5">3.5 Layer 5 — Escrow</a></li>
+      <li class="toc-item"><a href="#arch">3. Architecture</a></li>
+      <li class="toc-item toc-sub"><a href="#l1">L1 IntentValidator</a></li>
+      <li class="toc-item toc-sub"><a href="#l2">L2 SolverVerifier</a></li>
+      <li class="toc-item toc-sub"><a href="#l3">L3 ExecutionSandbox</a></li>
+      <li class="toc-item toc-sub"><a href="#l4">L4 SettlementFinalizer</a></li>
+      <li class="toc-item toc-sub"><a href="#l5">L5 DisputeEscrow</a></li>
       <li class="toc-item"><a href="#solvers">4. Solver network</a></li>
       <li class="toc-item"><a href="#token">5. Token economics</a></li>
       <li class="toc-item"><a href="#reputation">6. Reputation primitive</a></li>
@@ -213,442 +182,312 @@ strong{font-weight:500}
       <li class="toc-item"><a href="#risks">8. Risks</a></li>
       <li class="toc-item"><a href="#conclusion">9. Conclusion</a></li>
     </ul>
-    <hr class="toc-divider">
-    <div class="toc-meta">
-      Version 1.0<br>
-      April 2026<br>
-      Base Sepolia testnet<br><br>
-      <a href="https://intnt.xyz" style="color:var(--black);text-decoration:none">intnt.xyz</a>
-    </div>
   </aside>
 
   <!-- CONTENT -->
-  <div class="content">
+  <div class="wp-content">
 
-    <!-- COVER -->
-    <div class="cover" id="abstract">
-      <div class="cover-eyebrow">INTNT PROTOCOL — WHITEPAPER</div>
-      <h1 class="cover-title">A General Intent Layer<br>for <strong>Trustless Execution</strong></h1>
-      <p class="cover-sub">INTNT is an application-layer protocol that translates user intent into verified onchain execution. Users express what they want. A competitive solver network executes it. A five-layer settlement engine enforces the outcome — without trusting the solver.</p>
-      <div class="cover-meta">
-        <div class="cover-meta-item">Version <span>1.0 — Draft</span></div>
-        <div class="cover-meta-item">Network <span>Base (Base Sepolia testnet)</span></div>
-        <div class="cover-meta-item">Date <span>April 2026</span></div>
-        <div class="cover-meta-item">Status <span>Pre-mainnet</span></div>
-      </div>
-      <div class="abstract">
-        <div class="abstract-label">Abstract</div>
-        <p>Blockchain adoption has stalled at the execution layer. Despite 119 million verified accounts on Coinbase alone, only 7.3% transact monthly — a dormancy rate that has persisted for five years. The barrier is not education or regulation. It is the requirement that users think like computers: selecting chains, managing gas tokens, navigating bridges, and approving contracts manually for every action.</p>
-        <br>
-        <p>INTNT Protocol introduces an intent layer that abstracts this complexity entirely. Users sign a declarative intent — specifying desired outcome, acceptable parameters, and expiry — without initiating a transaction. A network of registered solvers competes to fill the intent optimally. A novel five-layer settlement architecture verifies the solver's solution atomically, ensures the user receives at minimum what they specified, and provides optimistic dispute resolution backed by solver stake. The protocol launches on Base and expands to all EVM chains in Phase 4, with Solana support planned thereafter.</p>
-        <br>
-        <p>The $INTNT token serves three structural functions: access control for solvers via staking, governance over protocol parameters, and yield distribution to stakers from protocol fees. A fourth emergent utility — onchain reputation scoring for solver wallets — positions INTNT as the trust primitive for autonomous AI agents operating onchain.</p>
+    <!-- ABSTRACT -->
+    <div class="wp-section" id="abstract">
+      <span class="sec-num">Abstract</span>
+      <div class="sec-body">
+        <p>Blockchain adoption has stalled at the execution layer. Despite 119 million verified accounts on Coinbase alone, only 7% transact monthly. The barrier is not regulation, education, or product-market fit — it is the execution model itself. Every onchain action requires users to manually navigate chains, bridges, gas tokens, and contract approvals.</p>
+        <p>INTNT Protocol introduces an intent layer that abstracts this complexity entirely. Users sign a declarative intent — specifying a desired outcome rather than a transaction sequence. A competitive network of solvers finds the optimal execution path and submits it to a five-layer settlement engine that verifies the outcome before any funds move.</p>
+        <p>The $INTNT token serves three structural functions: access control for solvers via staking, governance over protocol parameters, and yield distribution to stakers from protocol fees. A fourth emergent utility — a verifiable onchain reputation score for autonomous agents — positions INTNT as foundational infrastructure for the AI-driven onchain economy.</p>
       </div>
     </div>
 
-    <!-- SECTION 1: PROBLEM -->
+    <!-- PROBLEM -->
     <div class="wp-section" id="problem">
-      <div class="section-num">SECTION 01</div>
-      <h2 class="section-title">The <strong>problem</strong> with crypto UX</h2>
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">The problem with <em>crypto UX</em></h2>
+      <div class="sec-body">
+        <p>Crypto promised to democratize finance. A decade later, the reality is that most people who own crypto never use it. The activation energy required to execute a single cross-chain transaction — identifying the right bridge, acquiring the gas token on both chains, approving contracts, monitoring for failures — is prohibitive for any non-technical user and tedious even for experienced ones.</p>
 
-      <p>Crypto promised to democratize finance. A decade later, the reality is that most people who own crypto never use it. The infrastructure exists — fast blockchains, deep liquidity, sophisticated financial primitives — but the interface between human intent and onchain execution remains broken.</p>
+        <div class="callout">
+          <strong>The execution gap:</strong> When a user wants to swap ETH for USDC at the best available price, the protocol-level reality requires: identifying which chain holds the liquidity, bridging if necessary, acquiring gas on the destination chain, selecting a DEX, setting slippage tolerance, approving the token, and executing the swap. That is six to eight discrete operations for one user intention.
+        </div>
 
-      <div class="stats-grid">
-        <div class="sg-item"><div class="sg-n">93%</div><div class="sg-l">Monthly wallet dormancy on Coinbase</div></div>
-        <div class="sg-item"><div class="sg-n">6+</div><div class="sg-l">Steps to execute a simple cross-chain swap</div></div>
-        <div class="sg-item"><div class="sg-n">$4.2B</div><div class="sg-l">Lost to bridge exploits 2021–2025</div></div>
+        <p>This is not a user intelligence problem. It is a design problem. The existing model forces users to speak the machine's language rather than the machine learning the user's.</p>
+        <p><strong>Why existing solutions fall short.</strong> Current approaches — DEX aggregators, bridge interfaces, portfolio managers — reduce friction at individual steps but do not solve the core problem. They still require users to make execution decisions. Existing intent-adjacent protocols such as UniswapX and CoW Protocol address intent within single ecosystems or specific use cases. None provide a general-purpose, cross-chain, trustless intent layer.</p>
       </div>
-
-      <h3>The execution gap</h3>
-      <p>When a user wants to swap ETH for USDC at the best available price, the protocol-level reality requires: identifying which chain offers the best rate, ensuring the correct gas token is available, approving the token spend, executing the swap, and — if the best rate is on another chain — bridging first. Each step introduces a new failure mode, a new approval, and a new opportunity for user error.</p>
-
-      <p>This is not a user intelligence problem. It is a design problem. The existing model forces users to speak the machine's language rather than their own. INTNT inverts this relationship.</p>
-
-      <div class="callout">
-        <p><strong>The core insight:</strong> Users have intent — a desired outcome. Blockchains execute transactions — a specific sequence of operations. The gap between these two things is what INTNT fills.</p>
-      </div>
-
-      <h3>Why existing solutions fall short</h3>
-      <p>Current approaches — DEX aggregators, bridge interfaces, portfolio managers — reduce friction at individual steps but do not solve the underlying problem. They still require users to understand chain topology, manage multiple approvals, and accept execution risk at each step. They optimize the machine-language interface rather than replacing it.</p>
-
-      <p>Existing intent-adjacent protocols such as UniswapX and CoW Protocol address intent within single ecosystems or specific verticals (token swaps). No general-purpose, cross-chain intent layer with a verifiable settlement guarantee exists today. This is the gap INTNT fills.</p>
     </div>
 
-    <!-- SECTION 2: SOLUTION -->
+    <!-- SOLUTION -->
     <div class="wp-section" id="solution">
-      <div class="section-num">SECTION 02</div>
-      <h2 class="section-title">The INTNT <strong>solution</strong></h2>
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">The INTNT <em>solution</em></h2>
+      <div class="sec-body">
+        <p>INTNT is a coordination protocol. It does not replace existing blockchains, DEXes, or liquidity venues. Instead, it sits above them — accepting intent as input and guaranteeing outcome as output.</p>
 
-      <p>INTNT is a coordination protocol. It does not replace existing blockchains, DEXes, or liquidity venues. Instead, it sits above them — translating declarative user intent into verified onchain execution through a competitive solver network and a novel multi-layer settlement architecture.</p>
+        <div class="sub-heading">How it works in three steps</div>
+        <p><strong>1. Intent creation.</strong> The user signs a structured intent using EIP-712 — specifying input token, output token, minimum acceptable output, and deadline. No transaction is broadcast. No gas is spent. The signed intent is posted to the IntentBook contract.</p>
+        <p><strong>2. Solver competition.</strong> Registered solvers monitor the IntentBook for new intents. They compete to find the best execution path across any approved DEX, bridge, or liquidity venue. The first solver to submit a valid solution that meets the user's parameters wins the fill fee.</p>
+        <p><strong>3. Atomic verification and settlement.</strong> The five-layer settlement engine verifies the solver's solution atomically. If the solution delivers at least the user's minimum output, funds transfer. If not, the transaction reverts completely. The user cannot receive less than they specified — this is enforced as a protocol invariant, not a social guarantee.</p>
 
-      <h3>How it works in three steps</h3>
-
-      <ul class="wp-list">
-        <li><strong>Intent creation.</strong> The user signs a structured intent using EIP-712 — specifying input token, output token, minimum acceptable output, deadline, and a unique nonce. No transaction is broadcast. No gas is paid. The signed message is posted to the IntentBook contract, which stores it and emits an event.</li>
-        <li><strong>Solver competition.</strong> Registered solvers — bots, market makers, or any technical operator — monitor the IntentBook for new intents. Each solver independently calculates the best execution path across available liquidity venues. The solver that can provide the best outcome submits their solution to the SettlementEngine.</li>
-        <li><strong>Atomic verification and settlement.</strong> The five-layer SettlementEngine verifies the solver's solution atomically. If the solution satisfies all conditions — valid signature, eligible solver, correct output — it executes and the user receives their output. If any condition fails, the entire transaction reverts. The user loses nothing.</li>
-      </ul>
-
-      <div class="callout">
-        <p><strong>The key property:</strong> The user cannot receive less than they specified. The settlement contract enforces this as an invariant — not a trust assumption about the solver's honesty.</p>
+        <div class="sub-heading">What users can express as intents</div>
+        <table class="wp-table">
+          <tr><th>Intent type</th><th>Example</th><th>Today's alternative</th></tr>
+          <tr><td>Token swap</td><td>"Best price for 1 ETH in USDC"</td><td>Compare 3 DEXes, choose chain, approve, swap</td></tr>
+          <tr><td>Conditional trade</td><td>"Buy SOL if BTC drops 5% in 24h"</td><td>Custom bot or centralized limit order</td></tr>
+          <tr><td>Yield optimization</td><td>"Highest APY USDC pool under 5% depeg risk"</td><td>Check 4 protocols across 3 chains weekly</td></tr>
+          <tr><td>Cross-chain action</td><td>"Bridge and deposit in one step"</td><td>Bridge separately, wait, then deposit</td></tr>
+        </table>
       </div>
-
-      <h3>What users can express as intents</h3>
-      <table class="wp-table">
-        <thead><tr><th>Intent type</th><th>Example</th><th>Today's alternative</th></tr></thead>
-        <tbody>
-          <tr><td>Token swap</td><td>"Get me the best price for 1 ETH in USDC"</td><td>Compare 3 DEXes manually, choose chain, approve, swap</td></tr>
-          <tr><td>Conditional trade</td><td>"Buy SOL if BTC drops 5% in the next 24h"</td><td>Custom bot or centralized exchange limit order</td></tr>
-          <tr><td>Yield optimization</td><td>"Deposit my USDC in the highest APY pool under 5% depeg risk"</td><td>Check 4 protocols across 3 chains weekly</td></tr>
-          <tr><td>Cross-chain action</td><td>"Bridge and deposit in one step"</td><td>Bridge separately, wait for confirmation, then deposit</td></tr>
-        </tbody>
-      </table>
     </div>
 
-    <!-- SECTION 3: ARCHITECTURE -->
-    <div class="wp-section" id="architecture">
-      <div class="section-num">SECTION 03</div>
-      <h2 class="section-title">Protocol <strong>architecture</strong></h2>
+    <!-- ARCHITECTURE -->
+    <div class="wp-section" id="arch">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Protocol <em>architecture</em></h2>
+      <div class="sec-body">
+        <p>INTNT's core innovation is the separation of financial logic from verification logic. Traditional smart contracts mix these concerns, creating large auditable attack surfaces. INTNT isolates each concern into an independent contract with a single responsibility.</p>
 
-      <!-- LITE MODE -->
-      <div class="lite-panel" id="lite-arch">
-        <p>INTNT's core innovation is the separation of financial logic from verification logic. Traditional smart contracts mix these concerns — a bug anywhere can drain funds. INTNT's five-layer architecture isolates each concern into its own contract, with funds touching only one layer.</p>
+        <div class="callout">
+          <strong>Security by separation:</strong> A bug in L1, L2, L3, or L5 <em>cannot drain user funds</em> — those layers hold no money. Only L4 touches funds and it is intentionally under 100 lines of Solidity. The auditable financial surface is smaller than almost any other DeFi protocol in existence.
+        </div>
 
-        <div id="layers">
-          <div class="layer-diagram">
-            <div class="ld-row"><div class="ld-left"><div class="ld-num">L1</div><div class="ld-name">Intent validator</div></div><div class="ld-mid">Verifies the user's EIP-712 signature and consumes the nonce to prevent replay attacks. No funds ever enter this contract.</div><div class="ld-badge lb-safe">NO FUNDS</div></div>
-            <div class="ld-row"><div class="ld-left"><div class="ld-num">L2</div><div class="ld-name">Solver verifier</div></div><div class="ld-mid">Confirms the solver is registered, staked, and in good standing. Manages reputation scores and slashing for bad behavior.</div><div class="ld-badge lb-safe">NO FUNDS</div></div>
-            <div class="ld-row"><div class="ld-left"><div class="ld-num">L3</div><div class="ld-name">Execution sandbox</div></div><div class="ld-mid">Simulates the solver's proposed execution before any money moves. Measures actual output token delta. Reverts if output misses the user's minimum.</div><div class="ld-badge lb-safe">NO FUNDS</div></div>
-            <div class="ld-row ld-fund"><div class="ld-left"><div class="ld-num">L4</div><div class="ld-name" style="font-weight:600">Settlement</div></div><div class="ld-mid">The only contract that moves funds. Intentionally under 100 lines of logic. Calls L1→L2→L3 in sequence, then executes the transfer atomically.</div><div class="ld-badge lb-fund">FUNDS HERE</div></div>
-            <div class="ld-row"><div class="ld-left"><div class="ld-num">L5</div><div class="ld-name">Dispute escrow</div></div><div class="ld-mid">Holds solver fees in escrow for a 10-minute dispute window. Users can challenge fraud. After the window closes, fees auto-release.</div><div class="ld-badge lb-opt">OPTIMISTIC</div></div>
+        <div class="layer-list">
+          <div class="layer" id="l1">
+            <span class="layer-id">L1</span>
+            <div class="layer-info"><div class="layer-name">IntentValidator.sol</div><div class="layer-desc">EIP-712 signature verification and nonce consumption. Bound to chainId. No funds ever enter this contract.</div></div>
+            <span class="layer-badge badge-none">no funds</span>
+          </div>
+          <div class="layer" id="l2">
+            <span class="layer-id">L2</span>
+            <div class="layer-info"><div class="layer-name">SolverVerifier.sol</div><div class="layer-desc">Solver registration, staking, reputation scoring (0–1000), and slashing. Bad actors permanently burned.</div></div>
+            <span class="layer-badge badge-none">no funds</span>
+          </div>
+          <div class="layer" id="l3">
+            <span class="layer-id">L3</span>
+            <div class="layer-info"><div class="layer-name">ExecutionSandbox.sol</div><div class="layer-desc">Executes solver calldata against approved targets and measures actual output delta. Reverts if output misses minimum.</div></div>
+            <span class="layer-badge badge-none">no funds</span>
+          </div>
+          <div class="layer funds" id="l4">
+            <span class="layer-id">L4</span>
+            <div class="layer-info"><div class="layer-name">SettlementFinalizer.sol</div><div class="layer-desc">The ONLY contract that moves user funds. Under 100 lines. Calls L1→L2→L3 in sequence then executes atomically. Address: <span class="address">0x6000510c889590223EA8e86dC5d54a07b27547B0</span></div></div>
+            <span class="layer-badge badge-funds">moves funds</span>
+          </div>
+          <div class="layer" id="l5">
+            <span class="layer-id">L5</span>
+            <div class="layer-info"><div class="layer-name">DisputeEscrow.sol</div><div class="layer-desc">Solver fees escrowed for 10-minute optimistic window. Batch release available. Arbiters resolve disputes; fraud triggers L2 slashing.</div></div>
+            <span class="layer-badge badge-none">optimistic</span>
           </div>
         </div>
 
-        <h3>Why this design matters for security</h3>
-        <p>The blast radius of a bug is contained to the layer in which it exists. A flaw in the signature verification logic (L1) cannot drain funds — L1 holds no funds. A flaw in solver reputation calculation (L2) cannot drain funds — L2 holds no funds. Only L4 touches funds, and L4 is intentionally minimal: its only responsibility is to call the other layers in sequence and execute token transfers if all checks pass.</p>
-
-        <p>This means the auditable financial surface is under 100 lines of Solidity — compared to hundreds or thousands of lines in monolithic settlement contracts. Smaller auditable surfaces mean fewer vulnerabilities and more confident deployments.</p>
-
-        <h3>Governance upgradeability</h3>
-        <p>Each layer is independently upgradeable by governance. If the community votes to change solver verification parameters, only L2 is redeployed. L4 — the financial core — can remain immutable indefinitely. Competitors running monolithic contracts must re-audit everything for any change. INTNT evolves at the edges while the financial core stays frozen and trusted.</p>
-      </div>
-
-      <!-- TECHNICAL MODE -->
-      <div class="tech-panel" id="tech-arch">
-        <p>The INTNT settlement architecture comprises five independent Solidity contracts deployed on Base. Each contract has a single, narrow responsibility. Inter-contract calls are permissioned — only Layer 4 can invoke Layer 2's <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">recordFill()</code> and <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">slash()</code> functions, and only Layer 4 can invoke Layer 3's <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">simulate()</code>.</p>
-
-        <div id="layer1">
-        <h3>3.1 Layer 1 — IntentValidator.sol</h3>
-        <p>Responsible for cryptographic verification of user intents using EIP-712 structured signing. The domain separator is bound to the contract address and chain ID at deploy time, preventing cross-chain and cross-contract replay attacks.</p>
-
-        <div class="code-block"><pre><span class="code-comment">// Core intent data structure</span>
-<span class="code-keyword">struct</span> <span class="code-type">Intent</span> {
-    <span class="code-keyword">address</span> user;           <span class="code-comment">// intent creator</span>
-    <span class="code-keyword">address</span> inputToken;     <span class="code-comment">// ERC-20 being spent</span>
-    <span class="code-keyword">uint256</span> inputAmount;    <span class="code-comment">// amount to spend</span>
-    <span class="code-keyword">address</span> outputToken;    <span class="code-comment">// ERC-20 desired</span>
-    <span class="code-keyword">uint256</span> minOutput;      <span class="code-comment">// floor — enforced by L4</span>
-    <span class="code-keyword">uint256</span> deadline;       <span class="code-comment">// unix timestamp expiry</span>
-    <span class="code-keyword">uint256</span> nonce;          <span class="code-comment">// prevents replay</span>
-    <span class="code-keyword">bytes32</span> intentHash;     <span class="code-comment">// keccak256 of above</span>
-}</pre></div>
-
-        <p>The <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">validateAndConsume()</code> function verifies the signature, checks deadline and nonce freshness, marks the nonce as consumed (state write), and returns the canonical intent hash. Nonce consumption occurs before L3 simulation — a deliberately conservative design that prevents griefing via repeated partial-fill attempts against the same intent.</p>
-
-        <p>A read-only <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">isValid()</code> function is available for off-chain solver pre-flight checks without consuming the nonce.</p>
-        </div>
-
-        <div id="layer2">
-        <h3>3.2 Layer 2 — SolverVerifier.sol</h3>
-        <p>Manages solver registration, staking, reputation, and slashing. Solvers must hold a minimum $INTNT stake (governance-adjustable, initially 10,000 $INTNT) to be active. Reputation scores range 0–1000 and are computed onchain from fill history.</p>
-
-        <div class="code-block"><pre><span class="code-comment">// Reputation growth curve (fills → points per fill)</span>
-fills  <span class="code-num">1</span>–<span class="code-num">100</span>:   +<span class="code-num">5</span> points per fill
-fills  <span class="code-num">101</span>–<span class="code-num">500</span>: +<span class="code-num">2</span> points per fill
-fills  <span class="code-num">501</span>+:    +<span class="code-num">1</span> point per fill
-max:          <span class="code-num">1000</span> points
-
-<span class="code-comment">// Slashing mechanics</span>
-slash amount = stakedAmount × slashPercent / <span class="code-num">100</span>
-reputation   = max(<span class="code-num">0</span>, score − reputationDecayPerSlash)
-deactivate   <span class="code-keyword">if</span> stakedAmount &lt; minimumStake</pre></div>
-
-        <p>Slashed tokens are sent to <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">address(1)</code> — a dead address used as a burn target compatible with all ERC-20 implementations. The slash percentage and minimum stake are governance parameters, allowing the protocol to calibrate solver economics as the network matures.</p>
-        </div>
-
-        <div id="layer3">
-        <h3>3.3 Layer 3 — ExecutionSandbox.sol</h3>
-        <p>The most architecturally novel layer. Rather than trusting the solver's claimed output amount, L3 executes the solver's calldata against an approved target contract and measures the actual output token balance delta of the user's address. This simulation runs in the same transaction as settlement — no trusted oracle required.</p>
-
-        <div class="code-block"><pre><span class="code-comment">// Simulation flow</span>
-<span class="code-num">1.</span> Check target is on governance-approved whitelist
-<span class="code-num">2.</span> Snapshot outputToken.balanceOf(user) → balanceBefore
-<span class="code-num">3.</span> Execute solution.callData against solution.target
-<span class="code-num">4.</span> Snapshot outputToken.balanceOf(user) → balanceAfter
-<span class="code-num">5.</span> outputReceived = balanceAfter − balanceBefore
-<span class="code-num">6.</span> Require outputReceived >= intent.minOutput</pre></div>
-
-        <p>The approved target whitelist — governed by $INTNT holders — controls which DEX routers, bridge contracts, and liquidity venues solvers can route through. This prevents solvers from calling arbitrary contracts while allowing the network to expand to new venues via governance vote.</p>
-
-        <p>A <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">dryRun()</code> view function allows solvers to pre-flight their solutions off-chain using <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">eth_call</code> before spending gas on actual submission.</p>
-        </div>
-
-        <div id="layer4">
-        <h3>3.4 Layer 4 — SettlementFinalizer.sol</h3>
-        <p>The only contract that holds or transfers user funds. Intentionally minimal — the entire financial logic is under 100 lines. Implements a manual reentrancy guard (no library dependency) and marks intents as filled before executing transfers.</p>
-
-        <div class="code-block"><pre><span class="code-comment">// Settlement sequence (atomic)</span>
-<span class="code-num">1.</span> Require Layer2.isEligible(solver)          <span class="code-comment">// cheapest check first</span>
-<span class="code-num">2.</span> intentHash = Layer1.validateAndConsume()   <span class="code-comment">// consumes nonce</span>
-<span class="code-num">3.</span> Require !filled[intentHash]                <span class="code-comment">// double-fill guard</span>
-<span class="code-num">4.</span> simResult = Layer3.simulate()              <span class="code-comment">// verify output</span>
-<span class="code-num">5.</span> If sim failed: slash solver, revert
-<span class="code-num">6.</span> filled[intentHash] = true                  <span class="code-comment">// before transfers</span>
-<span class="code-num">7.</span> Pull inputToken from user → this
-<span class="code-num">8.</span> Transfer (inputAmount − fees) → solver
-<span class="code-num">9.</span> Transfer protocolFee → treasury
-<span class="code-num">10.</span> Transfer solverFee → Layer5 escrow
-<span class="code-num">11.</span> Layer2.recordFill(solver)                 <span class="code-comment">// update reputation</span></pre></div>
-
-        <p>Fee parameters: solver fee 0.10% of input amount, protocol fee 0.05%, total 0.15%. Both adjustable by governance with a hard cap of 1% total.</p>
-        </div>
-
-        <div id="layer5">
-        <h3>3.5 Layer 5 — DisputeEscrow.sol</h3>
-        <p>Implements an optimistic dispute mechanism inspired by Optimistic Rollup design. Solver fees are escrowed for a configurable dispute window (default 600 seconds, governance range 60–86400 seconds). Any address can raise a dispute within the window by calling <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">raiseDispute(intentHash, reason)</code>.</p>
-
-        <p>Approved arbiters (initially the founding team, progressively decentralized) resolve disputes by calling <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">resolveDispute(intentHash, fraudProven, refundUser)</code>. If fraud is confirmed, the solver's L2 stake is slashed and the escrowed fee is refunded to the challenger. If the dispute fails, the fee is released to the solver immediately.</p>
-
-        <p>A <code style="font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">batchRelease(bytes32[])</code> function allows solvers to claim multiple fees in a single transaction — critical for high-volume solvers managing hundreds of fills daily.</p>
-        </div>
+        <p style="margin-top:1.25rem">Each layer is independently upgradeable by governance. If the community votes to change solver verification parameters, only L2 needs an upgrade — L4 (the financial layer) remains untouched. This minimizes governance attack surface on the contract that actually holds funds.</p>
       </div>
     </div>
 
-    <!-- SECTION 4: SOLVERS -->
+    <!-- SOLVERS -->
     <div class="wp-section" id="solvers">
-      <div class="section-num">SECTION 04</div>
-      <h2 class="section-title">The <strong>solver network</strong></h2>
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">The <em>solver network</em></h2>
+      <div class="sec-body">
+        <p>Solvers are the execution layer of INTNT. They are independent operators — bots, market makers, or technical individuals — that monitor the IntentBook for open intents and compete to fill them profitably.</p>
 
-      <p>Solvers are the execution layer of INTNT. They are independent operators — bots, market makers, or technical individuals — that monitor the IntentBook for open intents and compete to fill them profitably.</p>
+        <div class="sub-heading">Solver architecture</div>
+        <table class="wp-table">
+          <tr><th>Module</th><th>Responsibility</th><th>Technology</th></tr>
+          <tr><td>Event listener</td><td>Monitors IntentBook for IntentPosted events via WebSocket</td><td>Python asyncio + web3.py</td></tr>
+          <tr><td>Pathfinder</td><td>Queries approved DEX routers for optimal execution path</td><td>0x API, 1inch API, direct pool queries</td></tr>
+          <tr><td>Execution engine</td><td>Constructs and submits solution to SettlementFinalizer</td><td>web3.py, custom calldata encoding</td></tr>
+          <tr><td>Risk manager</td><td>Evaluates profitability after gas; skips negative-EV intents</td><td>Custom Kelly-inspired position sizing</td></tr>
+        </table>
 
-      <h3>Solver architecture</h3>
-      <p>A solver comprises four functional modules:</p>
+        <div class="sub-heading">Solver economics</div>
+        <p>Solvers earn 0.10% of the input amount on every filled intent. At $1M in daily volume, a single solver capturing 30% of fills earns approximately $300/day in fees before gas costs. Early solvers additionally receive $INTNT liquidity mining rewards during the bootstrap phase.</p>
 
-      <table class="wp-table">
-        <thead><tr><th>Module</th><th>Responsibility</th><th>Technology</th></tr></thead>
-        <tbody>
-          <tr><td>Event listener</td><td>Monitors IntentBook for new IntentPosted events via WebSocket</td><td>Python asyncio + web3.py</td></tr>
-          <tr><td>Pathfinder</td><td>Queries approved DEX routers for optimal execution path and output quote</td><td>0x API, 1inch API, direct pool queries</td></tr>
-          <tr><td>Execution engine</td><td>Constructs and submits the solution transaction to SettlementFinalizer</td><td>web3.py, custom calldata encoding</td></tr>
-          <tr><td>Risk manager</td><td>Evaluates profitability after gas costs; skips negative-EV intents</td><td>Custom Kelly-inspired position sizing</td></tr>
-        </tbody>
-      </table>
-
-      <h3>Solver economics</h3>
-      <p>Solvers earn 0.10% of the input amount on every filled intent. At $1M in daily volume, a single solver capturing 30% of fills earns approximately $300/day in fees before gas costs. Early solvers additionally receive $INTNT liquidity mining rewards, materially improving unit economics during the bootstrap phase.</p>
-
-      <div class="formula">solver_daily_earnings = daily_volume × fill_share × 0.001 − gas_costs + $INTNT_rewards</div>
-
-      <h3>Reputation and competition</h3>
-      <p>Solver reputation scores — computed entirely onchain from fill history — serve two functions. First, they act as a market signal: users and integrating apps can filter for high-reputation solvers. Second, they become the basis for INTNT's AI agent reputation primitive (see Section 6). Early solvers who accumulate reputation during the testnet and bootstrap phases hold a durable competitive advantage as the network scales.</p>
-
-      <div class="callout">
-        <p><strong>Cold start strategy:</strong> The founding team operates the first solver, ensuring all posted intents can be filled from day one. Open-source solver templates lower the barrier for technical operators to join. Liquidity mining incentives from the 40% community allocation pay early solvers above their organic fee earnings until the network reaches self-sustaining volume.</p>
+        <div class="sub-heading">Reputation and competition</div>
+        <p>Solver reputation scores — computed entirely onchain from fill history — serve two functions. First, they act as a market signal for quality. Second, they are the foundation of INTNT's emergent utility as a trust primitive for AI agents (see Section 6).</p>
+        <p><strong>Cold start strategy:</strong> The founding team operates the first solver, ensuring all posted intents can be filled from day one. Open-source solver templates lower the barrier for technical operators to join. Liquidity mining rewards subsidize early solver economics until organic fee revenue is sufficient.</p>
       </div>
     </div>
 
-    <!-- SECTION 5: TOKEN -->
+    <!-- TOKEN -->
     <div class="wp-section" id="token">
-      <div class="section-num">SECTION 05</div>
-      <h2 class="section-title">$INTNT <strong>token economics</strong></h2>
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">$INTNT <em>token economics</em></h2>
+      <div class="sec-body">
+        <p>$INTNT is an ERC-20 token with three structural utilities and one emergent utility. Each utility is load-bearing — the protocol cannot function without it.</p>
 
-      <p>$INTNT is an ERC-20 token with three structural utilities and one emergent utility. It is not a governance token that happens to exist — each utility is load-bearing to the protocol's operation.</p>
+        <div class="sub-heading">Utility 1 — Solver access</div>
+        <p>Solvers must stake a minimum of 10,000 $INTNT in the SolverVerifier contract to fill intents. This creates demand directly correlated to solver network growth. Slashed tokens are burned permanently — sent to <code>address(1)</code> — reducing supply in proportion to protocol misconduct.</p>
 
-      <h3>Utility 1 — Solver access</h3>
-      <p>Solvers must stake a minimum of 10,000 $INTNT in the SolverVerifier contract to be eligible to fill intents. This creates demand for the token directly correlated to solver network growth. As intent volume increases, more solvers join, each requiring a minimum stake purchase. Bad actors are slashed — tokens burned permanently — creating deflationary pressure from protocol misuse.</p>
+        <div class="sub-heading">Utility 2 — Governance</div>
+        <p>$INTNT holders govern all adjustable protocol parameters via Snapshot voting with onchain execution via a Governor contract and Timelock. Governable parameters include fee rates, minimum solver stake, approved execution targets, and dispute window duration.</p>
 
-      <h3>Utility 2 — Governance</h3>
-      <p>$INTNT holders govern all adjustable protocol parameters via Snapshot voting with onchain execution via a Governor contract and Timelock. Governable parameters include: fee rates, minimum solver stake, slash percentages, dispute window duration, approved execution targets (L3 whitelist), and treasury allocation.</p>
+        <div class="sub-heading">Utility 3 — Staker yield</div>
+        <p>25% of all protocol fees flow to $INTNT stakers proportional to their stake. This creates real yield backed by real transaction volume — not an emission schedule. At $10M daily volume: $3,750 distributed daily to stakers.</p>
 
-      <h3>Utility 3 — Staker yield</h3>
-      <p>25% of all protocol fees flow to $INTNT stakers proportional to their stake. This creates real yield backed by real transaction volume — not an emission schedule. The yield scales linearly with protocol usage.</p>
-
-      <div class="formula">staker_yield = (daily_volume × 0.0015 × 0.25) × (your_stake / total_staked)</div>
-
-      <h3>Supply allocation</h3>
-      <table class="wp-table">
-        <thead><tr><th>Allocation</th><th>Percentage</th><th>Purpose</th><th>Vesting</th></tr></thead>
-        <tbody>
-          <tr><td>Community incentives</td><td>40%</td><td>Liquidity mining, solver rewards, early user grants</td><td>Distributed over 36 months via governance</td></tr>
+        <div class="sub-heading">Supply allocation</div>
+        <table class="wp-table">
+          <tr><th>Allocation</th><th>%</th><th>Purpose</th><th>Vesting</th></tr>
+          <tr><td>Community incentives</td><td>40%</td><td>Liquidity mining, solver rewards, early user grants</td><td>36 months via governance</td></tr>
           <tr><td>Protocol treasury</td><td>25%</td><td>Governed by $INTNT holders</td><td>Controlled by governance from day 1</td></tr>
           <tr><td>Team</td><td>20%</td><td>Founding team and future hires</td><td>4-year vest, 1-year cliff</td></tr>
-          <tr><td>Ecosystem fund</td><td>15%</td><td>Audits, grants, integrations, partnerships</td><td>2-year vest, deployed as needed</td></tr>
-        </tbody>
-      </table>
+          <tr><td>Ecosystem fund</td><td>15%</td><td>Audits, grants, integrations</td><td>2-year vest, deployed as needed</td></tr>
+        </table>
 
-      <h3>Fee flow</h3>
-      <table class="wp-table">
-        <thead><tr><th>Recipient</th><th>Share</th><th>Mechanism</th></tr></thead>
-        <tbody>
-          <tr><td>Solver</td><td>60% of total fee (0.09% of intent)</td><td>Direct transfer on settlement</td></tr>
-          <tr><td>$INTNT stakers</td><td>25% of total fee (0.0375% of intent)</td><td>Distributed pro-rata to stakers</td></tr>
-          <tr><td>Protocol treasury</td><td>15% of total fee (0.0225% of intent)</td><td>Accumulated, deployed by governance</td></tr>
-        </tbody>
-      </table>
+        <div class="sub-heading">Fee flow</div>
+        <table class="wp-table">
+          <tr><th>Recipient</th><th>Share</th><th>Mechanism</th></tr>
+          <tr><td>Solver</td><td>60% of fee (0.09% of intent)</td><td>Direct transfer on settlement</td></tr>
+          <tr><td>$INTNT stakers</td><td>25% of fee (0.0375% of intent)</td><td>Distributed pro-rata to stakers</td></tr>
+          <tr><td>Protocol treasury</td><td>15% of fee (0.0225% of intent)</td><td>Accumulated, deployed by governance</td></tr>
+        </table>
 
-      <h3>Revenue scenarios</h3>
-      <div class="scenario-grid">
-        <div class="sc-card">
-          <div class="sc-label">Conservative</div>
-          <div class="sc-title">$1M daily volume</div>
-          <div class="sc-row"><span class="sc-key">Protocol fees/day</span><span class="sc-val">$1,500</span></div>
-          <div class="sc-row"><span class="sc-key">Staker yield/day</span><span class="sc-val">$375</span></div>
-          <div class="sc-row"><span class="sc-key">Annual protocol</span><span class="sc-val">$547K</span></div>
-        </div>
-        <div class="sc-card">
-          <div class="sc-label">Base case</div>
-          <div class="sc-title">$10M daily volume</div>
-          <div class="sc-row"><span class="sc-key">Protocol fees/day</span><span class="sc-val">$15,000</span></div>
-          <div class="sc-row"><span class="sc-key">Staker yield/day</span><span class="sc-val">$3,750</span></div>
-          <div class="sc-row"><span class="sc-key">Annual protocol</span><span class="sc-val">$5.4M</span></div>
-        </div>
-        <div class="sc-card">
-          <div class="sc-label">Growth case</div>
-          <div class="sc-title">$100M daily volume</div>
-          <div class="sc-row"><span class="sc-key">Protocol fees/day</span><span class="sc-val">$150,000</span></div>
-          <div class="sc-row"><span class="sc-key">Staker yield/day</span><span class="sc-val">$37,500</span></div>
-          <div class="sc-row"><span class="sc-key">Annual protocol</span><span class="sc-val">$54M</span></div>
+        <div class="sub-heading">Revenue scenarios</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-n">$1M</div><div class="stat-l">Daily volume → $1,500/day to stakers</div></div>
+          <div class="stat-card"><div class="stat-n">$10M</div><div class="stat-l">Daily volume → $3,750/day to stakers</div></div>
+          <div class="stat-card"><div class="stat-n">$100M</div><div class="stat-l">Daily volume → $37,500/day to stakers</div></div>
         </div>
       </div>
     </div>
 
-    <!-- SECTION 6: REPUTATION -->
+    <!-- REPUTATION -->
     <div class="wp-section" id="reputation">
-      <div class="section-num">SECTION 06</div>
-      <h2 class="section-title">The <strong>reputation primitive</strong></h2>
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">The reputation <em>primitive</em></h2>
+      <div class="sec-body">
+        <p>The most underappreciated aspect of INTNT's design is its emergent fourth utility: a verifiable onchain trust score for autonomous execution agents.</p>
+        <p>As AI trading agents, DeFi bots, and autonomous wallets proliferate, every protocol they interact with faces a fundamental question: should this agent be trusted? Today there is no standard answer. Each protocol implements its own ad-hoc trust model.</p>
 
-      <p>The most underappreciated aspect of INTNT's design is its emergent fourth utility: a verifiable onchain trust score for autonomous execution agents.</p>
+        <div class="sub-heading">The INTNT reputation score</div>
+        <p>Every solver wallet in INTNT accumulates an onchain reputation score based on four factors: fill rate, execution quality (output versus minimum), speed, and slash history. This score is fully verifiable by any contract, wallet, or protocol that can read Base state. It requires no oracle, no trusted intermediary, and no off-chain attestation.</p>
 
-      <p>As AI trading agents, DeFi bots, and autonomous wallets proliferate, every protocol they interact with faces a fundamental question: should this agent be trusted? Today there is no standard answer. Each protocol makes its own assessment, usually defaulting to either full permissionlessness (anyone can interact) or full permissioning (whitelist only).</p>
+        <div class="callout">
+          DeFi protocols can use INTNT reputation scores to gate access — "only interact with wallets that have INTNT reputation above 800." For AI agents operating autonomously, this score becomes a portable credential. An agent that has filled 10,000 intents with a 99.8% success rate and zero slashes has proven trustworthiness in a way no other primitive currently provides.
+        </div>
 
-      <h3>The INTNT reputation score</h3>
-      <p>Every solver wallet in INTNT accumulates an onchain reputation score based on four factors:</p>
-
-      <ul class="wp-list">
-        <li><strong>Fill rate</strong> — the percentage of submitted solutions that successfully settle</li>
-        <li><strong>Execution quality</strong> — average output delivered versus minimum required (did the solver beat the floor?)</li>
-        <li><strong>Speed</strong> — time from intent posting to fill submission</li>
-        <li><strong>Slash history</strong> — permanent record of any slashing events</li>
-      </ul>
-
-      <p>This score is fully verifiable by any contract, wallet, or protocol that can read Base state. It requires no oracle, no trusted intermediary, and no off-chain attestation.</p>
-
-      <h3>The AI agent market</h3>
-      <p>DeFi protocols can use INTNT reputation scores to gate access — "only interact with wallets that have INTNT reputation above 800." For AI agents operating autonomously, this score becomes a portable credential: evidence of reliable, non-fraudulent onchain execution history. As autonomous agent wallets become the dominant user archetype in DeFi, INTNT owns the trust primitive they all need.</p>
-
-      <p>This positions INTNT not only as an intent execution layer but as foundational infrastructure for the autonomous onchain economy — a market that barely exists today but will be substantial within three years.</p>
-    </div>
-
-    <!-- SECTION 7: ROADMAP -->
-    <div class="wp-section" id="roadmap">
-      <div class="section-num">SECTION 07</div>
-      <h2 class="section-title">Development <strong>roadmap</strong></h2>
-
-      <table class="wp-table">
-        <thead><tr><th>Phase</th><th>Timeline</th><th>Milestones</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Phase 1</strong><br>Protocol foundation</td>
-            <td>Months 1–3</td>
-            <td>Five contracts compiled and tested. Code4rena audit. Named firm audit. Base Sepolia testnet live. First intent filled by founding team solver.</td>
-          </tr>
-          <tr>
-            <td><strong>Phase 2</strong><br>Solver network</td>
-            <td>Months 4–6</td>
-            <td>Open-source solver template published. 5–10 early solvers onboarded. Uniswap v3, Curve, 1inch approved as execution targets. Reputation scores activated. Liquidity mining live.</td>
-          </tr>
-          <tr>
-            <td><strong>Phase 3</strong><br>Token launch</td>
-            <td>Months 7–9</td>
-            <td>$INTNT deployed. Uniswap v3 liquidity seeded from treasury. Staking activated. Governance live (Snapshot + Governor contract). Whitepaper v2 published.</td>
-          </tr>
-          <tr>
-            <td><strong>Phase 4</strong><br>Scale and reputation</td>
-            <td>Months 10–18</td>
-            <td>Ethereum mainnet, Arbitrum, Optimism expansion. TypeScript and Python SDKs. First partner integrations. Cross-chain intent support. AI agent reputation API.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- SECTION 8: RISKS -->
-    <div class="wp-section" id="risks">
-      <div class="section-num">SECTION 08</div>
-      <h2 class="section-title">Risk <strong>factors</strong></h2>
-
-      <p>INTNT is pre-mainnet software. The following risks are material and should be understood by any participant.</p>
-
-      <h3>Smart contract risk</h3>
-      <p>Despite multiple audits and the architectural isolation of financial logic to Layer 4, smart contract exploits remain possible. Mitigations: staged TVL caps during initial deployment (single intent cap $1,000, total cap $50,000 in the first 90 days), two independent audits before mainnet, formal verification of core L4 invariants, and a bug bounty program.</p>
-
-      <h3>Solver cold start</h3>
-      <p>A protocol with no solvers cannot fill intents. Mitigations: the founding team operates solver zero from day one; liquidity mining rewards subsidize early solver economics; the open-source solver template minimizes technical onboarding friction.</p>
-
-      <h3>Regulatory risk</h3>
-      <p>$INTNT may be classified as a security in certain jurisdictions. Mitigations: legal opinion obtained before token launch; foundation or DAO LLC structure in a crypto-favorable jurisdiction; genuine utility from day one reduces the "investment contract" argument; progressive decentralization of governance.</p>
-
-      <h3>Competitive risk</h3>
-      <p>Established protocols (Anoma, ERC-7521, UniswapX) may expand to address the general intent layer. Mitigation: the reputation primitive is INTNT's durable differentiator — it accumulates with usage and cannot be replicated by a competing protocol starting fresh.</p>
-
-      <h3>MEV and solver manipulation</h3>
-      <p>Solvers could attempt to frontrun intents or manipulate execution prices within the allowed parameters. Mitigations: L3 simulation enforces minimum output strictly; commit-reveal patterns for high-value intents; private mempool support (Flashbots Protect) as a recommended solver configuration.</p>
-    </div>
-
-    <!-- SECTION 9: CONCLUSION -->
-    <div class="wp-section" id="conclusion">
-      <div class="section-num">SECTION 09</div>
-      <h2 class="section-title"><strong>Conclusion</strong></h2>
-
-      <p>INTNT Protocol addresses a foundational gap in the onchain economy: the translation layer between human intent and machine execution. By separating intent expression from transaction construction, introducing a competitive solver network for optimal execution, and enforcing outcomes through a novel multi-layer settlement architecture, INTNT makes crypto work the way users expect it to — not the way blockchains require it to.</p>
-
-      <p>The protocol launches on Base, targeting the 93% of wallet holders who own crypto but never use it. It expands to all major EVM chains and Solana in Phase 4. Its reputation primitive — an emergent byproduct of the solver network's onchain activity — positions INTNT as infrastructure for the autonomous agent economy that is developing alongside it.</p>
-
-      <p>$INTNT is a structurally necessary token: without solver staking, there are no solvers; without solvers, there are no fills; without fills, there are no fees. This alignment between token utility and protocol function makes $INTNT one of the few tokens in DeFi whose demand is directly correlated to the protocol's actual usage.</p>
-
-      <div class="callout">
-        <p><strong>Join the network.</strong> The solver waitlist is open at <a href="https://intnt.xyz" style="color:var(--black)">intnt.xyz</a>. Early solvers receive bonus $INTNT rewards, reduced stake requirements, and 2× reputation weighting at launch.</p>
+        <p>This positions INTNT not only as an intent execution layer but as foundational infrastructure for the autonomous onchain economy — a market that barely exists today but will be substantial within three years.</p>
       </div>
+    </div>
 
-      <p style="margin-top:2rem;color:var(--muted);font-size:13px;font-style:italic">This document is provided for informational purposes only and does not constitute an offer or solicitation to purchase securities. $INTNT tokens have not been registered under the securities laws of any jurisdiction. This whitepaper describes a pre-mainnet protocol and is subject to change. Participation in INTNT Protocol involves significant risk including total loss of funds. Always conduct your own due diligence.</p>
+    <!-- ROADMAP -->
+    <div class="wp-section" id="roadmap">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">Development <em>roadmap</em></h2>
+      <div class="sec-body">
+        <div class="roadmap-grid">
+          <div class="phase-card">
+            <div class="phase-header">
+              <div><span class="phase-period">Months 1–3</span><div class="phase-title">Phase 1 — Foundation</div></div>
+              <span class="phase-badge badge-complete">Complete</span>
+            </div>
+            <ul class="phase-items">
+              <li class="phase-item">5 contracts deployed to Base Sepolia</li>
+              <li class="phase-item">2 audits complete</li>
+              <li class="phase-item">Testnet live — intnt.xyz/testnet</li>
+              <li class="phase-item">First intent filled on-chain</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <div><span class="phase-period">Months 4–6</span><div class="phase-title">Phase 2 — Solver network</div></div>
+              <span class="phase-badge badge-progress">In progress</span>
+            </div>
+            <ul class="phase-items">
+              <li class="phase-item">Open-source solver template published</li>
+              <li class="phase-item">5–10 early solvers onboarded</li>
+              <li class="phase-item">Uniswap v3, Curve, 1inch approved</li>
+              <li class="phase-item">Reputation scores activated</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <div><span class="phase-period">Months 7–9</span><div class="phase-title">Phase 3 — Token launch</div></div>
+              <span class="phase-badge badge-upcoming">Upcoming</span>
+            </div>
+            <ul class="phase-items">
+              <li class="phase-item">$INTNT deployed on Base mainnet</li>
+              <li class="phase-item">Staking and governance live</li>
+              <li class="phase-item">Uniswap v3 liquidity seeded</li>
+              <li class="phase-item">Whitepaper v2 published</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <div><span class="phase-period">Months 10–18</span><div class="phase-title">Phase 4 — Scale</div></div>
+              <span class="phase-badge badge-upcoming">Upcoming</span>
+            </div>
+            <ul class="phase-items">
+              <li class="phase-item">Ethereum, Arbitrum, Optimism expansion</li>
+              <li class="phase-item">TypeScript and Python SDKs</li>
+              <li class="phase-item">First partner integrations</li>
+              <li class="phase-item">AI agent reputation API</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISKS -->
+    <div class="wp-section" id="risks">
+      <span class="sec-num">08</span>
+      <h2 class="sec-title">Risk <em>factors</em></h2>
+      <div class="sec-body">
+        <p>INTNT is pre-mainnet software. The following risks are material and should be understood by any participant.</p>
+        <div class="risk-list">
+          <div class="risk-item"><div class="risk-title">Smart contract risk</div><div class="risk-body">Despite multiple audits and the architectural isolation of financial logic to Layer 4, exploits remain possible. Mitigations: staged TVL caps during initial deployment; bug bounty program; gradual rollout.</div></div>
+          <div class="risk-item"><div class="risk-title">Solver cold start</div><div class="risk-body">A protocol with no solvers cannot fill intents. Mitigations: founding team operates solver zero from day one; liquidity mining rewards subsidize early economics; open-source solver template lowers barrier.</div></div>
+          <div class="risk-item"><div class="risk-title">Regulatory risk</div><div class="risk-body">$INTNT may be classified as a security in certain jurisdictions. Mitigations: legal opinion obtained before token launch; foundation or DAO LLC structure in a crypto-favorable jurisdiction; genuine utility design.</div></div>
+          <div class="risk-item"><div class="risk-title">Competitive risk</div><div class="risk-body">Established protocols (Anoma, ERC-7521, UniswapX) may expand to address the general intent layer. Mitigation: the reputation primitive is INTNT's durable differentiator — it accumulates with usage and cannot be replicated by a new entrant without network effects.</div></div>
+          <div class="risk-item"><div class="risk-title">MEV and solver manipulation</div><div class="risk-body">Solvers could attempt to frontrun intents or manipulate execution prices within allowed parameters. Mitigations: L3 simulation enforces minimum output strictly; commit-reveal patterns for high-value intents on the roadmap.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCLUSION -->
+    <div class="wp-section" id="conclusion">
+      <span class="sec-num">09</span>
+      <h2 class="sec-title"><em>Conclusion</em></h2>
+      <div class="sec-body">
+        <p>INTNT Protocol addresses a foundational gap in the onchain economy: the translation layer between human intent and machine execution. By separating intent expression from transaction construction, introducing a competitive solver network, and enforcing outcomes through a five-layer settlement architecture, INTNT makes crypto accessible to the 93% of wallet holders who currently never transact.</p>
+        <p>The protocol launches on Base, targeting the largest verified wallet base in crypto. It expands to all major EVM chains in Phase 4. Its reputation primitive — an emergent byproduct of the solver architecture — creates durable competitive advantage as autonomous agents become the dominant DeFi user archetype.</p>
+        <p>$INTNT is a structurally necessary token: without solver staking, there are no solvers; without solvers, there are no fills; without fills, there are no fees. This alignment between token utility and protocol function is the foundation of a sustainable, self-reinforcing economy.</p>
+
+        <div class="callout">
+          <strong>Join the network.</strong> The solver waitlist is open at <a href="https://intnt.xyz" style="color:#fff">intnt.xyz</a>. Early solvers receive bonus $INTNT rewards, reduced stake requirements, and 2× reputation weighting at launch.
+        </div>
+
+        <p style="color:rgba(255,255,255,.3);font-size:12px;margin-top:2rem;line-height:1.7;">This document is provided for informational purposes only and does not constitute an offer or solicitation to purchase securities. $INTNT tokens have not been registered under the securities laws of any jurisdiction. Participants should consult legal and financial advisors before making any investment decisions.</p>
+      </div>
     </div>
 
   </div>
 </div>
 
+<footer>
+  <div class="footer-inner">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <img class="footer-logo" src="data:image/png;base64,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" alt="INTNT">
+      <span class="footer-copy">© 2026 INTNT Protocol · @intntprotocol</span>
+    </div>
+    <div class="footer-links">
+      <a href="/" class="footer-link">Home</a>
+      <a href="/testnet" class="footer-link">Testnet</a>
+      <a href="https://x.com/intntprotocol" target="_blank" class="footer-link">X / Twitter</a>
+      <a href="https://github.com/lbpreme-del/INTNT" target="_blank" class="footer-link">GitHub</a>
+    </div>
+  </div>
+</footer>
+
 <script>
-function setMode(mode) {
-  const isLite = mode === "lite";
-  document.getElementById("btn-lite").classList.toggle("active", isLite);
-  document.getElementById("btn-tech").classList.toggle("active", !isLite);
-  document.getElementById("lite-arch").classList.toggle("hidden", !isLite);
-  document.getElementById("tech-arch").classList.toggle("active", !isLite);
-
-  // Toggle TOC items
-  document.querySelectorAll(".lite-toc").forEach(el => el.style.display = isLite ? "" : "none");
-  document.querySelectorAll(".tech-toc").forEach(el => el.style.display = isLite ? "none" : "");
-}
-
-// Active TOC highlighting
-const sections = document.querySelectorAll("[id]");
-const tocLinks = document.querySelectorAll(".toc-item");
-window.addEventListener("scroll", () => {
-  let current = "";
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 140) current = s.id; });
-  tocLinks.forEach(li => {
-    const a = li.querySelector("a");
-    li.classList.toggle("active", a && a.getAttribute("href") === "#" + current);
+// Highlight active TOC item on scroll
+const sections = document.querySelectorAll('.wp-section[id]');
+const tocLinks = document.querySelectorAll('.toc-item a');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.parentElement.classList.remove('active'));
+      const active = document.querySelector(`.toc-item a[href="#${entry.target.id}"]`);
+      if (active) active.parentElement.classList.add('active');
+    }
   });
-});
+}, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
+sections.forEach(s => obs.observe(s));
 </script>
 </body>
 </html>
