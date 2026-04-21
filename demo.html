@@ -175,14 +175,15 @@ var solverNames = ["Solver Alpha","Solver Beta","Solver Gamma","Solver Delta"];
 var solverSources = ["0x API","1inch Fusion","Paraswap","Uniswap v3"];
 var busy = false;
 var txCount = 0;
+var chatHistory = [];
 
-function fmt(n, dec) {
-  return parseFloat(n).toFixed(dec !== undefined ? dec : 2);
-}
-
-function fmtUSD(n) {
-  return "$" + parseFloat(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-}
+function fmt(n, dec) { return parseFloat(n).toFixed(dec !== undefined ? dec : 2); }
+function fmtUSD(n) { return "$" + parseFloat(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function rnd(a, b) { return Math.random() * (b - a) + a; }
+function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+function autoResize(el) { el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 100) + "px"; }
+function handleKey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }
+function usePrompt(el) { document.getElementById("input").value = el.textContent; autoResize(document.getElementById("input")); send(); }
 
 function renderWallet() {
   var list = document.getElementById("balance-list");
@@ -225,125 +226,6 @@ function addTx(desc, val, isIn) {
   list.insertBefore(d, list.firstChild);
 }
 
-function parseIntent(text) {
-  var t = text.toLowerCase();
-  var result = { type: "swap", fromTok: "USDC", toTok: "ETH", amount: 500, valid: true, error: "", condition: null };
-
-  // Detect intent type first
-  if (t.indexOf("yield") !== -1 || t.indexOf("pool") !== -1 || t.indexOf("earn") !== -1 || t.indexOf("deposit") !== -1) {
-    result.type = "yield";
-  }
-  if (t.indexOf(" if ") !== -1 || t.indexOf("when ") !== -1 || t.indexOf("below") !== -1 || t.indexOf("drops") !== -1 || t.indexOf("reaches") !== -1) {
-    result.type = "conditional";
-    var condMatch = t.match(/\$?([0-9][0-9,]*)/g);
-    if (condMatch && condMatch.length > 0) result.condition = condMatch[condMatch.length-1].replace(/[$,]/g,"");
-  }
-
-  // Detect dollar amount — "$300 worth" or "300 dollars" or "buy $300"
-  var isDollarAmount = false;
-  var dollarMatch = t.match(/\$([0-9]+\.?[0-9]*)/);
-  if (!dollarMatch) dollarMatch = t.match(/([0-9]+\.?[0-9]*)\s*(?:dollars?|usd|worth)/);
-  if (dollarMatch) {
-    isDollarAmount = true;
-    result._dollarAmount = parseFloat(dollarMatch[1]);
-  }
-
-  // Detect raw amount (non-dollar)
-  var amtMatch = t.match(/([0-9]+\.?[0-9]*)/);
-  if (amtMatch) result._rawAmount = parseFloat(amtMatch[1]);
-
-  // Detect tokens — look for context clues: "swap X for Y", "sell X", "buy X"
-  var toks = ["wbtc","usdc","usdt","dai","eth"];
-  
-  // Try to find "swap/sell/exchange [amount] [FROM] for/to [TO]"
-  var swapMatch = t.match(/(?:swap|sell|exchange|convert)\s+(?:[0-9.]+\s+)?([a-z]+)\s+(?:for|to|into)\s+([a-z]+)/);
-  if (swapMatch) {
-    var f = swapMatch[1].toUpperCase();
-    var to = swapMatch[2].toUpperCase();
-    if (toks.indexOf(f.toLowerCase()) !== -1) result.fromTok = f;
-    if (toks.indexOf(to.toLowerCase()) !== -1) result.toTok = to;
-  } else {
-    // Try "buy [amount] [TOKEN]" or "get [TOKEN]" or "I want [TOKEN]"
-    var buyMatch = t.match(/(?:buy|get|purchase|acquire)\s+(?:\$?[0-9.]+\s+(?:worth\s+of\s+)?)?([a-z]+)/);
-    if (buyMatch) {
-      var tok = buyMatch[1].toUpperCase();
-      if (toks.indexOf(tok.toLowerCase()) !== -1) {
-        result.toTok = tok;
-        result.fromTok = tok === "ETH" ? "USDC" : "ETH";
-      }
-    }
-    // Try "[amount] [TOKEN] for/to [TOKEN]"
-    var forMatch = t.match(/([a-z]+)\s+(?:for|to|into)\s+([a-z]+)/);
-    if (forMatch) {
-      var f2 = forMatch[1].toUpperCase();
-      var t2 = forMatch[2].toUpperCase();
-      if (toks.indexOf(f2.toLowerCase()) !== -1) result.fromTok = f2;
-      if (toks.indexOf(t2.toLowerCase()) !== -1) result.toTok = t2;
-    }
-  }
-
-  // Yield: always spend USDC unless specified
-  if (result.type === "yield") {
-    result.fromTok = "USDC";
-    result.toTok = "POOL";
-  }
-
-  // Resolve amount
-  if (isDollarAmount) {
-    // Convert dollar amount to fromTok units
-    var fromPrice2 = wallet[result.fromTok] ? wallet[result.fromTok].price : 1;
-    result.amount = result._dollarAmount / fromPrice2;
-    result.amount = Math.round(result.amount * 10000) / 10000;
-    result._displayAmount = "$" + result._dollarAmount;
-  } else if (result._rawAmount) {
-    result.amount = result._rawAmount;
-    result._displayAmount = result.amount + " " + result.fromTok;
-  }
-
-  // Yield amount
-  if (result.type === "yield" && result._rawAmount) {
-    result.amount = result._rawAmount;
-  }
-
-  // Validate same token
-  if (result.fromTok === result.toTok && result.type === "swap") {
-    result.valid = false;
-    result.error = "Looks like the input and output are the same token. Try something like \"swap 500 USDC for ETH\".";
-    return result;
-  }
-
-  // Validate balance
-  if (result.type === "swap") {
-    var bal2 = wallet[result.fromTok] ? wallet[result.fromTok].amount : 0;
-    if (result.amount > bal2) {
-      result.valid = false;
-      var dec2 = (result.fromTok === "ETH" || result.fromTok === "WBTC") ? 5 : 2;
-      var usdVal = bal2 * (wallet[result.fromTok] ? wallet[result.fromTok].price : 1);
-      result.error = "Not enough " + result.fromTok + ". You have " + fmt(bal2, dec2) + " " + result.fromTok + " (" + fmtUSD(usdVal) + "). Try a smaller amount.";
-    }
-  }
-
-  return result;
-}
-
-function rnd(a, b) { return Math.random() * (b - a) + a; }
-function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
-
-function autoResize(el) {
-  el.style.height = "auto";
-  el.style.height = Math.min(el.scrollHeight, 100) + "px";
-}
-
-function handleKey(e) {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
-}
-
-function usePrompt(el) {
-  document.getElementById("input").value = el.textContent;
-  autoResize(document.getElementById("input"));
-  send();
-}
-
 function addMsg(role, innerHtml) {
   var msgs = document.getElementById("messages");
   var d = document.createElement("div");
@@ -366,10 +248,173 @@ function addTyping() {
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
 }
+function removeTyping() { var t = document.getElementById("typ"); if (t) t.remove(); }
 
-function removeTyping() {
-  var t = document.getElementById("typ");
-  if (t) t.remove();
+// Build wallet context string for Claude
+function walletContext() {
+  var lines = ["Current wallet balances:"];
+  Object.keys(wallet).forEach(function(tok) {
+    var w = wallet[tok];
+    lines.push("- " + tok + ": " + fmt(w.amount, tok==="ETH"||tok==="WBTC"?5:2) + " (worth " + fmtUSD(w.amount * w.price) + " at $" + w.price + " each)");
+  });
+  return lines.join("\n");
+}
+
+// Parse intent using Claude API
+async function parseWithClaude(userText) {
+  var systemPrompt = `You are the intent parser for INTNT Protocol, a DeFi swap protocol. Parse the user's request and return ONLY a JSON object.
+
+` + walletContext() + `
+
+Token prices: ETH=$1847.20, USDC=$1.00, DAI=$1.00, WBTC=$63420.00, BTC=$63420.00 (treat BTC as WBTC)
+
+Rules:
+- "all of my X" means use the full balance of that token
+- "swap X, Y, and Z into W" = multiple swaps, each token separately into W
+- Dollar amounts like "$300 worth of ETH" or "buy $300 ETH" = convert $300 to fromTok units
+- "buy ETH" with no from token = use USDC as fromTok
+- Conditional = has "if", "when", "below", "drops to", "reaches"
+- Yield = has "yield", "pool", "earn", "deposit", "best APY"
+
+Return ONLY this JSON (no markdown, no explanation):
+{
+  "type": "swap" | "multi_swap" | "conditional" | "yield" | "error",
+  "swaps": [
+    { "fromTok": "USDC", "toTok": "ETH", "amount": 500.0, "displayFrom": "500 USDC" }
+  ],
+  "condition": null or "3000",
+  "error": null or "error message if truly invalid"
+}
+
+For single swaps, swaps array has one item. For multi-swap (swap all my DAI, USDC, and ETH into BTC), swaps array has multiple items.
+For yield, use fromTok=USDC, toTok="POOL".
+For conditional, include the price condition.
+Never return an error for reasonable requests — always try to parse them.`;
+
+  var response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 500,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userText }]
+    })
+  });
+
+  var data = await response.json();
+  var text = data.content[0].text.trim();
+  // Strip markdown if present
+  text = text.replace(/```json\n?/g,"").replace(/```/g,"").trim();
+  return JSON.parse(text);
+}
+
+async function executeSingleSwap(swap, isLast) {
+  var msgs = document.getElementById("messages");
+  var fromTok = swap.fromTok;
+  var toTok = swap.toTok;
+  var amount = swap.amount;
+  var displayFrom = swap.displayFrom || (fmt(amount, fromTok==="ETH"||fromTok==="WBTC"?5:2) + " " + fromTok);
+
+  // Validate balance
+  var bal = wallet[fromTok] ? wallet[fromTok].amount : 0;
+  if (amount > bal * 1.001) {
+    addMsg("intnt", '<div class="error-card">Not enough ' + fromTok + '. You have ' + fmt(bal, fromTok==="ETH"||fromTok==="WBTC"?5:2) + ' ' + fromTok + ' (' + fmtUSD(bal * (wallet[fromTok]?wallet[fromTok].price:1)) + ').</div>');
+    return false;
+  }
+
+  // Solver race
+  var fromPrice = wallet[fromTok] ? wallet[fromTok].price : 1;
+  var toPrice   = wallet[toTok]   ? wallet[toTok].price   : 1;
+  var baseOut   = (amount * fromPrice) / toPrice;
+  var isSmall   = (toTok === "ETH" || toTok === "WBTC");
+  var dec       = isSmall ? 5 : 2;
+
+  var quotes = [
+    fmt(baseOut * rnd(1.006, 1.014), dec),
+    fmt(baseOut * rnd(1.010, 1.020), dec),
+    fmt(baseOut * rnd(1.003, 1.012), dec),
+    fmt(baseOut * rnd(1.015, 1.025), dec)
+  ];
+  var winnerIdx = 0;
+  for (var i = 1; i < quotes.length; i++) {
+    if (parseFloat(quotes[i]) > parseFloat(quotes[winnerIdx])) winnerIdx = i;
+  }
+
+  var raceDiv = document.createElement("div");
+  raceDiv.className = "msg intnt";
+  var uid = "r" + Date.now();
+  var raceHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%">' +
+    '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:.5rem">' + displayFrom + ' &rarr; ' + toTok + '</div>' +
+    '<div class="chat-card"><div class="card-title">Solvers competing</div>';
+  for (var i = 0; i < 4; i++) {
+    raceHTML += '<div class="race-row"><span class="race-name">' + solverNames[i] + '</span><div class="race-bar-wrap"><div class="race-bar" id="' + uid + 'rb' + i + '"></div></div><span class="race-quote" id="' + uid + 'rq' + i + '">searching...</span></div>';
+  }
+  raceHTML += '</div></div>';
+  raceDiv.innerHTML = raceHTML;
+  msgs.appendChild(raceDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  for (var i = 0; i < 4; i++) {
+    (function(idx) {
+      var sp = rnd(200, 650);
+      setTimeout(function() {
+        var el = document.getElementById(uid + "rb" + idx);
+        if (el) el.style.width = rnd(45, 82) + "%";
+        setTimeout(function() {
+          var ql = document.getElementById(uid + "rq" + idx);
+          if (ql) ql.textContent = quotes[idx] + " " + toTok;
+        }, sp + 100);
+      }, sp);
+    })(i);
+  }
+
+  await delay(1400);
+  var wb = document.getElementById(uid + "rb" + winnerIdx);
+  var wq = document.getElementById(uid + "rq" + winnerIdx);
+  if (wb) { wb.style.width = "100%"; wb.className = "race-bar winner"; }
+  if (wq) wq.textContent = quotes[winnerIdx] + " " + toTok + " ✓";
+  await delay(300);
+
+  // Settlement (only show full pipeline on last swap)
+  if (isLast) {
+    addTyping(); await delay(600); removeTyping();
+    var steps = ["L1 — Signature verified","L2 — Solver cleared","L3 — Output confirmed","L4 — Funds transferred","L5 — Fee escrowed"];
+    var settleDiv = document.createElement("div");
+    settleDiv.className = "msg intnt";
+    var suid = "s" + Date.now();
+    var sHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">Settlement</div>';
+    for (var i = 0; i < steps.length; i++) {
+      sHTML += '<div class="pipe-row" id="' + suid + 'p' + i + '"><div class="pipe-dot"></div>' + steps[i] + '</div>';
+    }
+    sHTML += '</div></div>';
+    settleDiv.innerHTML = sHTML;
+    msgs.appendChild(settleDiv);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    for (var i = 0; i < steps.length; i++) {
+      await delay(300);
+      if (i > 0) { var prev = document.getElementById(suid + "p" + (i-1)); if (prev) prev.className = "pipe-row done"; }
+      var curr = document.getElementById(suid + "p" + i);
+      if (curr) curr.className = "pipe-row active";
+    }
+    await delay(300);
+    var last = document.getElementById(suid + "p" + (steps.length-1));
+    if (last) last.className = "pipe-row done";
+    await delay(300);
+  }
+
+  // Update wallet
+  var fee = amount * 0.0015;
+  wallet[fromTok].amount -= (amount + fee);
+  if (wallet[fromTok].amount < 0) wallet[fromTok].amount = 0;
+  if (!wallet[toTok]) wallet[toTok] = { amount: 0, price: toPrice, icon: toTok[0], color: "#888" };
+  wallet[toTok].amount += parseFloat(quotes[winnerIdx]);
+  addTx(displayFrom + " → " + toTok, "+" + quotes[winnerIdx] + " " + toTok, true);
+  addTx("Fee", "-" + fmt(fee,4) + " " + fromTok, false);
+  renderWallet();
+
+  return { quote: quotes[winnerIdx], toTok: toTok, fromTok: fromTok, displayFrom: displayFrom, solver: solverNames[winnerIdx], source: solverSources[winnerIdx] };
 }
 
 async function send() {
@@ -384,158 +429,107 @@ async function send() {
   input.value = "";
   input.style.height = "auto";
 
-  var intent = parseIntent(text);
   addMsg("user", text);
   await delay(350);
+  addTyping(); await delay(1000); removeTyping();
 
-  if (!intent.valid) {
-    addTyping(); await delay(700); removeTyping();
-    addMsg("intnt", '<div class="error-card">' + intent.error + '</div>');
+  var parsed;
+  try {
+    parsed = await parseWithClaude(text);
+  } catch(e) {
+    addMsg("intnt", '<div class="error-card">Could not understand that request. Try something like "swap 500 USDC for ETH" or "buy $200 worth of ETH".</div>');
     busy = false;
     document.getElementById("send-btn").disabled = false;
     return;
   }
 
-  addTyping(); await delay(850); removeTyping();
+  if (parsed.error) {
+    addMsg("intnt", '<div class="error-card">' + parsed.error + '</div>');
+    busy = false;
+    document.getElementById("send-btn").disabled = false;
+    return;
+  }
 
-  var displayAmt = intent._displayAmount || (intent.amount + " " + intent.fromTok);
-  var ack = "Signed. Posting your intent to the network &mdash; swapping " + displayAmt + " for " + intent.toTok + ". Solvers are competing now.";
-  if (intent.type === "conditional") ack = "Got it. I will monitor the price and execute automatically when it hits your target. Your funds stay in your wallet until then.";
-  if (intent.type === "yield") ack = "Scanning yield pools across Base right now for the best APY on your " + intent.fromTok + ".";
-  addMsg("intnt", ack);
-  await delay(500);
+  if (parsed.type === "conditional") {
+    var sw = parsed.swaps && parsed.swaps[0];
+    var condTok = sw ? sw.toTok : "ETH";
+    var condFrom = sw ? sw.fromTok : "USDC";
+    addMsg("intnt", "Got it. I will monitor the price and execute automatically when " + condTok + " hits $" + parsed.condition + ". Your " + condFrom + " stays in your wallet until then.");
+    addTx("Conditional intent set: " + condTok + " @ $" + parsed.condition, "pending", false);
+    busy = false;
+    document.getElementById("send-btn").disabled = false;
+    return;
+  }
 
-  // SOLVER RACE
+  if (parsed.type === "yield") {
+    var yAmt = parsed.swaps && parsed.swaps[0] ? parsed.swaps[0].amount : 1000;
+    var yBal = wallet.USDC ? wallet.USDC.amount : 0;
+    if (yAmt > yBal) yAmt = yBal;
+    var apy = fmt(rnd(4.8, 11.2), 1);
+    addMsg("intnt", "Found the best yield pool on Base &mdash; " + apy + "% APY. Depositing " + fmt(yAmt, 2) + " USDC now.");
+    await delay(800);
+    wallet.USDC.amount -= yAmt;
+    addTx("Deposited " + fmt(yAmt,2) + " USDC to yield pool", "+" + apy + "% APY", true);
+    renderWallet();
+    await delay(400);
+    addMsg("intnt", "Done. " + fmt(yAmt,2) + ' USDC deposited at ' + apy + '% APY.<div class="result-card" style="margin-top:.6rem"><div class="result-row"><span class="rl">Pool APY</span><span class="rv green">' + apy + '%</span></div><div class="result-row"><span class="rl">Gas you paid</span><span class="rv green">$0.00</span></div></div>');
+    busy = false;
+    document.getElementById("send-btn").disabled = false;
+    return;
+  }
+
+  // SWAP or MULTI_SWAP
+  var swaps = parsed.swaps || [];
+  if (swaps.length === 0) {
+    addMsg("intnt", '<div class="error-card">Could not figure out what to swap. Try "swap 500 USDC for ETH".</div>');
+    busy = false;
+    document.getElementById("send-btn").disabled = false;
+    return;
+  }
+
+  if (swaps.length === 1) {
+    addMsg("intnt", "Signed. Posting to the network &mdash; solvers are competing now.");
+    await delay(400);
+  } else {
+    addMsg("intnt", "Got it &mdash; executing " + swaps.length + " swaps. Running them sequentially for best execution.");
+    await delay(400);
+  }
+
+  var results = [];
+  for (var i = 0; i < swaps.length; i++) {
+    var result = await executeSingleSwap(swaps[i], i === swaps.length - 1);
+    if (result) results.push(result);
+    if (i < swaps.length - 1) await delay(400);
+  }
+
+  await delay(400);
   addTyping(); await delay(500); removeTyping();
 
-  var fromPrice = wallet[intent.fromTok] ? wallet[intent.fromTok].price : 1;
-  var toPrice   = wallet[intent.toTok]   ? wallet[intent.toTok].price   : 1;
-  var baseOut   = (intent.amount * fromPrice) / toPrice;
-  var isSmall   = (intent.toTok === "ETH" || intent.toTok === "WBTC");
-  var dec       = isSmall ? 5 : 2;
-
-  var quotes = [
-    fmt(baseOut * rnd(1.006, 1.014), dec),
-    fmt(baseOut * rnd(1.010, 1.020), dec),
-    fmt(baseOut * rnd(1.003, 1.012), dec),
-    fmt(baseOut * rnd(1.015, 1.025), dec)
-  ];
-  var winnerIdx = 0;
-  for (var i = 1; i < quotes.length; i++) {
-    if (parseFloat(quotes[i]) > parseFloat(quotes[winnerIdx])) winnerIdx = i;
-  }
-
-  var msgs = document.getElementById("messages");
-  var raceDiv = document.createElement("div");
-  raceDiv.className = "msg intnt";
-  var raceHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">Solvers competing</div>';
-  for (var i = 0; i < 4; i++) {
-    raceHTML += '<div class="race-row"><span class="race-name">' + solverNames[i] + '</span><div class="race-bar-wrap"><div class="race-bar" id="rb' + i + '"></div></div><span class="race-quote" id="rq' + i + '">searching...</span></div>';
-  }
-  raceHTML += '</div></div>';
-  raceDiv.innerHTML = raceHTML;
-  msgs.appendChild(raceDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  for (var i = 0; i < 4; i++) {
-    (function(idx) {
-      var sp = rnd(250, 750);
-      setTimeout(function() {
-        var el = document.getElementById("rb" + idx);
-        if (el) el.style.width = rnd(45, 82) + "%";
-        setTimeout(function() {
-          var ql = document.getElementById("rq" + idx);
-          if (ql) ql.textContent = quotes[idx] + " " + intent.toTok;
-        }, sp + 120);
-      }, sp);
-    })(i);
-  }
-
-  await delay(1600);
-  var winBar = document.getElementById("rb" + winnerIdx);
-  var winQ   = document.getElementById("rq" + winnerIdx);
-  if (winBar) { winBar.style.width = "100%"; winBar.className = "race-bar winner"; }
-  if (winQ)   { winQ.textContent = quotes[winnerIdx] + " " + intent.toTok + " \u2713"; }
-  await delay(400);
-
-  // SETTLEMENT
-  addTyping(); await delay(800); removeTyping();
-  var steps = ["L1 \u2014 Signature verified","L2 \u2014 Solver cleared","L3 \u2014 Output confirmed","L4 \u2014 Funds transferred","L5 \u2014 Fee escrowed"];
-  var settleDiv = document.createElement("div");
-  settleDiv.className = "msg intnt";
-  var settleHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">5-layer settlement</div>';
-  for (var i = 0; i < steps.length; i++) {
-    settleHTML += '<div class="pipe-row" id="pr' + i + '"><div class="pipe-dot"></div>' + steps[i] + '</div>';
-  }
-  settleHTML += '</div></div>';
-  settleDiv.innerHTML = settleHTML;
-  msgs.appendChild(settleDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  for (var i = 0; i < steps.length; i++) {
-    await delay(360);
-    if (i > 0) {
-      var prev = document.getElementById("pr" + (i-1));
-      if (prev) prev.className = "pipe-row done";
-    }
-    var curr = document.getElementById("pr" + i);
-    if (curr) curr.className = "pipe-row active";
-  }
-  await delay(360);
-  var last = document.getElementById("pr" + (steps.length - 1));
-  if (last) last.className = "pipe-row done";
-  await delay(400);
-
-  // UPDATE WALLET
-  if (intent.type === "swap") {
-    var fee = intent.amount * 0.0015;
-    wallet[intent.fromTok].amount -= (intent.amount + fee);
-    if (wallet[intent.fromTok].amount < 0) wallet[intent.fromTok].amount = 0;
-    if (!wallet[intent.toTok]) wallet[intent.toTok] = { amount: 0, price: toPrice, icon: intent.toTok[0], color: "#888" };
-    wallet[intent.toTok].amount += parseFloat(quotes[winnerIdx]);
-    addTx("Swapped " + intent.amount + " " + intent.fromTok + " \u2192 " + intent.toTok, "+" + quotes[winnerIdx] + " " + intent.toTok, true);
-    addTx("Protocol fee", "-" + fmt(fee, 4) + " " + intent.fromTok, false);
-  } else if (intent.type === "yield") {
-    addTx("Deposited to yield pool", "+" + fmt(rnd(4.2, 9.8), 1) + "% APY", true);
-  }
-  renderWallet();
-
-  // RESULT
-  addTyping(); await delay(600); removeTyping();
-  var fillTime = fmt(rnd(2.1, 4.8), 1);
-  var beat = fmt(((parseFloat(quotes[winnerIdx]) - baseOut) / baseOut) * 100, 2);
-  var feeAmt = fmt(intent.amount * 0.0015, 4);
-
-  var resultHTML = "";
-  if (intent.type === "conditional") {
-    resultHTML = "Your conditional intent is active. I will execute when the price hits $" + intent.condition + ". No further action needed from you.";
-  } else if (intent.type === "yield") {
-    var apy = fmt(rnd(4.2, 9.8), 1);
-    resultHTML = "Deposited into the highest APY pool (" + apy + "% APY). Your balance is updated above." +
+  if (results.length === 1) {
+    var r = results[0];
+    var beat = fmt(((parseFloat(r.quote) / ((wallet[r.toTok] ? wallet[r.toTok].price : 1) / (wallet[r.fromTok] ? wallet[r.fromTok].price : 1))) - 1) * 100, 2);
+    addMsg("intnt", 'Done. Check your wallet above.' +
       '<div class="result-card" style="margin-top:.6rem">' +
-        '<div class="result-row"><span class="rl">Pool APY</span><span class="rv green">' + apy + '%</span></div>' +
-        '<div class="result-row"><span class="rl">Fill time</span><span class="rv">' + fillTime + 's</span></div>' +
+        '<div class="result-row"><span class="rl">You received</span><span class="rv green">' + r.quote + ' ' + r.toTok + '</span></div>' +
+        '<div class="result-row"><span class="rl">Best solver</span><span class="rv">' + r.solver + ' via ' + r.source + '</span></div>' +
+        '<div class="result-row"><span class="rl">Fill time</span><span class="rv">' + fmt(rnd(2.1,4.8),1) + 's</span></div>' +
         '<div class="result-row"><span class="rl">Gas you paid</span><span class="rv green">$0.00</span></div>' +
-      '</div>';
+      '</div>Want to try another?');
   } else {
-    resultHTML = "Done. Check your wallet &mdash; your balance updated." +
-      '<div class="result-card" style="margin-top:.6rem">' +
-        '<div class="result-row"><span class="rl">You received</span><span class="rv green">' + quotes[winnerIdx] + ' ' + intent.toTok + '</span></div>' +
-        '<div class="result-row"><span class="rl">Best solver</span><span class="rv">' + solverNames[winnerIdx] + ' via ' + solverSources[winnerIdx] + '</span></div>' +
-        '<div class="result-row"><span class="rl">Beat floor by</span><span class="rv green">+' + beat + '%</span></div>' +
-        '<div class="result-row"><span class="rl">Fill time</span><span class="rv">' + fillTime + 's</span></div>' +
-        '<div class="result-row"><span class="rl">Protocol fee</span><span class="rv">' + feeAmt + ' ' + intent.fromTok + '</span></div>' +
-        '<div class="result-row"><span class="rl">Gas you paid</span><span class="rv green">$0.00</span></div>' +
-      '</div>Want to try another?';
+    var summaryHTML = 'All ' + results.length + ' swaps complete.<div class="result-card" style="margin-top:.6rem">';
+    results.forEach(function(r) {
+      summaryHTML += '<div class="result-row"><span class="rl">' + r.displayFrom + '</span><span class="rv green">+' + r.quote + ' ' + r.toTok + '</span></div>';
+    });
+    summaryHTML += '<div class="result-row"><span class="rl">Gas you paid</span><span class="rv green">$0.00</span></div></div>';
+    addMsg("intnt", summaryHTML);
   }
 
-  addMsg("intnt", resultHTML);
   busy = false;
   document.getElementById("send-btn").disabled = false;
 }
 
-// Init
 renderWallet();
+
 </script>
 </body>
 </html>
