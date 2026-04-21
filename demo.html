@@ -9,8 +9,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;background:#000;color:#fff;font-family:"Almarai",sans-serif;}
 body{display:flex;flex-direction:column;}
-
-/* NAV */
 .nav-outer{padding:.9rem 1.25rem 0;background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);flex-shrink:0;}
 nav{display:flex;align-items:center;justify-content:space-between;background:rgba(15,25,40,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:.65rem 1rem .65rem 1.5rem;max-width:1200px;margin:0 auto;}
 .nav-logo{height:36px;filter:brightness(0) invert(1);}
@@ -19,12 +17,8 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .nav-link:hover{color:#fff;}
 .nav-cta{font-size:12px;font-weight:500;color:#000;background:#fff;padding:8px 18px;border-radius:100px;text-decoration:none;}
 @media(max-width:600px){.nav-links,.nav-cta{display:none;}}
-
-/* LAYOUT */
 .app{flex:1;display:grid;grid-template-columns:280px 1fr;max-width:1200px;width:100%;margin:0 auto;padding:1.25rem;gap:1.25rem;min-height:0;}
 @media(max-width:800px){.app{grid-template-columns:1fr;}.sidebar{display:none;}}
-
-/* SIDEBAR — WALLET */
 .sidebar{display:flex;flex-direction:column;gap:1rem;}
 .wallet-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1.25rem;}
 .wallet-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;display:block;}
@@ -40,8 +34,6 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .total-row{margin-top:.85rem;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.08);}
 .total-label{font-size:10px;color:rgba(255,255,255,.35);}
 .total-val{font-size:22px;font-weight:700;letter-spacing:-.02em;}
-
-/* TX HISTORY */
 .history-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1.25rem;flex:1;overflow:hidden;display:flex;flex-direction:column;}
 .tx-list{overflow-y:auto;flex:1;}
 .tx-list::-webkit-scrollbar{width:0;}
@@ -56,8 +48,6 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .tx-val{font-size:11px;text-align:right;flex-shrink:0;}
 .tx-val.green{color:rgba(74,222,128,.8);}
 @keyframes txIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
-
-/* CHAT */
 .chat-wrap{display:flex;flex-direction:column;min-height:0;}
 .chat-header{text-align:center;padding:1.5rem 0 1rem;flex-shrink:0;}
 .chat-header-title{font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:400;letter-spacing:-.025em;margin-bottom:.4rem;}
@@ -68,8 +58,6 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .suggestion:hover{color:#fff;border-color:rgba(255,255,255,.3);}
 .messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.85rem;padding-bottom:.75rem;min-height:200px;max-height:calc(100vh - 380px);}
 .messages::-webkit-scrollbar{width:0;}
-
-/* BUBBLES */
 .msg{display:flex;gap:.65rem;animation:msgIn .35s cubic-bezier(.16,1,.3,1);}
 .msg.user{flex-direction:row-reverse;}
 .msg-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;}
@@ -83,8 +71,6 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .typing span:nth-child(2){animation-delay:.2s;}
 .typing span:nth-child(3){animation-delay:.4s;}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-
-/* CARDS IN CHAT */
 .chat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1rem 1.1rem;margin-top:.4rem;font-size:12px;}
 .card-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.75rem;}
 .race-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.5rem;}
@@ -103,14 +89,10 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .result-card{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:12px;padding:1rem 1.1rem;margin-top:.4rem;}
 .result-row{display:flex;justify-content:space-between;padding:.28rem 0;font-size:12px;border-bottom:.5px solid rgba(74,222,128,.08);}
 .result-row:last-child{border-bottom:none;}
-.result-label{color:rgba(255,255,255,.4);}
-.result-val{color:#fff;font-weight:600;}
-.result-val.green{color:rgba(74,222,128,.9);}
-
-/* ERROR CARD */
+.rl{color:rgba(255,255,255,.4);}
+.rv{color:#fff;font-weight:600;}
+.rv.green{color:rgba(74,222,128,.9);}
 .error-card{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:1rem 1.1rem;margin-top:.4rem;font-size:12px;color:rgba(239,68,68,.8);}
-
-/* INPUT */
 .input-bar{flex-shrink:0;padding:.75rem 0 .5rem;}
 .input-wrap{display:flex;align-items:flex-end;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:.55rem .55rem .55rem 1rem;transition:border-color .2s;}
 .input-wrap:focus-within{border-color:rgba(255,255,255,.28);}
@@ -138,12 +120,10 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 </div>
 
 <div class="app">
-
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="wallet-card">
       <span class="wallet-label">Demo wallet</span>
-      <div class="wallet-addr">0x71C7...a4b2 &nbsp;&#x25cf;&nbsp; Base</div>
+      <div class="wallet-addr">0x71C7...a4b2 &nbsp;&bull;&nbsp; Base</div>
       <div id="balance-list"></div>
       <div class="total-row">
         <div class="total-label">Total value</div>
@@ -158,7 +138,6 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
     </div>
   </div>
 
-  <!-- CHAT -->
   <div class="chat-wrap">
     <div class="chat-header">
       <h1 class="chat-header-title">Tell INTNT <em>what you want.</em></h1>
@@ -179,122 +158,154 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
           <svg width="14" height="14" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </button>
       </div>
-      <p class="input-hint">Demo only &#8212; no real funds</p>
+      <p class="input-hint">Demo only &mdash; no real funds</p>
     </div>
   </div>
 </div>
 
 <script>
-// ── WALLET STATE ──
 var wallet = {
-  ETH:  { amount: 2.450,   price: 1847.20, icon: "E",  color: "#627EEA" },
-  USDC: { amount: 3241.50, price: 1.00,    icon: "U",  color: "#2775CA" },
-  DAI:  { amount: 580.00,  price: 1.00,    icon: "D",  color: "#F4B731" },
-  WBTC: { amount: 0.025,   price: 63420.0, icon: "B",  color: "#F7931A" },
+  ETH:  { amount: 2.4500,  price: 1847.20, icon: "E", color: "#627EEA" },
+  USDC: { amount: 3241.50, price: 1.00,    icon: "U", color: "#2775CA" },
+  DAI:  { amount: 580.00,  price: 1.00,    icon: "D", color: "#F4B731" },
+  WBTC: { amount: 0.0250,  price: 63420.0, icon: "B", color: "#F7931A" }
 };
-var txHistory = [];
-var busy = false;
-var solvers = ["Solver Alpha","Solver Beta","Solver Gamma","Solver Delta"];
-var sources = ["0x API","1inch Fusion","Paraswap","Uniswap v3"];
 
-// ── RENDER WALLET ──
+var solverNames = ["Solver Alpha","Solver Beta","Solver Gamma","Solver Delta"];
+var solverSources = ["0x API","1inch Fusion","Paraswap","Uniswap v3"];
+var busy = false;
+var txCount = 0;
+
+function fmt(n, dec) {
+  return parseFloat(n).toFixed(dec !== undefined ? dec : 2);
+}
+
+function fmtUSD(n) {
+  return "$" + parseFloat(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
 function renderWallet() {
   var list = document.getElementById("balance-list");
   var total = 0;
-  list.innerHTML = Object.keys(wallet).map(function(tok) {
+  var html = "";
+  var keys = Object.keys(wallet);
+  for (var i = 0; i < keys.length; i++) {
+    var tok = keys[i];
     var w = wallet[tok];
     var usd = w.amount * w.price;
     total += usd;
-    return '<div class="balance-row">' +
+    var dec = (tok === "ETH" || tok === "WBTC") ? 4 : 2;
+    html += '<div class="balance-row">' +
       '<div class="bal-token">' +
-        '<div class="bal-icon" style="background:' + w.color + '20;color:' + w.color + '">' + w.icon + '</div>' +
+        '<div class="bal-icon" style="background:' + w.color + '22;color:' + w.color + '">' + w.icon + '</div>' +
         '<span class="bal-name">' + tok + '</span>' +
       '</div>' +
       '<div class="bal-amounts">' +
-        '<div class="bal-amount">' + w.amount.toFixed(tok==="WBTC"?4:tok==="ETH"?4:2) + '</div>' +
-        '<div class="bal-usd">$' + usd.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div>' +
+        '<div class="bal-amount">' + fmt(w.amount, dec) + '</div>' +
+        '<div class="bal-usd">' + fmtUSD(usd) + '</div>' +
       '</div>' +
     '</div>';
-  }).join("");
-  document.getElementById("total-val").textContent = "$" + total.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  list.innerHTML = html;
+  document.getElementById("total-val").textContent = fmtUSD(total);
 }
 
 function addTx(desc, val, isIn) {
   var now = new Date();
-  var time = now.toLocaleTimeString("en-US",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
-  txHistory.unshift({desc:desc, val:val, isIn:isIn, time:time});
+  var time = now.toLocaleTimeString("en-US", {hour12:false, hour:"2-digit", minute:"2-digit", second:"2-digit"});
   var list = document.getElementById("tx-list");
-  if (txHistory.length === 1) list.innerHTML = "";
+  if (txCount === 0) list.innerHTML = "";
+  txCount++;
   var d = document.createElement("div");
   d.className = "tx-item";
-  d.innerHTML = '<div class="tx-dot ' + (isIn?"dot-in":"dot-out") + '"></div>' +
+  d.innerHTML =
+    '<div class="tx-dot ' + (isIn ? "dot-in" : "dot-out") + '"></div>' +
     '<div class="tx-info"><div class="tx-desc">' + desc + '</div><div class="tx-time">' + time + '</div></div>' +
-    '<div class="tx-val ' + (isIn?"green":"") + '">' + val + '</div>';
+    '<div class="tx-val ' + (isIn ? "green" : "") + '">' + val + '</div>';
   list.insertBefore(d, list.firstChild);
 }
 
-// ── PARSE INTENT ──
 function parseIntent(text) {
   var t = text.toLowerCase();
-  var result = { type:"swap", fromTok:"USDC", toTok:"ETH", amount:500, condition:null, valid:true, error:"" };
+  var result = { type: "swap", fromTok: "USDC", toTok: "ETH", amount: 500, valid: true, error: "", condition: null };
 
-  // Detect amounts
-  var amtMatch = t.match(/([0-9]+\.?[0-9]*)/);
-  if (amtMatch) result.amount = parseFloat(amtMatch[1]);
+  var amtMatch = t.match(/[0-9]+\.?[0-9]*/);
+  if (amtMatch) result.amount = parseFloat(amtMatch[0]);
 
-  // Detect tokens
-  var toks = ["eth","usdc","dai","wbtc"];
   var found = [];
-  toks.forEach(function(tk) { if(t.includes(tk)) found.push(tk.toUpperCase()); });
-
-  if (found.length >= 2) { result.fromTok = found[0]; result.toTok = found[1]; }
-  else if (found.length === 1) {
-    if (t.includes("swap")||t.includes("sell")) { result.fromTok=found[0]; result.toTok=found[0]==="USDC"?"ETH":"USDC"; }
-    else { result.toTok=found[0]; }
+  var toks = ["wbtc","usdc","usdt","dai","eth"];
+  for (var i = 0; i < toks.length; i++) {
+    if (t.indexOf(toks[i]) !== -1) found.push(toks[i].toUpperCase());
   }
 
-  // Detect type
-  if (t.includes("yield")||t.includes("pool")||t.includes("earn")||t.includes("deposit")) { result.type="yield"; result.fromTok="USDC"; }
-  if (t.includes("if ")||t.includes("when ")||t.includes("below ")||t.includes("drops")) {
-    result.type="conditional";
-    var priceMatch = t.match(/\$?([0-9,]+)/g);
-    if (priceMatch) result.condition = priceMatch[priceMatch.length-1].replace(/,/g,"").replace("$","");
+  if (found.length >= 2) {
+    result.fromTok = found[0];
+    result.toTok = found[1];
+  } else if (found.length === 1) {
+    if (t.indexOf("for") !== -1 || t.indexOf("into") !== -1) {
+      result.toTok = found[0];
+      result.fromTok = found[0] === "ETH" ? "USDC" : "ETH";
+    } else {
+      result.fromTok = found[0];
+      result.toTok = found[0] === "USDC" ? "ETH" : "USDC";
+    }
   }
 
-  // Same token check
+  if (t.indexOf("yield") !== -1 || t.indexOf("pool") !== -1 || t.indexOf("earn") !== -1 || t.indexOf("deposit") !== -1) {
+    result.type = "yield";
+    result.fromTok = "USDC";
+  }
+
+  if (t.indexOf(" if ") !== -1 || t.indexOf("when ") !== -1 || t.indexOf("below") !== -1 || t.indexOf("drops") !== -1) {
+    result.type = "conditional";
+    var priceMatch = t.match(/[0-9][0-9,]*/g);
+    if (priceMatch && priceMatch.length > 0) result.condition = priceMatch[priceMatch.length - 1].replace(/,/g, "");
+  }
+
   if (result.fromTok === result.toTok && result.type === "swap") {
     result.valid = false;
-    result.error = "Input and output tokens are the same. Try "swap USDC for ETH" instead.";
+    result.error = "Input and output tokens are the same. Try something like \"swap USDC for ETH\".";
     return result;
   }
 
-  // Insufficient balance check
   if (result.type === "swap") {
     var bal = wallet[result.fromTok] ? wallet[result.fromTok].amount : 0;
     if (result.amount > bal) {
       result.valid = false;
-      result.error = "Insufficient balance. You have " + bal.toFixed(result.fromTok==="ETH"||result.fromTok==="WBTC"?4:2) + " " + result.fromTok + " but tried to swap " + result.amount + ".";
+      var dec = (result.fromTok === "ETH" || result.fromTok === "WBTC") ? 4 : 2;
+      result.error = "Not enough balance. You have " + fmt(bal, dec) + " " + result.fromTok + " but tried to use " + result.amount + ".";
     }
   }
 
   return result;
 }
 
-// ── UTILS ──
-function delay(ms) { return new Promise(function(r){setTimeout(r,ms);}); }
-function rnd(a,b) { return Math.random()*(b-a)+a; }
-function autoResize(el) { el.style.height="auto"; el.style.height=Math.min(el.scrollHeight,100)+"px"; }
-function handleKey(e) { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();} }
-function usePrompt(el) { document.getElementById("input").value=el.textContent; autoResize(document.getElementById("input")); send(); }
+function rnd(a, b) { return Math.random() * (b - a) + a; }
+function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 100) + "px";
+}
+
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function usePrompt(el) {
+  document.getElementById("input").value = el.textContent;
+  autoResize(document.getElementById("input"));
+  send();
+}
 
 function addMsg(role, innerHtml) {
   var msgs = document.getElementById("messages");
   var d = document.createElement("div");
   d.className = "msg " + role;
-  var av = role==="intnt"
-    ? "<div class="msg-av intnt">&#9889;</div>"
-    : "<div class="msg-av user">S</div>";
-  d.innerHTML = av + "<div class="msg-bubble">" + innerHtml + "</div>";
+  var av = role === "intnt"
+    ? '<div class="msg-av intnt">&#9889;</div>'
+    : '<div class="msg-av user">S</div>';
+  d.innerHTML = av + '<div class="msg-bubble">' + innerHtml + '</div>';
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
   return d;
@@ -303,168 +314,180 @@ function addMsg(role, innerHtml) {
 function addTyping() {
   var msgs = document.getElementById("messages");
   var d = document.createElement("div");
-  d.className = "msg intnt"; d.id = "typ";
-  d.innerHTML = "<div class="msg-av intnt">&#9889;</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>";
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+  d.className = "msg intnt";
+  d.id = "typ";
+  d.innerHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
 }
-function removeTyping() { var t=document.getElementById("typ"); if(t)t.remove(); }
 
-// ── MAIN SEND ──
+function removeTyping() {
+  var t = document.getElementById("typ");
+  if (t) t.remove();
+}
+
 async function send() {
   if (busy) return;
   var input = document.getElementById("input");
   var text = input.value.trim();
   if (!text) return;
+
   busy = true;
   document.getElementById("send-btn").disabled = true;
   document.getElementById("suggestions").style.display = "none";
-  input.value = ""; input.style.height = "auto";
+  input.value = "";
+  input.style.height = "auto";
 
   var intent = parseIntent(text);
-
-  // User message
   addMsg("user", text);
   await delay(350);
 
-  // Validation error
   if (!intent.valid) {
     addTyping(); await delay(700); removeTyping();
-    addMsg("intnt", "<div class="error-card">" + intent.error + "</div>");
+    addMsg("intnt", '<div class="error-card">' + intent.error + '</div>');
     busy = false;
     document.getElementById("send-btn").disabled = false;
     return;
   }
 
-  addTyping(); await delay(800); removeTyping();
+  addTyping(); await delay(850); removeTyping();
 
-  // Acknowledge
-  var ack = "";
-  if (intent.type === "conditional") {
-    ack = "Got it. I will monitor the price and execute automatically when it hits your target. Your " + intent.fromTok + " stays in your wallet until then.";
-  } else if (intent.type === "yield") {
-    ack = "Scanning yield pools across Base right now for the best APY on your " + intent.fromTok + ".";
-  } else {
-    ack = "Signed. Posting your intent to the network now &mdash; solvers are already competing for your order.";
-  }
+  var ack = "Signed. Posting your intent to the network now &mdash; solvers are already competing.";
+  if (intent.type === "conditional") ack = "Got it. I will monitor the price and execute automatically when it hits your target. Your funds stay in your wallet until then.";
+  if (intent.type === "yield") ack = "Scanning yield pools across Base right now for the best APY on your " + intent.fromTok + ".";
   addMsg("intnt", ack);
   await delay(500);
 
-  // Solver race
+  // SOLVER RACE
   addTyping(); await delay(500); removeTyping();
 
   var fromPrice = wallet[intent.fromTok] ? wallet[intent.fromTok].price : 1;
   var toPrice   = wallet[intent.toTok]   ? wallet[intent.toTok].price   : 1;
   var baseOut   = (intent.amount * fromPrice) / toPrice;
-  var quotes    = [
-    (baseOut * rnd(1.006,1.014)).toFixed(intent.toTok==="ETH"||intent.toTok==="WBTC"?5:2),
-    (baseOut * rnd(1.010,1.020)).toFixed(intent.toTok==="ETH"||intent.toTok==="WBTC"?5:2),
-    (baseOut * rnd(1.003,1.012)).toFixed(intent.toTok==="ETH"||intent.toTok==="WBTC"?5:2),
-    (baseOut * rnd(1.015,1.025)).toFixed(intent.toTok==="ETH"||intent.toTok==="WBTC"?5:2),
+  var isSmall   = (intent.toTok === "ETH" || intent.toTok === "WBTC");
+  var dec       = isSmall ? 5 : 2;
+
+  var quotes = [
+    fmt(baseOut * rnd(1.006, 1.014), dec),
+    fmt(baseOut * rnd(1.010, 1.020), dec),
+    fmt(baseOut * rnd(1.003, 1.012), dec),
+    fmt(baseOut * rnd(1.015, 1.025), dec)
   ];
-  var winnerIdx = quotes.map(Number).indexOf(Math.max.apply(null, quotes.map(Number)));
+  var winnerIdx = 0;
+  for (var i = 1; i < quotes.length; i++) {
+    if (parseFloat(quotes[i]) > parseFloat(quotes[winnerIdx])) winnerIdx = i;
+  }
 
   var msgs = document.getElementById("messages");
   var raceDiv = document.createElement("div");
   raceDiv.className = "msg intnt";
-  raceDiv.innerHTML = "<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">Solvers competing</div>" +
-    solvers.map(function(s,i){
-      return "<div class="race-row"><span class="race-name">" + s + "</span><div class="race-bar-wrap"><div class="race-bar" id="rb-"+i+""></div></div><span class="race-quote" id="rq-"+i+"">searching...</span></div>";
-    }).join("") +
-  "</div></div>";
-  msgs.appendChild(raceDiv); msgs.scrollTop = msgs.scrollHeight;
+  var raceHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">Solvers competing</div>';
+  for (var i = 0; i < 4; i++) {
+    raceHTML += '<div class="race-row"><span class="race-name">' + solverNames[i] + '</span><div class="race-bar-wrap"><div class="race-bar" id="rb' + i + '"></div></div><span class="race-quote" id="rq' + i + '">searching...</span></div>';
+  }
+  raceHTML += '</div></div>';
+  raceDiv.innerHTML = raceHTML;
+  msgs.appendChild(raceDiv);
+  msgs.scrollTop = msgs.scrollHeight;
 
-  for (var i=0; i<4; i++) {
+  for (var i = 0; i < 4; i++) {
     (function(idx) {
-      var sp = rnd(250,750);
+      var sp = rnd(250, 750);
       setTimeout(function() {
-        document.getElementById("rb-"+idx).style.width = rnd(45,82)+"%";
+        var el = document.getElementById("rb" + idx);
+        if (el) el.style.width = rnd(45, 82) + "%";
         setTimeout(function() {
-          document.getElementById("rq-"+idx).textContent = quotes[idx] + " " + intent.toTok;
-        }, sp+120);
+          var ql = document.getElementById("rq" + idx);
+          if (ql) ql.textContent = quotes[idx] + " " + intent.toTok;
+        }, sp + 120);
       }, sp);
     })(i);
   }
-  await delay(1500);
-  document.getElementById("rb-"+winnerIdx).style.width = "100%";
-  document.getElementById("rb-"+winnerIdx).className = "race-bar winner";
-  document.getElementById("rq-"+winnerIdx).textContent = quotes[winnerIdx] + " " + intent.toTok + " ✓";
+
+  await delay(1600);
+  var winBar = document.getElementById("rb" + winnerIdx);
+  var winQ   = document.getElementById("rq" + winnerIdx);
+  if (winBar) { winBar.style.width = "100%"; winBar.className = "race-bar winner"; }
+  if (winQ)   { winQ.textContent = quotes[winnerIdx] + " " + intent.toTok + " \u2713"; }
   await delay(400);
 
-  // Settlement layers
+  // SETTLEMENT
   addTyping(); await delay(800); removeTyping();
-  var steps = ["L1 — Signature verified","L2 — Solver cleared","L3 — Output confirmed","L4 — Funds transferred","L5 — Fee escrowed"];
+  var steps = ["L1 \u2014 Signature verified","L2 \u2014 Solver cleared","L3 \u2014 Output confirmed","L4 \u2014 Funds transferred","L5 \u2014 Fee escrowed"];
   var settleDiv = document.createElement("div");
   settleDiv.className = "msg intnt";
-  settleDiv.innerHTML = "<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">5-layer settlement</div>" +
-    steps.map(function(s){ return "<div class="pipe-row"><div class="pipe-dot"></div>" + s + "</div>"; }).join("") +
-  "</div></div>";
-  msgs.appendChild(settleDiv); msgs.scrollTop = msgs.scrollHeight;
-
-  var stepEls = settleDiv.querySelectorAll(".pipe-row");
-  for (var i=0; i<stepEls.length; i++) {
-    await delay(350);
-    if (i>0) stepEls[i-1].className = "pipe-row done";
-    stepEls[i].className = "pipe-row active";
+  var settleHTML = '<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%"><div class="chat-card"><div class="card-title">5-layer settlement</div>';
+  for (var i = 0; i < steps.length; i++) {
+    settleHTML += '<div class="pipe-row" id="pr' + i + '"><div class="pipe-dot"></div>' + steps[i] + '</div>';
   }
-  await delay(350);
-  stepEls[stepEls.length-1].className = "pipe-row done";
+  settleHTML += '</div></div>';
+  settleDiv.innerHTML = settleHTML;
+  msgs.appendChild(settleDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  for (var i = 0; i < steps.length; i++) {
+    await delay(360);
+    if (i > 0) {
+      var prev = document.getElementById("pr" + (i-1));
+      if (prev) prev.className = "pipe-row done";
+    }
+    var curr = document.getElementById("pr" + i);
+    if (curr) curr.className = "pipe-row active";
+  }
+  await delay(360);
+  var last = document.getElementById("pr" + (steps.length - 1));
+  if (last) last.className = "pipe-row done";
   await delay(400);
 
-  // Update wallet balances
+  // UPDATE WALLET
   if (intent.type === "swap") {
     var fee = intent.amount * 0.0015;
     wallet[intent.fromTok].amount -= (intent.amount + fee);
     if (wallet[intent.fromTok].amount < 0) wallet[intent.fromTok].amount = 0;
-    if (!wallet[intent.toTok]) wallet[intent.toTok] = {amount:0, price:toPrice, icon:intent.toTok[0], color:"#888"};
+    if (!wallet[intent.toTok]) wallet[intent.toTok] = { amount: 0, price: toPrice, icon: intent.toTok[0], color: "#888" };
     wallet[intent.toTok].amount += parseFloat(quotes[winnerIdx]);
-    addTx("Swapped " + intent.amount + " " + intent.fromTok + " → " + intent.toTok, "+" + quotes[winnerIdx] + " " + intent.toTok, true);
-    addTx("Protocol fee", "-" + fee.toFixed(4) + " " + intent.fromTok, false);
+    addTx("Swapped " + intent.amount + " " + intent.fromTok + " \u2192 " + intent.toTok, "+" + quotes[winnerIdx] + " " + intent.toTok, true);
+    addTx("Protocol fee", "-" + fmt(fee, 4) + " " + intent.fromTok, false);
   } else if (intent.type === "yield") {
-    var yieldApy = rnd(4.2,9.8).toFixed(1);
-    addTx("Deposited " + intent.amount + " USDC → yield pool", "+" + yieldApy + "% APY", true);
+    addTx("Deposited to yield pool", "+" + fmt(rnd(4.2, 9.8), 1) + "% APY", true);
   }
   renderWallet();
 
-  // Final result message
+  // RESULT
   addTyping(); await delay(600); removeTyping();
-  var fillTime = rnd(2.1,4.8).toFixed(1);
-  var beat = (((parseFloat(quotes[winnerIdx]) - baseOut) / baseOut) * 100).toFixed(2);
-  var feeAmt = (intent.amount * 0.0015).toFixed(4);
+  var fillTime = fmt(rnd(2.1, 4.8), 1);
+  var beat = fmt(((parseFloat(quotes[winnerIdx]) - baseOut) / baseOut) * 100, 2);
+  var feeAmt = fmt(intent.amount * 0.0015, 4);
 
-  var resultDiv = document.createElement("div");
-  resultDiv.className = "msg intnt";
-
-  var resultContent = "";
+  var resultHTML = "";
   if (intent.type === "conditional") {
-    resultContent = "Your conditional intent is set. I will execute automatically when the price hits $" + intent.condition + ". No further action needed.";
+    resultHTML = "Your conditional intent is active. I will execute when the price hits $" + intent.condition + ". No further action needed from you.";
   } else if (intent.type === "yield") {
-    var apy = rnd(4.2,9.8).toFixed(1);
-    resultContent = "Deposited into the highest APY pool (" + apy + "% APY). Your balance is updated. You can withdraw any time." +
-      "<div class="result-card" style="margin-top:.6rem">" +
-        "<div class="result-row"><span class="result-label">Pool APY</span><span class="result-val green">" + apy + "%</span></div>" +
-        "<div class="result-row"><span class="result-label">Fill time</span><span class="result-val">" + fillTime + "s</span></div>" +
-        "<div class="result-row"><span class="result-label">Gas you paid</span><span class="result-val green">$0.00</span></div>" +
-      "</div>";
+    var apy = fmt(rnd(4.2, 9.8), 1);
+    resultHTML = "Deposited into the highest APY pool (" + apy + "% APY). Your balance is updated above." +
+      '<div class="result-card" style="margin-top:.6rem">' +
+        '<div class="result-row"><span class="rl">Pool APY</span><span class="rv green">' + apy + '%</span></div>' +
+        '<div class="result-row"><span class="rl">Fill time</span><span class="rv">' + fillTime + 's</span></div>' +
+        '<div class="result-row"><span class="rl">Gas you paid</span><span class="rv green">$0.00</span></div>' +
+      '</div>';
   } else {
-    resultContent = "Done. Check your wallet &mdash; your balance is updated." +
-      "<div class="result-card" style="margin-top:.6rem">" +
-        "<div class="result-row"><span class="result-label">You received</span><span class="result-val green">" + quotes[winnerIdx] + " " + intent.toTok + "</span></div>" +
-        "<div class="result-row"><span class="result-label">Best solver</span><span class="result-val">" + solvers[winnerIdx] + " via " + sources[winnerIdx] + "</span></div>" +
-        "<div class="result-row"><span class="result-label">Beat floor by</span><span class="result-val green">+" + beat + "%</span></div>" +
-        "<div class="result-row"><span class="result-label">Fill time</span><span class="result-val">" + fillTime + "s</span></div>" +
-        "<div class="result-row"><span class="result-label">Protocol fee</span><span class="result-val">" + feeAmt + " " + intent.fromTok + "</span></div>" +
-        "<div class="result-row"><span class="result-label">Gas you paid</span><span class="result-val green">$0.00</span></div>" +
-      "</div>Want to try another?";
+    resultHTML = "Done. Check your wallet &mdash; your balance updated." +
+      '<div class="result-card" style="margin-top:.6rem">' +
+        '<div class="result-row"><span class="rl">You received</span><span class="rv green">' + quotes[winnerIdx] + ' ' + intent.toTok + '</span></div>' +
+        '<div class="result-row"><span class="rl">Best solver</span><span class="rv">' + solverNames[winnerIdx] + ' via ' + solverSources[winnerIdx] + '</span></div>' +
+        '<div class="result-row"><span class="rl">Beat floor by</span><span class="rv green">+' + beat + '%</span></div>' +
+        '<div class="result-row"><span class="rl">Fill time</span><span class="rv">' + fillTime + 's</span></div>' +
+        '<div class="result-row"><span class="rl">Protocol fee</span><span class="rv">' + feeAmt + ' ' + intent.fromTok + '</span></div>' +
+        '<div class="result-row"><span class="rl">Gas you paid</span><span class="rv green">$0.00</span></div>' +
+      '</div>Want to try another?';
   }
 
-  resultDiv.innerHTML = "<div class="msg-av intnt">&#9889;</div><div class="msg-bubble" style="max-width:94%;width:100%">" + resultContent + "</div>";
-  msgs.appendChild(resultDiv); msgs.scrollTop = msgs.scrollHeight;
-
+  addMsg("intnt", resultHTML);
   busy = false;
   document.getElementById("send-btn").disabled = false;
 }
 
-// ── INIT ──
+// Init
 renderWallet();
 </script>
 </body>
