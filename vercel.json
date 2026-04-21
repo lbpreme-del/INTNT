@@ -1,8 +1,7 @@
 {
-  "version": 2,
-  "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/whitepaper", "dest": "/whitepaper.html" },
-    { "src": "/testnet", "dest": "/testnet.html" }
+  "rewrites": [
+    { "source": "/demo", "destination": "/demo.html" },
+    { "source": "/whitepaper", "destination": "/whitepaper.html" },
+    { "source": "/testnet", "destination": "/testnet.html" }
   ]
 }
