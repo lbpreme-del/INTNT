@@ -229,51 +229,97 @@ function parseIntent(text) {
   var t = text.toLowerCase();
   var result = { type: "swap", fromTok: "USDC", toTok: "ETH", amount: 500, valid: true, error: "", condition: null };
 
-  var amtMatch = t.match(/[0-9]+\.?[0-9]*/);
-  if (amtMatch) result.amount = parseFloat(amtMatch[0]);
-
-  var found = [];
-  var toks = ["wbtc","usdc","usdt","dai","eth"];
-  for (var i = 0; i < toks.length; i++) {
-    if (t.indexOf(toks[i]) !== -1) found.push(toks[i].toUpperCase());
+  // Detect intent type first
+  if (t.indexOf("yield") !== -1 || t.indexOf("pool") !== -1 || t.indexOf("earn") !== -1 || t.indexOf("deposit") !== -1) {
+    result.type = "yield";
+  }
+  if (t.indexOf(" if ") !== -1 || t.indexOf("when ") !== -1 || t.indexOf("below") !== -1 || t.indexOf("drops") !== -1 || t.indexOf("reaches") !== -1) {
+    result.type = "conditional";
+    var condMatch = t.match(/\$?([0-9][0-9,]*)/g);
+    if (condMatch && condMatch.length > 0) result.condition = condMatch[condMatch.length-1].replace(/[$,]/g,"");
   }
 
-  if (found.length >= 2) {
-    result.fromTok = found[0];
-    result.toTok = found[1];
-  } else if (found.length === 1) {
-    if (t.indexOf("for") !== -1 || t.indexOf("into") !== -1) {
-      result.toTok = found[0];
-      result.fromTok = found[0] === "ETH" ? "USDC" : "ETH";
-    } else {
-      result.fromTok = found[0];
-      result.toTok = found[0] === "USDC" ? "ETH" : "USDC";
+  // Detect dollar amount — "$300 worth" or "300 dollars" or "buy $300"
+  var isDollarAmount = false;
+  var dollarMatch = t.match(/\$([0-9]+\.?[0-9]*)/);
+  if (!dollarMatch) dollarMatch = t.match(/([0-9]+\.?[0-9]*)\s*(?:dollars?|usd|worth)/);
+  if (dollarMatch) {
+    isDollarAmount = true;
+    result._dollarAmount = parseFloat(dollarMatch[1]);
+  }
+
+  // Detect raw amount (non-dollar)
+  var amtMatch = t.match(/([0-9]+\.?[0-9]*)/);
+  if (amtMatch) result._rawAmount = parseFloat(amtMatch[1]);
+
+  // Detect tokens — look for context clues: "swap X for Y", "sell X", "buy X"
+  var toks = ["wbtc","usdc","usdt","dai","eth"];
+  
+  // Try to find "swap/sell/exchange [amount] [FROM] for/to [TO]"
+  var swapMatch = t.match(/(?:swap|sell|exchange|convert)\s+(?:[0-9.]+\s+)?([a-z]+)\s+(?:for|to|into)\s+([a-z]+)/);
+  if (swapMatch) {
+    var f = swapMatch[1].toUpperCase();
+    var to = swapMatch[2].toUpperCase();
+    if (toks.indexOf(f.toLowerCase()) !== -1) result.fromTok = f;
+    if (toks.indexOf(to.toLowerCase()) !== -1) result.toTok = to;
+  } else {
+    // Try "buy [amount] [TOKEN]" or "get [TOKEN]" or "I want [TOKEN]"
+    var buyMatch = t.match(/(?:buy|get|purchase|acquire)\s+(?:\$?[0-9.]+\s+(?:worth\s+of\s+)?)?([a-z]+)/);
+    if (buyMatch) {
+      var tok = buyMatch[1].toUpperCase();
+      if (toks.indexOf(tok.toLowerCase()) !== -1) {
+        result.toTok = tok;
+        result.fromTok = tok === "ETH" ? "USDC" : "ETH";
+      }
+    }
+    // Try "[amount] [TOKEN] for/to [TOKEN]"
+    var forMatch = t.match(/([a-z]+)\s+(?:for|to|into)\s+([a-z]+)/);
+    if (forMatch) {
+      var f2 = forMatch[1].toUpperCase();
+      var t2 = forMatch[2].toUpperCase();
+      if (toks.indexOf(f2.toLowerCase()) !== -1) result.fromTok = f2;
+      if (toks.indexOf(t2.toLowerCase()) !== -1) result.toTok = t2;
     }
   }
 
-  if (t.indexOf("yield") !== -1 || t.indexOf("pool") !== -1 || t.indexOf("earn") !== -1 || t.indexOf("deposit") !== -1) {
-    result.type = "yield";
+  // Yield: always spend USDC unless specified
+  if (result.type === "yield") {
     result.fromTok = "USDC";
+    result.toTok = "POOL";
   }
 
-  if (t.indexOf(" if ") !== -1 || t.indexOf("when ") !== -1 || t.indexOf("below") !== -1 || t.indexOf("drops") !== -1) {
-    result.type = "conditional";
-    var priceMatch = t.match(/[0-9][0-9,]*/g);
-    if (priceMatch && priceMatch.length > 0) result.condition = priceMatch[priceMatch.length - 1].replace(/,/g, "");
+  // Resolve amount
+  if (isDollarAmount) {
+    // Convert dollar amount to fromTok units
+    var fromPrice2 = wallet[result.fromTok] ? wallet[result.fromTok].price : 1;
+    result.amount = result._dollarAmount / fromPrice2;
+    result.amount = Math.round(result.amount * 10000) / 10000;
+    result._displayAmount = "$" + result._dollarAmount;
+  } else if (result._rawAmount) {
+    result.amount = result._rawAmount;
+    result._displayAmount = result.amount + " " + result.fromTok;
   }
 
+  // Yield amount
+  if (result.type === "yield" && result._rawAmount) {
+    result.amount = result._rawAmount;
+  }
+
+  // Validate same token
   if (result.fromTok === result.toTok && result.type === "swap") {
     result.valid = false;
-    result.error = "Input and output tokens are the same. Try something like \"swap USDC for ETH\".";
+    result.error = "Looks like the input and output are the same token. Try something like \"swap 500 USDC for ETH\".";
     return result;
   }
 
+  // Validate balance
   if (result.type === "swap") {
-    var bal = wallet[result.fromTok] ? wallet[result.fromTok].amount : 0;
-    if (result.amount > bal) {
+    var bal2 = wallet[result.fromTok] ? wallet[result.fromTok].amount : 0;
+    if (result.amount > bal2) {
       result.valid = false;
-      var dec = (result.fromTok === "ETH" || result.fromTok === "WBTC") ? 4 : 2;
-      result.error = "Not enough balance. You have " + fmt(bal, dec) + " " + result.fromTok + " but tried to use " + result.amount + ".";
+      var dec2 = (result.fromTok === "ETH" || result.fromTok === "WBTC") ? 5 : 2;
+      var usdVal = bal2 * (wallet[result.fromTok] ? wallet[result.fromTok].price : 1);
+      result.error = "Not enough " + result.fromTok + ". You have " + fmt(bal2, dec2) + " " + result.fromTok + " (" + fmtUSD(usdVal) + "). Try a smaller amount.";
     }
   }
 
@@ -352,7 +398,8 @@ async function send() {
 
   addTyping(); await delay(850); removeTyping();
 
-  var ack = "Signed. Posting your intent to the network now &mdash; solvers are already competing.";
+  var displayAmt = intent._displayAmount || (intent.amount + " " + intent.fromTok);
+  var ack = "Signed. Posting your intent to the network &mdash; swapping " + displayAmt + " for " + intent.toTok + ". Solvers are competing now.";
   if (intent.type === "conditional") ack = "Got it. I will monitor the price and execute automatically when it hits your target. Your funds stay in your wallet until then.";
   if (intent.type === "yield") ack = "Scanning yield pools across Base right now for the best APY on your " + intent.fromTok + ".";
   addMsg("intnt", ack);
