@@ -838,45 +838,14 @@ footer {
       <div class="perk">Double reputation points — get established faster</div>
       <div class="perk">Direct line to the team on Discord</div>
     </div>
-    <div id="wl-form" class="reveal">
-      <div class="form-grid">
-        <div class="form-col"><label class="form-label">Name</label><input class="form-input" id="wl-name" placeholder="Satoshi" type="text"></div>
-        <div class="form-col"><label class="form-label">Email</label><input class="form-input" id="wl-email" placeholder="you@example.com" type="email"></div>
-        <div class="form-col"><label class="form-label">Wallet address <span style="opacity:.4">(optional)</span></label><input class="form-input" id="wl-wallet" placeholder="0x..."></div>
-        <div class="form-col">
-          <label class="form-label">Background</label>
-          <select class="form-select" id="wl-bg">
-            <option value="">Select...</option>
-            <option>Smart contract dev</option>
-            <option>Python backend dev</option>
-            <option>Quant / algo trader</option>
-            <option>MEV searcher</option>
-            <option>Non-technical</option>
-          </select>
-        </div>
-        <div class="form-col">
-          <label class="form-label">Primary chain</label>
-          <select class="form-select" id="wl-chain">
-            <option value="">Select...</option>
-            <option>Base</option>
-            <option>Ethereum</option>
-            <option>Arbitrum</option>
-            <option>Solana</option>
-            <option>Multiple</option>
-          </select>
-        </div>
-        <div class="form-col" style="align-self:flex-end">
-          <button class="submit-btn" onclick="submitWL()">
-            Join the waitlist
-            <span class="submit-arrow">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div id="wl-success" style="display:none" class="reveal">
-      <p class="success-msg">You're on the list. <em>We'll be in touch.</em></p>
+    <div class="reveal">
+      <a href="https://tally.so/r/q4E8P9" target="_blank" class="submit-btn" style="display:inline-flex">
+        Join the waitlist
+        <span class="submit-arrow">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+      <p style="margin-top:1rem;font-size:12px;color:rgba(255,255,255,.35)">Takes 2 minutes. We'll reach out when staking goes live.</p>
     </div>
   </div>
 </section>
@@ -939,18 +908,7 @@ function closeSheet() {
   document.body.style.overflow = '';
 }
 
-// Waitlist form
-function submitWL() {
-  const name = document.getElementById('wl-name').value.trim();
-  const email = document.getElementById('wl-email').value.trim();
-  if (!name || !email || !email.includes('@')) {
-    alert('Please enter your name and a valid email.');
-    return;
-  }
-  document.getElementById('wl-form').style.display = 'none';
-  document.getElementById('wl-success').style.display = 'block';
-  document.getElementById('wl-success').classList.add('visible');
-}
+// Waitlist handled by Tally: tally.so/r/q4E8P9
 </script>
 </body>
 </html>
