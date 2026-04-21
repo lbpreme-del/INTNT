@@ -7,38 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;background:#000;color:#fff;font-family:'Almarai',sans-serif;}
+html,body{height:100%;background:#000;color:#fff;font-family:"Almarai",sans-serif;}
 body{display:flex;flex-direction:column;}
-
-/* NAV */
 .nav-outer{padding:.9rem 1.25rem 0;background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);flex-shrink:0;}
 nav{display:flex;align-items:center;justify-content:space-between;background:rgba(15,25,40,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:.65rem 1rem .65rem 1.5rem;max-width:1200px;margin:0 auto;}
 .nav-logo{height:36px;filter:brightness(0) invert(1);}
 .nav-links{display:flex;gap:1.75rem;}
-.nav-link{font-size:11px;color:rgba(255,255,255,.6);text-decoration:none;transition:color .15s;}
+.nav-link{font-size:11px;color:rgba(255,255,255,.6);text-decoration:none;}
 .nav-link:hover{color:#fff;}
 .nav-cta{font-size:12px;font-weight:500;color:#000;background:#fff;padding:8px 18px;border-radius:100px;text-decoration:none;}
 @media(max-width:600px){.nav-links,.nav-cta{display:none;}}
-
-/* MAIN CHAT LAYOUT */
 .chat-wrap{flex:1;display:flex;flex-direction:column;max-width:720px;width:100%;margin:0 auto;padding:0 1rem;min-height:0;}
-
-/* HEADER */
 .chat-header{text-align:center;padding:2.5rem 0 1.75rem;flex-shrink:0;}
 .chat-header-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:400;letter-spacing:-.025em;margin-bottom:.5rem;}
-.chat-header-title em{font-family:'Instrument Serif',serif;font-style:italic;}
+.chat-header-title em{font-family:"Instrument Serif",serif;font-style:italic;}
 .chat-header-sub{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;}
-
-/* SUGGESTIONS */
 .suggestions{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1.5rem;flex-shrink:0;}
 .suggestion{font-size:12px;color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-.suggestion:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);}
-
-/* MESSAGES */
+.suggestion:hover{color:#fff;border-color:rgba(255,255,255,.3);}
 .messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;padding-bottom:1rem;min-height:0;}
 .messages::-webkit-scrollbar{width:0;}
-
-/* MESSAGE BUBBLES */
 .msg{display:flex;gap:.75rem;animation:msgIn .35s cubic-bezier(.16,1,.3,1);}
 .msg.user{flex-direction:row-reverse;}
 .msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;}
@@ -47,32 +35,24 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .msg-bubble{max-width:85%;padding:.85rem 1.1rem;border-radius:18px;font-size:14px;line-height:1.65;}
 .msg.intnt .msg-bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-bottom-left-radius:4px;color:rgba(255,255,255,.85);}
 .msg.user .msg-bubble{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-bottom-right-radius:4px;color:#fff;}
-
-/* TYPING INDICATOR */
 .typing{display:flex;gap:4px;align-items:center;padding:.6rem .85rem;}
 .typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);animation:bounce 1.2s infinite;}
 .typing span:nth-child(2){animation-delay:.2s;}
 .typing span:nth-child(3){animation-delay:.4s;}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-
-/* PIPELINE CARD */
 .pipeline-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.5rem;font-size:13px;}
-.pipe-step-line{display:flex;align-items:center;gap:.75rem;padding:.4rem 0;color:rgba(255,255,255,.5);}
+.pipe-step-line{display:flex;align-items:center;gap:.75rem;padding:.4rem 0;color:rgba(255,255,255,.4);}
 .pipe-step-line.active{color:#fff;}
 .pipe-step-line.done{color:rgba(74,222,128,.8);}
-.pipe-step-line .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
-.pipe-step-line.active .dot{background:#fff;box-shadow:0 0 6px rgba(255,255,255,.5);}
-.pipe-step-line.done .dot{background:rgba(74,222,128,.8);}
-
-/* RESULT CARD */
-.result-card{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.5rem;}
+.pipe-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.pipe-step-line.active .pipe-dot{background:#fff;box-shadow:0 0 6px rgba(255,255,255,.5);}
+.pipe-step-line.done .pipe-dot{background:rgba(74,222,128,.8);}
+.result-card{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.75rem;}
 .result-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:13px;border-bottom:.5px solid rgba(74,222,128,.1);}
 .result-row:last-child{border-bottom:none;}
 .result-label{color:rgba(255,255,255,.45);}
 .result-val{color:#fff;font-weight:500;}
 .result-val.green{color:rgba(74,222,128,.9);}
-
-/* SOLVER RACE CARD */
 .race-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.1rem 1.25rem;margin-top:.5rem;}
 .race-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.85rem;}
 .race-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem;}
@@ -81,29 +61,23 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
 .race-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
 .race-bar{height:100%;border-radius:3px;background:rgba(255,255,255,.2);width:0%;transition:width .9s cubic-bezier(.16,1,.3,1);}
 .race-bar.winner{background:rgba(74,222,128,.8);}
-.race-quote{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.4);width:80px;text-align:right;flex-shrink:0;}
-
-/* INPUT BAR */
+.race-quote{font-family:"Courier New",monospace;font-size:10px;color:rgba(255,255,255,.4);width:90px;text-align:right;flex-shrink:0;}
 .input-bar{flex-shrink:0;padding:.85rem 0 1.25rem;}
 .input-wrap{display:flex;align-items:flex-end;gap:.65rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:.65rem .65rem .65rem 1.1rem;transition:border-color .2s;}
 .input-wrap:focus-within{border-color:rgba(255,255,255,.28);}
-.input-field{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'Almarai',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:120px;min-height:24px;}
+.input-field{flex:1;background:none;border:none;outline:none;color:#fff;font-family:"Almarai",sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:120px;min-height:24px;}
 .input-field::placeholder{color:rgba(255,255,255,.25);}
 .send-btn{width:36px;height:36px;border-radius:10px;background:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
 .send-btn:hover{opacity:.85;}
 .send-btn:disabled{opacity:.3;cursor:not-allowed;}
 .input-hint{font-size:10px;color:rgba(255,255,255,.2);text-align:center;margin-top:.5rem;}
-
-/* RESET */
 .reset-row{text-align:center;padding:.5rem 0;flex-shrink:0;}
-.reset-btn{font-size:12px;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;transition:color .15s;}
+.reset-btn{font-size:12px;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;}
 .reset-btn:hover{color:rgba(255,255,255,.7);}
-
 @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-
 <div class="nav-outer">
   <nav>
     <a href="/"><img class="nav-logo" src="data:image/png;base64,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" alt="INTNT"></a>
@@ -112,7 +86,7 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
       <a href="/whitepaper" class="nav-link">Whitepaper</a>
       <a href="/testnet" class="nav-link">Testnet</a>
     </div>
-    <a href="/#solvers" class="nav-cta">Join waitlist</a>
+    <a href="https://tally.so/r/q4E8P9" target="_blank" class="nav-cta">Join waitlist</a>
   </nav>
 </div>
 
@@ -121,21 +95,17 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
     <h1 class="chat-header-title">Tell INTNT <em>what you want.</em></h1>
     <p class="chat-header-sub">Type a request in plain language. INTNT figures out how to get it done.</p>
   </div>
-
   <div class="suggestions" id="suggestions">
     <div class="suggestion" onclick="usePrompt(this)">Swap 1000 USDC for ETH at the best price</div>
-    <div class="suggestion" onclick="usePrompt(this)">Buy ETH if the price drops below 000</div>
+    <div class="suggestion" onclick="usePrompt(this)">Buy ETH if the price drops below $3000</div>
     <div class="suggestion" onclick="usePrompt(this)">Put my USDC in the highest yield pool</div>
     <div class="suggestion" onclick="usePrompt(this)">Bridge 500 USDC to Arbitrum</div>
     <div class="suggestion" onclick="usePrompt(this)">Swap all my DAI for USDC</div>
   </div>
-
   <div class="messages" id="messages"></div>
-
   <div class="reset-row" id="reset-row" style="display:none">
     <button class="reset-btn" onclick="resetDemo()">← Start over</button>
   </div>
-
   <div class="input-bar">
     <div class="input-wrap">
       <textarea class="input-field" id="input" placeholder="Tell INTNT what you want..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
@@ -143,240 +113,147 @@ nav{display:flex;align-items:center;justify-content:space-between;background:rgb
         <svg width="16" height="16" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
       </button>
     </div>
-    <p class="input-hint">This is a simulation — no real funds are used</p>
+    <p class="input-hint">Simulation only — no real funds used</p>
   </div>
 </div>
 
 <script>
 var busy = false;
+function autoResize(el){el.style.height="auto";el.style.height=Math.min(el.scrollHeight,120)+"px";}
+function handleKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}}
+function usePrompt(el){document.getElementById("input").value=el.textContent;autoResize(document.getElementById("input"));send();}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+function rnd(a,b){return Math.random()*(b-a)+a;}
 
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-}
-
-function usePrompt(el) {
-  document.getElementById('input').value = el.textContent;
-  autoResize(document.getElementById('input'));
-  send();
-}
-
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-function rnd(a,b) { return Math.random()*(b-a)+a; }
-
-function addMsg(role, content) {
-  var msgs = document.getElementById('messages');
-  var d = document.createElement('div');
-  d.className = 'msg ' + role;
-  var avatar = role === 'intnt'
-    ? '<div class="msg-avatar intnt">⚡</div>'
-    : '<div class="msg-avatar user">S</div>';
-  d.innerHTML = avatar + '<div class="msg-bubble">' + content + '</div>';
+function addMsg(role,content){
+  var msgs=document.getElementById("messages");
+  var d=document.createElement("div");
+  d.className="msg "+role;
+  var av=role==="intnt"?"<div class="msg-avatar intnt">&#9889;</div>":"<div class="msg-avatar user">S</div>";
+  d.innerHTML=av+"<div class="msg-bubble">"+content+"</div>";
   msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
+  msgs.scrollTop=msgs.scrollHeight;
   return d;
 }
 
-function addTyping() {
-  var msgs = document.getElementById('messages');
-  var d = document.createElement('div');
-  d.className = 'msg intnt';
-  d.id = 'typing-indicator';
-  d.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
-  msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
+function addTyping(){
+  var msgs=document.getElementById("messages");
+  var d=document.createElement("div");
+  d.className="msg intnt";d.id="typing-ind";
+  d.innerHTML="<div class="msg-avatar intnt">&#9889;</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>";
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
+function removeTyping(){var t=document.getElementById("typing-ind");if(t)t.remove();}
 
-function removeTyping() {
-  var t = document.getElementById('typing-indicator');
-  if (t) t.remove();
-}
+async function send(){
+  if(busy)return;
+  var input=document.getElementById("input");
+  var text=input.value.trim();
+  if(!text)return;
+  busy=true;
+  document.getElementById("send-btn").disabled=true;
+  document.getElementById("suggestions").style.display="none";
+  document.getElementById("reset-row").style.display="block";
+  input.value="";input.style.height="auto";
 
-function parseIntent(text) {
-  text = text.toLowerCase();
-  var result = { type: 'swap', from: 'USDC', to: 'ETH', amount: '1,000', condition: null };
+  var t=text.toLowerCase();
+  var fromTok="USDC",toTok="ETH",type="swap";
+  if(t.includes("usdc")&&t.includes("eth")){fromTok="USDC";toTok="ETH";}
+  else if(t.includes("eth")&&t.includes("usdc")){fromTok="ETH";toTok="USDC";}
+  else if(t.includes("dai")&&t.includes("usdc")){fromTok="DAI";toTok="USDC";}
+  else if(t.includes("usdc")&&t.includes("arb")){fromTok="USDC";toTok="USDC";type="bridge";}
+  if(t.includes("yield")||t.includes("pool")||t.includes("earn"))type="yield";
+  if(t.includes("if")||t.includes("when")||t.includes("below")||t.includes("drops"))type="conditional";
 
-  if (text.includes('usdc') && text.includes('eth')) { result.from='USDC'; result.to='ETH'; }
-  else if (text.includes('eth') && text.includes('usdc')) { result.from='ETH'; result.to='USDC'; }
-  else if (text.includes('dai') && text.includes('usdc')) { result.from='DAI'; result.to='USDC'; }
-  else if (text.includes('usdc') && text.includes('dai')) { result.from='USDC'; result.to='DAI'; }
-  else if (text.includes('usdc') && text.includes('arb')) { result.type='bridge'; result.from='USDC'; result.to='Arbitrum'; }
-
-  var amtMatch = text.match(/(\d[\d,]*)\s*(usdc|eth|dai|wbtc)?/);
-  if (amtMatch) result.amount = amtMatch[1];
-
-  if (text.includes('if') || text.includes('when') || text.includes('below') || text.includes('drops')) {
-    result.type = 'conditional';
-    var priceMatch = text.match(/$?([\d,]+)/g);
-    if (priceMatch && priceMatch.length > 1) result.condition = priceMatch[priceMatch.length-1];
-  }
-
-  if (text.includes('yield') || text.includes('pool') || text.includes('apy') || text.includes('earn')) {
-    result.type = 'yield';
-  }
-
-  return result;
-}
-
-async function send() {
-  if (busy) return;
-  var input = document.getElementById('input');
-  var text = input.value.trim();
-  if (!text) return;
-
-  busy = true;
-  document.getElementById('send-btn').disabled = true;
-  document.getElementById('suggestions').style.display = 'none';
-  document.getElementById('reset-row').style.display = 'block';
-  input.value = '';
-  input.style.height = 'auto';
-
-  var intent = parseIntent(text);
-
-  // User message
-  addMsg('user', text);
+  addMsg("user",text);
   await delay(400);
+  addTyping();await delay(900);removeTyping();
 
-  // INTNT acknowledges
-  addTyping();
-  await delay(900);
-  removeTyping();
-
-  var ackMsg = '';
-  if (intent.type === 'conditional') {
-    ackMsg = 'Got it — I'll watch the price and execute automatically when your condition is met. No need to stay online. Let me set this up.';
-  } else if (intent.type === 'yield') {
-    ackMsg = 'I'll scan the top yield pools across Base and deposit your funds into the highest APY option that meets your risk parameters.';
-  } else if (intent.type === 'bridge') {
-    ackMsg = 'I'll handle the bridge and deposit in a single step — no need to track confirmations on both chains.';
-  } else {
-    ackMsg = 'Got it. Signing your intent and posting it to the network — solvers are already competing for the best price.';
-  }
-
-  addMsg('intnt', ackMsg);
+  var ack="Got it. Signing your intent and posting it to the network now.";
+  if(type==="conditional")ack="Got it. I will watch the price and execute automatically when your condition is met. You don't need to stay online.";
+  else if(type==="yield")ack="Scanning yield pools across Base right now to find the best APY for your funds.";
+  else if(type==="bridge")ack="I will handle the bridge and the deposit in a single step. No need to track confirmations on both chains.";
+  addMsg("intnt",ack);
   await delay(600);
 
   // Solver race
-  addTyping();
-  await delay(700);
-  removeTyping();
+  addTyping();await delay(600);removeTyping();
+  var base=toTok==="ETH"?0.485:toTok==="USDC"?1847.20:0.998;
+  var quotes=[(base*rnd(1.008,1.018)).toFixed(4),(base*rnd(1.012,1.024)).toFixed(4),(base*rnd(1.005,1.015)).toFixed(4),(base*rnd(1.019,1.028)).toFixed(4)];
+  var winnerIdx=quotes.map(Number).indexOf(Math.max(...quotes.map(Number)));
+  var solvers=["Solver Alpha","Solver Beta","Solver Gamma","Solver Delta"];
+  var sources=["0x API","1inch Fusion","Paraswap","Uniswap v3"];
 
-  var fromTok = intent.from;
-  var toTok = intent.to === 'Arbitrum' ? 'USDC (on Arbitrum)' : intent.to;
-  var baseQuote = intent.to === 'ETH' ? 0.485 : intent.to === 'USDC' ? 1847.20 : 0.998;
-  var quotes = [
-    (baseQuote * rnd(1.008, 1.018)).toFixed(intent.to === 'USDC' ? 2 : 4),
-    (baseQuote * rnd(1.012, 1.024)).toFixed(intent.to === 'USDC' ? 2 : 4),
-    (baseQuote * rnd(1.005, 1.015)).toFixed(intent.to === 'USDC' ? 2 : 4),
-    (baseQuote * rnd(1.019, 1.028)).toFixed(intent.to === 'USDC' ? 2 : 4),
-  ];
-  var winnerIdx = quotes.map(Number).indexOf(Math.max(...quotes.map(Number)));
-  var solvers = ['Solver Alpha', 'Solver Beta', 'Solver Gamma', 'Solver Delta'];
-  var sources = ['0x API', '1inch Fusion', 'Paraswap', 'Uniswap v3'];
+  var msgs=document.getElementById("messages");
+  var raceDiv=document.createElement("div");
+  raceDiv.className="msg intnt";
+  raceDiv.innerHTML="<div class="msg-avatar intnt">&#9889;</div><div class="msg-bubble" style="max-width:92%;width:100%"><div class="race-card"><div class="race-title">Solvers competing for best price</div>"+
+    solvers.map(function(s,i){return "<div class="race-row"><span class="race-name">"+s+"</span><div class="race-bar-wrap"><div class="race-bar" id="rb-"+i+""></div></div><span class="race-quote" id="rq-"+i+"">searching...</span></div>";}).join("")+
+  "</div></div>";
+  msgs.appendChild(raceDiv);msgs.scrollTop=msgs.scrollHeight;
 
-  // Race card
-  var msgs = document.getElementById('messages');
-  var raceDiv = document.createElement('div');
-  raceDiv.className = 'msg intnt';
-  raceDiv.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble" style="max-width:90%;width:100%"><div class="race-card"><div class="race-title">Solvers competing for best price</div>' +
-    solvers.map(function(s,i) {
-      return '<div class="race-row"><span class="race-name">' + s + '</span><div class="race-bar-wrap"><div class="race-bar" id="rb-'+i+'"></div></div><span class="race-quote" id="rq-'+i+'">searching...</span></div>';
-    }).join('') +
-  '</div></div>';
-  msgs.appendChild(raceDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  // Animate bars
-  for (var i = 0; i < 4; i++) {
-    (function(idx) {
-      var t = rnd(300, 800);
-      setTimeout(function() {
-        document.getElementById('rb-'+idx).style.width = rnd(50,85)+'%';
-        setTimeout(function() {
-          document.getElementById('rq-'+idx).textContent = quotes[idx] + ' ' + (intent.to === 'Arbitrum' ? 'USDC' : intent.to);
-        }, t + 150);
-      }, t);
+  for(var i=0;i<4;i++){
+    (function(idx){
+      var sp=rnd(300,800);
+      setTimeout(function(){
+        document.getElementById("rb-"+idx).style.width=rnd(50,85)+"%";
+        setTimeout(function(){document.getElementById("rq-"+idx).textContent=quotes[idx]+" "+toTok;},sp+150);
+      },sp);
     })(i);
   }
-
-  await delay(1400);
-  document.getElementById('rb-'+winnerIdx).style.width = '100%';
-  document.getElementById('rb-'+winnerIdx).className = 'race-bar winner';
-  document.getElementById('rq-'+winnerIdx).textContent = quotes[winnerIdx] + ' ' + (intent.to === 'Arbitrum' ? 'USDC' : intent.to) + ' ✓';
-
-  await delay(600);
-
-  // Settlement message
-  addTyping();
-  await delay(1000);
-  removeTyping();
-
-  var settleDiv = document.createElement('div');
-  settleDiv.className = 'msg intnt';
-  var steps = [
-    'L1 — Signature verified',
-    'L2 — Solver checked and cleared',
-    'L3 — Output simulated and confirmed',
-    'L4 — Funds transferred atomically',
-    'L5 — Solver fee escrowed',
-  ];
-  var stepsHtml = steps.map(function(s) {
-    return '<div class="pipe-step-line"><div class="dot"></div>' + s + '</div>';
-  }).join('');
-
-  settleDiv.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble" style="max-width:90%;width:100%"><div class="pipeline-card">' + stepsHtml + '</div></div>';
-  msgs.appendChild(settleDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  // Animate steps
-  var stepEls = settleDiv.querySelectorAll('.pipe-step-line');
-  for (var i = 0; i < stepEls.length; i++) {
-    await delay(350);
-    if (i > 0) stepEls[i-1].className = 'pipe-step-line done';
-    stepEls[i].className = 'pipe-step-line active';
-  }
-  await delay(350);
-  stepEls[stepEls.length-1].className = 'pipe-step-line done';
-
+  await delay(1600);
+  document.getElementById("rb-"+winnerIdx).style.width="100%";
+  document.getElementById("rb-"+winnerIdx).className="race-bar winner";
+  document.getElementById("rq-"+winnerIdx).textContent=quotes[winnerIdx]+" "+toTok+" ✓";
   await delay(500);
 
-  // Final result
-  addTyping();
-  await delay(700);
-  removeTyping();
+  // Settlement
+  addTyping();await delay(900);removeTyping();
+  var steps=["L1 — Signature verified","L2 — Solver checked and cleared","L3 — Output simulated and confirmed","L4 — Funds transferred atomically","L5 — Solver fee escrowed"];
+  var settleDiv=document.createElement("div");
+  settleDiv.className="msg intnt";
+  settleDiv.innerHTML="<div class="msg-avatar intnt">&#9889;</div><div class="msg-bubble" style="max-width:92%;width:100%"><div class="pipeline-card">"+
+    steps.map(function(s){return "<div class="pipe-step-line"><div class="pipe-dot"></div>"+s+"</div>";}).join("")+
+  "</div></div>";
+  msgs.appendChild(settleDiv);msgs.scrollTop=msgs.scrollHeight;
 
-  var fillTime = rnd(2.2, 4.9).toFixed(1);
-  var beat = (((parseFloat(quotes[winnerIdx]) - baseQuote) / baseQuote) * 100).toFixed(2);
-  var fee = intent.type === 'bridge' ? 'none' : (parseFloat(intent.amount.replace(',','')) * 0.0015).toFixed(2) + ' ' + fromTok;
+  var stepEls=settleDiv.querySelectorAll(".pipe-step-line");
+  for(var i=0;i<stepEls.length;i++){
+    await delay(380);
+    if(i>0)stepEls[i-1].className="pipe-step-line done";
+    stepEls[i].className="pipe-step-line active";
+  }
+  await delay(380);
+  stepEls[stepEls.length-1].className="pipe-step-line done";
+  await delay(500);
 
-  var resultDiv = document.createElement('div');
-  resultDiv.className = 'msg intnt';
-  resultDiv.innerHTML = '<div class="msg-avatar intnt">⚡</div><div class="msg-bubble" style="max-width:90%;width:100%">' +
-    'Done. Here's what happened:<div class="result-card" style="margin-top:.75rem">' +
-    '<div class="result-row"><span class="result-label">You received</span><span class="result-val green">' + quotes[winnerIdx] + ' ' + (intent.to === 'Arbitrum' ? 'USDC on Arbitrum' : intent.to) + '</span></div>' +
-    '<div class="result-row"><span class="result-label">Best solver</span><span class="result-val">' + solvers[winnerIdx] + ' via ' + sources[winnerIdx] + '</span></div>' +
-    '<div class="result-row"><span class="result-label">Beat your floor by</span><span class="result-val green">+' + beat + '%</span></div>' +
-    '<div class="result-row"><span class="result-label">Fill time</span><span class="result-val">' + fillTime + 's</span></div>' +
-    '<div class="result-row"><span class="result-label">Protocol fee</span><span class="result-val">' + fee + '</span></div>' +
-    '<div class="result-row"><span class="result-label">Gas you paid</span><span class="result-val green">/bin/sh.00</span></div>' +
-    '</div>Want to try another intent?</div>';
-  msgs.appendChild(resultDiv);
-  msgs.scrollTop = msgs.scrollHeight;
+  // Result
+  addTyping();await delay(700);removeTyping();
+  var fillTime=rnd(2.2,4.9).toFixed(1);
+  var beat=(((parseFloat(quotes[winnerIdx])-base)/base)*100).toFixed(2);
+  var fee=(1000*0.0015).toFixed(2)+" "+fromTok;
+  var resultDiv=document.createElement("div");
+  resultDiv.className="msg intnt";
+  resultDiv.innerHTML="<div class="msg-avatar intnt">&#9889;</div><div class="msg-bubble" style="max-width:92%;width:100%">Done. Here's what happened:<div class="result-card">"+
+    "<div class="result-row"><span class="result-label">You received</span><span class="result-val green">"+quotes[winnerIdx]+" "+toTok+"</span></div>"+
+    "<div class="result-row"><span class="result-label">Best solver</span><span class="result-val">"+solvers[winnerIdx]+" via "+sources[winnerIdx]+"</span></div>"+
+    "<div class="result-row"><span class="result-label">Beat your floor by</span><span class="result-val green">+"+beat+"%</span></div>"+
+    "<div class="result-row"><span class="result-label">Fill time</span><span class="result-val">"+fillTime+"s</span></div>"+
+    "<div class="result-row"><span class="result-label">Protocol fee</span><span class="result-val">"+fee+"</span></div>"+
+    "<div class="result-row"><span class="result-label">Gas you paid</span><span class="result-val green">$0.00</span></div>"+
+    "</div>Want to try another intent?</div>";
+  msgs.appendChild(resultDiv);msgs.scrollTop=msgs.scrollHeight;
 
-  busy = false;
-  document.getElementById('send-btn').disabled = false;
+  busy=false;
+  document.getElementById("send-btn").disabled=false;
 }
 
-function resetDemo() {
-  document.getElementById('messages').innerHTML = '';
-  document.getElementById('suggestions').style.display = 'flex';
-  document.getElementById('reset-row').style.display = 'none';
-  busy = false;
-  document.getElementById('send-btn').disabled = false;
+function resetDemo(){
+  document.getElementById("messages").innerHTML="";
+  document.getElementById("suggestions").style.display="flex";
+  document.getElementById("reset-row").style.display="none";
+  busy=false;
+  document.getElementById("send-btn").disabled=false;
 }
 </script>
 </body>
