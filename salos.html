@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAL/OS — Personal Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* palette */
+  --paper:#f3f1ec;
+  --ink:#111111;
+  --ink-2:#3a3a38;
+  --grey:#6e6d68;
+  --grey-2:#9b9a93;
+  --rule:#c9c7bf;
+  --accent:#e8330a;
+  --green:#1a8a3c;
+  --amber:#d98a00;
+  /* type */
+  --sans:'Archivo',system-ui,sans-serif;
+  --narrow:'Archivo Narrow',var(--sans);
+  --mono:'Space Mono',ui-monospace,monospace;
+  /* structure */
+  --rule-heavy:3px solid var(--ink);
+  --rule-mid:2px solid var(--ink);
+  --hair:1px solid var(--rule);
+  --pad:clamp(16px,4vw,40px);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.3;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--pad) 0}
+
+/* generic mono utilities */
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.kicker{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--grey);
+}
+.narrow{font-family:var(--narrow)}
+.accent{color:var(--accent)}
+.muted{color:var(--grey-2)}
+.tab{font-variant-numeric:tabular-nums}
+
+/* ───────────────────────── MASTHEAD ───────────────────────── */
+.masthead{padding-top:clamp(20px,4vw,36px)}
+.masthead-top{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+}
+.wordmark{
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(40px,9vw,64px);
+  letter-spacing:-.04em;
+  line-height:.9;
+}
+.wordmark .slash{color:var(--accent)}
+.furniture{
+  text-align:right;
+  font-family:var(--mono);
+  font-size:11px;
+  line-height:1.7;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+.furniture .lead{color:var(--ink);font-weight:700}
+
+.rulebar{
+  margin-top:clamp(16px,3vw,24px);
+  border-top:var(--hair);
+  border-bottom:var(--hair);
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:8px 0;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+.rulebar .right{color:var(--grey)}
+
+/* ───────────────────────── HERO STRIP ───────────────────────── */
+.hero{
+  margin-top:clamp(18px,3vw,28px);
+  border-top:var(--rule-heavy);
+  border-bottom:var(--rule-heavy);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+}
+.hero-cell{
+  padding:clamp(18px,2.4vw,30px) clamp(14px,1.8vw,24px);
+  border-left:var(--hair);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.hero-cell:first-child{border-left:0}
+.hero-num{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(34px,4.2vw,56px);
+  letter-spacing:-.03em;
+  line-height:.95;
+}
+.hero-desc{
+  font-family:var(--narrow);
+  font-size:13px;
+  color:var(--grey);
+  text-transform:lowercase;
+  margin-top:2px;
+}
+
+/* ───────────────────────── SECTION HEADERS ───────────────────────── */
+section{margin-top:clamp(40px,6vw,72px)}
+.sec-head{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:baseline;
+  gap:18px;
+  border-bottom:var(--rule-mid);
+  padding-bottom:10px;
+}
+.sec-no{
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.1em;
+  color:var(--accent);
+}
+.sec-title{
+  font-family:var(--sans);
+  font-weight:700;
+  font-size:clamp(20px,2.6vw,30px);
+  letter-spacing:-.02em;
+}
+.sec-meta{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--grey);
+  text-align:right;
+}
+
+/* ───────────────────────── TABLES (incoming / loops) ───────────────────────── */
+.table{width:100%;border-collapse:collapse}
+.table tr{border-bottom:var(--hair)}
+.table tr:last-child{border-bottom:0}
+.table td{padding:16px 0;vertical-align:baseline}
+.t-date{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--grey);
+  white-space:nowrap;
+  width:120px;
+}
+.t-name{font-weight:600;font-size:16px}
+.t-sub{
+  font-family:var(--narrow);
+  font-size:13px;
+  color:var(--grey);
+  margin-top:2px;
+}
+.t-amt{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(20px,2.4vw,26px);
+  letter-spacing:-.02em;
+  text-align:right;
+  white-space:nowrap;
+  width:140px;
+}
+.row-off{opacity:.5}
+.amt-zero{color:var(--grey-2)}
+
+/* ───────────────────────── 2-UP / 3-UP COLUMN GRIDS ───────────────────────── */
+.cols{
+  display:grid;
+  border-top:0;
+}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.item{
+  padding:clamp(20px,2.6vw,30px) clamp(16px,2vw,28px) clamp(20px,2.6vw,30px) 0;
+  border-left:var(--hair);
+  padding-left:clamp(16px,2vw,28px);
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+.cols-2 .item:nth-child(odd),
+.cols-3 .item:nth-child(3n+1){border-left:0;padding-left:0}
+.item-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+.item-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+.item-label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--grey);
+  white-space:nowrap;
+}
+.item-fig{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(30px,3.6vw,46px);
+  letter-spacing:-.03em;
+  line-height:.95;
+}
+.item-fig.muted{color:var(--grey-2)}
+.item-desc{
+  font-family:var(--narrow);
+  font-size:13.5px;
+  color:var(--grey);
+}
+
+/* ───────────────────────── CS:GO INVENTORY ───────────────────────── */
+.inv{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.inv-col{padding-left:clamp(16px,2vw,28px);border-left:var(--hair)}
+.inv-col:first-child{border-left:0;padding-left:0;padding-right:clamp(16px,2vw,28px)}
+.inv-col-head{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink);
+  font-weight:700;
+  padding:18px 0 10px;
+  border-bottom:var(--hair);
+}
+.skin{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:baseline;
+  gap:12px;
+  padding:13px 0;
+  border-bottom:var(--hair);
+}
+.skin:last-child{border-bottom:0}
+.skin-name{font-weight:600;font-size:14.5px;line-height:1.25}
+.skin-sub{
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--grey);
+  margin-top:3px;
+  letter-spacing:.02em;
+}
+.skin-price{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:17px;
+  text-align:right;
+  white-space:nowrap;
+}
+.skin.is-new .skin-name::after{
+  content:'NEW';
+  font-family:var(--mono);
+  font-size:8.5px;
+  font-weight:700;
+  letter-spacing:.12em;
+  color:var(--accent);
+  border:1px solid var(--accent);
+  padding:1px 4px;
+  margin-left:8px;
+  vertical-align:middle;
+  position:relative;
+  top:-1px;
+}
+.skin.is-new .skin-price{color:var(--accent)}
+/* gloves proportion bar */
+.prop{margin-top:6px;height:4px;background:var(--rule);width:100%;position:relative}
+.prop-fill{position:absolute;left:0;top:0;bottom:0;background:var(--ink);width:40%}
+.prop-cap{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--grey);
+  margin-top:4px;
+}
+
+.inv-summary{
+  margin-top:0;
+  grid-column:1 / -1;
+  border-top:var(--rule-mid);
+  margin-top:14px;
+  padding-top:16px;
+}
+.sum-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:16px;
+  padding:8px 0;
+}
+.sum-label{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+.sum-val{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(22px,2.6vw,30px);
+  letter-spacing:-.02em;
+}
+.sum-note{
+  font-family:var(--narrow);
+  font-size:12.5px;
+  color:var(--grey);
+  margin-top:6px;
+}
+
+/* ───────────────────────── UTILIZATION TRACKER ───────────────────────── */
+.util{
+  margin-top:18px;
+  border:var(--rule-mid);
+}
+.util-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.util-card{
+  padding:clamp(18px,2.4vw,28px);
+  border-left:var(--hair);
+}
+.util-card:first-child{border-left:0}
+.util-card-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.util-card-name{font-weight:700;font-size:16px}
+.util-card-lim{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--grey);
+}
+.util-pct{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(40px,5vw,56px);
+  letter-spacing:-.04em;
+  line-height:.9;
+  color:var(--grey-2);
+}
+.util-input-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:16px 0 14px;
+}
+.util-input-row label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--grey);
+}
+.util-input-wrap{
+  display:flex;
+  align-items:center;
+  border:var(--rule-mid);
+  background:var(--paper);
+}
+.util-input-wrap .dollar{
+  font-family:var(--mono);
+  font-weight:700;
+  padding:0 4px 0 10px;
+  color:var(--ink);
+}
+.util-input{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:18px;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  width:110px;
+  padding:9px 10px 9px 2px;
+  -moz-appearance:textfield;
+}
+.util-input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.util-input::-webkit-outer-spin-button,
+.util-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+.bar{
+  position:relative;
+  height:22px;
+  border:var(--rule-mid);
+  background:var(--paper);
+  overflow:visible;
+}
+.bar-fill{
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:0%;
+  background:var(--grey-2);
+  transition:width .12s linear,background .12s linear;
+}
+.bar-marker{
+  position:absolute;
+  top:-4px;bottom:-4px;
+  left:10%;
+  width:2px;
+  background:var(--accent);
+}
+.bar-marker span{
+  position:absolute;
+  top:-16px;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:700;
+  color:var(--accent);
+  letter-spacing:.06em;
+}
+.util-status{
+  font-family:var(--mono);
+  font-size:11.5px;
+  letter-spacing:.04em;
+  margin-top:14px;
+  min-height:1.2em;
+  color:var(--ink-2);
+}
+.util-status.zone-green{color:var(--green)}
+.util-status.zone-amber{color:var(--amber)}
+.util-status.zone-red{color:var(--accent)}
+
+/* on-time streak */
+.streak{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:16px;
+  border-top:var(--hair);
+  padding-top:14px;
+}
+.streak-label{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--grey);
+}
+.streak-dots{display:flex;gap:6px}
+.streak-dots input{position:absolute;opacity:0;width:0;height:0}
+.streak-dots label{
+  width:15px;height:15px;
+  border:1.5px solid var(--ink);
+  cursor:pointer;
+  display:block;
+}
+.streak-dots input:checked + label{background:var(--green);border-color:var(--green)}
+
+.util-footer{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:.08em;
+  padding:14px clamp(18px,2.4vw,28px);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.util-footer .uf-label{color:var(--grey-2);font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:10px}
+
+/* ───────────────────────── THE RULES ───────────────────────── */
+.rules{
+  border:var(--rule-mid);
+  margin-top:18px;
+}
+.rule{
+  display:grid;
+  grid-template-columns:64px 1fr;
+  border-bottom:var(--hair);
+}
+.rule:last-child{border-bottom:0}
+.rule-no{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(24px,3vw,34px);
+  color:var(--accent);
+  padding:clamp(16px,2vw,22px) 0 clamp(16px,2vw,22px) clamp(16px,2vw,22px);
+  letter-spacing:-.02em;
+}
+.rule-body{padding:clamp(16px,2vw,22px) clamp(16px,2vw,22px) clamp(16px,2vw,22px) 14px;border-left:var(--hair)}
+.rule-lead{font-weight:700;font-size:15.5px;letter-spacing:-.01em}
+.rule-exp{font-family:var(--narrow);font-size:14px;color:var(--grey);margin-top:5px;line-height:1.45}
+
+/* ───────────────────────── OPEN LOOPS ───────────────────────── */
+.loop{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:16px;
+  padding:16px 0;
+  border-bottom:var(--hair);
+}
+.loop:last-child{border-bottom:0}
+.loop .box{
+  width:16px;height:16px;
+  border:2px solid var(--ink);
+  flex:none;
+  cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background:var(--paper);
+  display:block;
+}
+.loop .box:checked{background:var(--ink)}
+.loop .box:checked::after{
+  content:'';
+  display:block;
+  width:5px;height:9px;
+  border:solid var(--paper);
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+  margin:1px auto 0;
+}
+.loop-task{font-weight:600;font-size:16px}
+.loop:has(.box:checked) .loop-task{text-decoration:line-through;color:var(--grey-2)}
+.loop-status{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  white-space:nowrap;
+}
+
+/* ───────────────────────── FOOTER ───────────────────────── */
+footer{
+  margin-top:clamp(48px,7vw,90px);
+  border-top:var(--rule-heavy);
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  padding:18px 0 40px;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+footer .right{color:var(--grey)}
+
+/* ───────────────────────── RESPONSIVE ───────────────────────── */
+@media(max-width:780px){
+  .hero{grid-template-columns:1fr 1fr}
+  .hero-cell{border-left:var(--hair)}
+  .hero-cell:nth-child(odd){border-left:0}
+  .hero-cell:nth-child(3),.hero-cell:nth-child(4){border-top:var(--hair)}
+  .cols-2,.cols-3{grid-template-columns:1fr}
+  .cols-2 .item,.cols-3 .item{border-left:0;padding-left:0;border-top:var(--hair)}
+  .cols-2 .item:first-child,.cols-3 .item:first-child{border-top:0}
+  .inv{grid-template-columns:1fr}
+  .inv-col{border-left:0;padding-left:0;padding-right:0}
+  .inv-col:nth-child(2){border-top:var(--hair);margin-top:8px}
+  .util-grid{grid-template-columns:1fr}
+  .util-card{border-left:0}
+  .util-card:nth-child(2){border-top:var(--hair)}
+  .sec-head{grid-template-columns:auto 1fr;gap:12px}
+  .sec-meta{grid-column:1 / -1;text-align:left;margin-top:4px}
+}
+@media(max-width:480px){
+  .t-amt{width:auto}
+  .t-date{width:84px}
+}
+
+/* ───────────────────────── PRINT ───────────────────────── */
+@media print{
+  :root{--paper:#fff}
+  body{background:#fff}
+  .util-input-wrap{border-color:#000}
+  section{margin-top:28px;break-inside:avoid}
+  .util,.rules,.hero{break-inside:avoid}
+  .util-footer{background:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  a{color:inherit}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ───────────── MASTHEAD ───────────── -->
+  <header class="masthead">
+    <div class="masthead-top">
+      <h1 class="wordmark">SAL<span class="slash">/</span>OS</h1>
+      <div class="furniture">
+        <div class="lead">Personal Operating System</div>
+        <div>Issue No. 06 — Vol. 2026</div>
+        <div>18 June 2026</div>
+      </div>
+    </div>
+    <div class="rulebar">
+      <div class="left">Finance · Inventory · Build · Body</div>
+      <div class="right">System Active</div>
+    </div>
+  </header>
+
+  <!-- ───────────── HERO STRIP ───────────── -->
+  <div class="hero">
+    <div class="hero-cell">
+      <div class="kicker">Liquid Cash</div>
+      <div class="hero-num">$1,800</div>
+      <div class="hero-desc">incl. kalshi + winnings</div>
+    </div>
+    <div class="hero-cell">
+      <div class="kicker">Incoming / 2 wks</div>
+      <div class="hero-num accent">$4,150</div>
+      <div class="hero-desc">jun 24 + jul 1 checks</div>
+    </div>
+    <div class="hero-cell">
+      <div class="kicker">Accessible</div>
+      <div class="hero-num">$3,700</div>
+      <div class="hero-desc">cash + spacex + skins</div>
+    </div>
+    <div class="hero-cell">
+      <div class="kicker">Locked · 401k</div>
+      <div class="hero-num muted">$6,500</div>
+      <div class="hero-desc">retirement · not spendable</div>
+    </div>
+  </div>
+
+  <!-- ───────────── 01 INCOMING ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">01</div>
+      <div class="sec-title">Incoming</div>
+      <div class="sec-meta">Check Schedule</div>
+    </div>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td class="t-date">Jun 24</td>
+          <td>
+            <div class="t-name">Paycheck — Commission</div>
+            <div class="t-sub">verizon · leverage check</div>
+          </td>
+          <td class="t-amt accent">+$3,000</td>
+        </tr>
+        <tr>
+          <td class="t-date">Jul 01</td>
+          <td>
+            <div class="t-name">Paycheck — Regular</div>
+            <div class="t-sub">verizon · biweekly</div>
+          </td>
+          <td class="t-amt accent">+$1,150</td>
+        </tr>
+        <tr class="row-off">
+          <td class="t-date">Jul 08</td>
+          <td>
+            <div class="t-name">Off Week</div>
+            <div class="t-sub">vacation jul 12–17</div>
+          </td>
+          <td class="t-amt amt-zero">$0</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ───────────── 02 INVESTMENTS ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">02</div>
+      <div class="sec-title">Investments</div>
+      <div class="sec-meta">Accessible</div>
+    </div>
+    <div class="cols cols-2">
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">SpaceX</div>
+          <div class="item-label">Equity · Private</div>
+        </div>
+        <div class="item-fig">$1,000</div>
+        <div class="item-desc">5 shares @ ~$199 · illiquid until liquidity event</div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">Crypto</div>
+          <div class="item-label">Auto-Invest</div>
+        </div>
+        <div class="item-fig">DCA</div>
+        <div class="item-desc">recurring positions · withdrawable</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 02.1 RETIREMENT ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">02.1</div>
+      <div class="sec-title">Retirement</div>
+      <div class="sec-meta">Locked · Not Spendable</div>
+    </div>
+    <div class="cols cols-2">
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">401(k)</div>
+          <div class="item-label">Active</div>
+        </div>
+        <div class="item-fig muted">$6,500</div>
+        <div class="item-desc">VFFVX · Vanguard Target Retirement 2065 · 6% of paycheck + employer match</div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">Roth IRA</div>
+          <div class="item-label accent">Not Opened</div>
+        </div>
+        <div class="item-fig muted">—</div>
+        <div class="item-desc">on the to-do list</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 03 CS:GO INVENTORY ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">03</div>
+      <div class="sec-title">CS:GO Inventory</div>
+      <div class="sec-meta">10 Items</div>
+    </div>
+    <div class="inv">
+      <div class="inv-col">
+        <div class="inv-col-head">Knife · Rifles · AWPs</div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">Survival Knife — Damascus Steel</div>
+            <div class="skin-sub">FN · 0.009 float · name tag “Nyrix”</div>
+          </div>
+          <div class="skin-price">$78</div>
+        </div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">AK-47 — Bloodsport</div>
+            <div class="skin-sub">MW · Paris 2023 sticker + die-cast charm</div>
+          </div>
+          <div class="skin-price">$177</div>
+        </div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">M4A4 — In Living Color</div>
+            <div class="skin-sub">MW</div>
+          </div>
+          <div class="skin-price">$45</div>
+        </div>
+        <div class="skin is-new">
+          <div>
+            <div class="skin-name">M4A1-S — Player Two</div>
+            <div class="skin-sub">FT</div>
+          </div>
+          <div class="skin-price">$54</div>
+        </div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">StatTrak AWP — Neo-Noir</div>
+            <div class="skin-sub">MW · FURIA Foil Stockholm 2021</div>
+          </div>
+          <div class="skin-price">$70</div>
+        </div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">StatTrak AWP — Fever Dream</div>
+            <div class="skin-sub">FN</div>
+          </div>
+          <div class="skin-price">$40</div>
+        </div>
+        <div class="skin is-new">
+          <div>
+            <div class="skin-name">AWP — Printstream</div>
+            <div class="skin-sub">FT</div>
+          </div>
+          <div class="skin-price">$52</div>
+        </div>
+      </div>
+      <div class="inv-col">
+        <div class="inv-col-head">Gloves · Agent · Misc</div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">Driver Gloves — Snow Leopard</div>
+            <div class="skin-sub">FT</div>
+            <div class="prop"><div class="prop-fill"></div></div>
+            <div class="prop-cap">~40% of inventory value</div>
+          </div>
+          <div class="skin-price">$375</div>
+        </div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">Sir Bloody Skullhead Darryl</div>
+            <div class="skin-sub">Master Agent · Crazy Banana patch</div>
+          </div>
+          <div class="skin-price">$18</div>
+        </div>
+        <div class="skin">
+          <div>
+            <div class="skin-name">Music Kit — Austin Wintory</div>
+            <div class="skin-sub">non-ST</div>
+          </div>
+          <div class="skin-price">$3</div>
+        </div>
+      </div>
+      <div class="inv-summary">
+        <div class="sum-row">
+          <div class="sum-label">Total market value</div>
+          <div class="sum-val">~$912</div>
+        </div>
+        <div class="sum-row">
+          <div class="sum-label">Net if sold instantly · after ~12% spread</div>
+          <div class="sum-val">~$797</div>
+        </div>
+        <div class="sum-note">Priced Jun 17 · third-party ask · inventory currently trade-locked</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 04 CREDIT BUILDING ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">04</div>
+      <div class="sec-title">Credit Building</div>
+      <div class="sec-meta">Two Lines</div>
+    </div>
+    <div class="cols cols-2">
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">Capital One Quicksilver</div>
+          <div class="item-label accent">1.5% Back</div>
+        </div>
+        <div class="item-fig">$1,000</div>
+        <div class="item-desc">limit · secured · daily driver</div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">OpenSky Plus Visa</div>
+          <div class="item-label">Secured</div>
+        </div>
+        <div class="item-fig">$300</div>
+        <div class="item-desc">limit · secured · history builder</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 04.1 UTILIZATION TRACKER ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">04.1</div>
+      <div class="sec-title">Utilization Tracker</div>
+      <div class="sec-meta">Live · Keep Each Under 10%</div>
+    </div>
+    <div class="util" id="util">
+      <div class="util-grid">
+        <!-- Cap One -->
+        <div class="util-card" data-limit="1000" data-name="capone">
+          <div class="util-card-head">
+            <div class="util-card-name">Capital One Quicksilver</div>
+            <div class="util-card-lim">Limit $1,000</div>
+          </div>
+          <div class="util-pct" data-role="pct">0%</div>
+          <div class="util-input-row">
+            <label for="bal-capone">Current balance</label>
+            <div class="util-input-wrap">
+              <span class="dollar">$</span>
+              <input class="util-input" id="bal-capone" type="number" inputmode="numeric"
+                     min="0" max="1000" step="1" value="0" data-role="input"
+                     aria-label="Capital One current balance in dollars">
+            </div>
+          </div>
+          <div class="bar">
+            <div class="bar-fill" data-role="fill"></div>
+            <div class="bar-marker"><span>10%</span></div>
+          </div>
+          <div class="util-status" data-role="status" role="status" aria-live="polite"></div>
+          <div class="streak">
+            <span class="streak-label">On-time streak</span>
+            <div class="streak-dots">
+              <input type="checkbox" id="c1s1" checked><label for="c1s1" aria-label="Cap One on-time month 1"></label>
+              <input type="checkbox" id="c1s2" checked><label for="c1s2" aria-label="Cap One on-time month 2"></label>
+              <input type="checkbox" id="c1s3" checked><label for="c1s3" aria-label="Cap One on-time month 3"></label>
+              <input type="checkbox" id="c1s4"><label for="c1s4" aria-label="Cap One on-time month 4"></label>
+              <input type="checkbox" id="c1s5"><label for="c1s5" aria-label="Cap One on-time month 5"></label>
+              <input type="checkbox" id="c1s6"><label for="c1s6" aria-label="Cap One on-time month 6"></label>
+            </div>
+          </div>
+        </div>
+        <!-- OpenSky -->
+        <div class="util-card" data-limit="300" data-name="opensky">
+          <div class="util-card-head">
+            <div class="util-card-name">OpenSky Plus Visa</div>
+            <div class="util-card-lim">Limit $300</div>
+          </div>
+          <div class="util-pct" data-role="pct">0%</div>
+          <div class="util-input-row">
+            <label for="bal-opensky">Current balance</label>
+            <div class="util-input-wrap">
+              <span class="dollar">$</span>
+              <input class="util-input" id="bal-opensky" type="number" inputmode="numeric"
+                     min="0" max="300" step="1" value="0" data-role="input"
+                     aria-label="OpenSky current balance in dollars">
+            </div>
+          </div>
+          <div class="bar">
+            <div class="bar-fill" data-role="fill"></div>
+            <div class="bar-marker"><span>10%</span></div>
+          </div>
+          <div class="util-status" data-role="status" role="status" aria-live="polite"></div>
+          <div class="streak">
+            <span class="streak-label">On-time streak</span>
+            <div class="streak-dots">
+              <input type="checkbox" id="c2s1" checked><label for="c2s1" aria-label="OpenSky on-time month 1"></label>
+              <input type="checkbox" id="c2s2" checked><label for="c2s2" aria-label="OpenSky on-time month 2"></label>
+              <input type="checkbox" id="c2s3"><label for="c2s3" aria-label="OpenSky on-time month 3"></label>
+              <input type="checkbox" id="c2s4"><label for="c2s4" aria-label="OpenSky on-time month 4"></label>
+              <input type="checkbox" id="c2s5"><label for="c2s5" aria-label="OpenSky on-time month 5"></label>
+              <input type="checkbox" id="c2s6"><label for="c2s6" aria-label="OpenSky on-time month 6"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="util-footer">
+        <div><span class="uf-label">Overall utilization</span></div>
+        <div data-role="overall">0% · $0 / $1,300</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 04.2 THE RULES ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">04.2</div>
+      <div class="sec-title">The Rules</div>
+      <div class="sec-meta">Six · No Exceptions</div>
+    </div>
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-no">1</div>
+        <div class="rule-body">
+          <div class="rule-lead">Treat the card like debit.</div>
+          <div class="rule-exp">If the cash isn’t in checking right now, it doesn’t go on the card. The limit is not your budget.</div>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-no">2</div>
+        <div class="rule-body">
+          <div class="rule-lead">Autopay = statement balance.</div>
+          <div class="rule-exp">Both cards. Not the minimum. This makes missing a payment or carrying a balance nearly impossible.</div>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-no">3</div>
+        <div class="rule-body">
+          <div class="rule-lead">Keep each card under 10%.</div>
+          <div class="rule-exp">~$100 on the Cap One, ~$30 on the OpenSky. Lower is better. Pay before the statement closes to report a tiny number.</div>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-no">4</div>
+        <div class="rule-body">
+          <div class="rule-lead">Cap One is the daily driver.</div>
+          <div class="rule-exp">Route already-planned spending through it for the 1.5%. Cash back on something you didn’t need is a 98.5% loss.</div>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-no">5</div>
+        <div class="rule-body">
+          <div class="rule-lead">Leave the OpenSky nearly dormant.</div>
+          <div class="rule-exp">One tiny recurring charge, autopaid. It exists only to age and add a second line of history.</div>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-no">6</div>
+        <div class="rule-body">
+          <div class="rule-lead">Never say “I’ll pay it next month.”</div>
+          <div class="rule-exp">Statement balance, every month, no exceptions. That sentence is how the debt starts.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 05 RUNA WORLD LLC ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">05</div>
+      <div class="sec-title">RUNA World LLC</div>
+      <div class="sec-meta">Build</div>
+    </div>
+    <div class="cols cols-2">
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">DROP-001 Samples</div>
+          <div class="item-label accent">In Transit</div>
+        </div>
+        <div class="item-fig">2–3 WKS</div>
+        <div class="item-desc">ordered via Tapstitch · awaiting delivery</div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">Drop Spec</div>
+          <div class="item-label">DTC</div>
+        </div>
+        <div class="item-fig">$42</div>
+        <div class="item-desc">sub-50 unit black tee · no restock</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 06 FITNESS ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">06</div>
+      <div class="sec-title">Fitness</div>
+      <div class="sec-meta">Body</div>
+    </div>
+    <div class="cols cols-2">
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">Training</div>
+          <div class="item-label accent">PPL</div>
+        </div>
+        <div class="item-fig">PUSH/PULL/LEGS</div>
+        <div class="item-desc">active split · bulk</div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <div class="item-name">Nutrition</div>
+          <div class="item-label">Tracking</div>
+        </div>
+        <div class="item-fig">MASS GAIN</div>
+        <div class="item-desc">meal plan + macro targets</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 07 OPEN LOOPS ───────────── -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">07</div>
+      <div class="sec-title">Open Loops</div>
+      <div class="sec-meta">To-Do</div>
+    </div>
+    <div class="loops">
+      <div class="loop">
+        <input type="checkbox" class="box" id="loop1" aria-label="Open Roth IRA">
+        <div class="loop-task">Open Roth IRA</div>
+        <div class="loop-status">not started</div>
+      </div>
+      <div class="loop">
+        <input type="checkbox" class="box" id="loop2" aria-label="Decide skin moves once trade lock lifts">
+        <div class="loop-task">Decide skin moves once trade lock lifts</div>
+        <div class="loop-status">pending</div>
+      </div>
+      <div class="loop">
+        <input type="checkbox" class="box" id="loop3" aria-label="Review DROP-001 samples on arrival">
+        <div class="loop-task">Review DROP-001 samples on arrival</div>
+        <div class="loop-status">2–3 wks</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── FOOTER ───────────── -->
+  <footer>
+    <div class="left">SAL/OS — Personal Operating System</div>
+    <div class="right">RUNA World LLC</div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var COMBINED = 1300;
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#util .util-card'));
+  var overallEl = document.querySelector('#util [data-role="overall"]');
+
+  function zone(pct){
+    if(pct <= 10) return 'green';
+    if(pct <= 30) return 'amber';
+    return 'red';
+  }
+  var COLORS = {green:'#1a8a3c', amber:'#d98a00', red:'#e8330a'};
+  var MSG = {
+    green: '✓ in the safe zone',
+    amber: '⚠ over 10% — pay down before statement',
+    red:   '✕ too high — this dings your score'
+  };
+
+  function recompute(){
+    var totalBalance = 0;
+    cards.forEach(function(card){
+      var limit = parseFloat(card.getAttribute('data-limit')) || 0;
+      var input = card.querySelector('[data-role="input"]');
+      var pctEl = card.querySelector('[data-role="pct"]');
+      var fill = card.querySelector('[data-role="fill"]');
+      var status = card.querySelector('[data-role="status"]');
+
+      var bal = parseFloat(input.value);
+      if(isNaN(bal)) bal = 0;
+      // clamp to [0, limit]
+      if(bal < 0) bal = 0;
+      if(bal > limit) bal = limit;
+      if(String(bal) !== input.value && document.activeElement !== input){
+        input.value = bal;
+      }
+      totalBalance += bal;
+
+      var pct = limit > 0 ? (bal / limit) * 100 : 0;
+      var pctRound = Math.round(pct);
+      pctEl.textContent = pctRound + '%';
+
+      fill.style.width = Math.min(pct, 100) + '%';
+
+      if(bal === 0){
+        fill.style.background = 'var(--grey-2)';
+        pctEl.style.color = 'var(--grey-2)';
+        status.textContent = '';
+        status.className = 'util-status';
+      } else {
+        var z = zone(pct);
+        fill.style.background = COLORS[z];
+        pctEl.style.color = COLORS[z];
+        status.textContent = MSG[z];
+        status.className = 'util-status zone-' + z;
+      }
+    });
+
+    var overallPct = Math.round((totalBalance / COMBINED) * 100);
+    overallEl.textContent = overallPct + '% · $' + formatNum(totalBalance) + ' / $1,300';
+  }
+
+  function formatNum(n){
+    return Math.round(n).toLocaleString('en-US');
+  }
+
+  cards.forEach(function(card){
+    var input = card.querySelector('[data-role="input"]');
+    input.addEventListener('input', recompute);
+    input.addEventListener('blur', recompute);
+  });
+
+  recompute();
+})();
+</script>
+</body>
+</html>
